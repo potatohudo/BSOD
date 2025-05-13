@@ -10,7 +10,7 @@ const ACCELERATION = 0.3
 const DEFAULT_MAX_CHAIN_SPEED = 20.0  
 const SLIDE_THRESHOLD = 15.0  
 const CAMERA_SLIDE_OFFSET = -0.5
-const SLIDE_FRICTION = 0.98  
+const SLIDE_FRICTION = 0.992  
 const SLIDE_CANCEL_SPEED = 3.0  
 const SLIDE_DURATION = 1.0  
 const MOMENTUM_DECAY = 2.0
@@ -53,7 +53,7 @@ var momentum = Vector3.ZERO
 var is_game_over = false  
 var crouching = false
 
-var camera_locked = false  # Prevents other inputs from changing camera position
+var camera_locked = false 
 
 func update_camera():
 	if is_sliding or crouching:
@@ -171,8 +171,7 @@ func perform_dash():
 
 	can_dash = false
 	
-	if is_in_air:  
-		is_sliding = true  
+	if not is_on_floor():  
 		movement_points += 1  
 
 	var dash_direction = get_movement_direction()
@@ -318,39 +317,29 @@ func apply_damage(amount: int):
 	var glitch_intensity = clamp(amount / 50.0, 0.1, 1.0)
 	var freaky_intensity = clamp (amount / 50.0, 0.01, 1.0)
 
-
 	freaky.visible = true
-	freaky.material.set_shader_parameter("strength", glitch_intensity)
-	LH.visible = true
-	LH.material.set_shader_parameter("strength", glitch_intensity)
 	freaky2.visible = true
+	
+	freaky.material.set_shader_parameter("strength", glitch_intensity)
 	freaky2.material.set_shader_parameter("strength", freaky_intensity)
 
 	var tween = get_tree().create_tween()
 	tween.tween_property(freaky.material, "shader_parameter/strength", 0.0, 2.0).set_trans(Tween.TRANS_SINE)
 	tween.finished.connect(func(): freaky.visible = false)
-
-	var tween2 = get_tree().create_tween()
-	tween2.tween_property(freaky2.material, "shader_parameter/strength", 0.0, 1.0).set_trans(Tween.TRANS_SINE)
-	tween2.finished.connect(func(): freaky2.visible = false)
-
-
-
-
-
 	
-
+	tween.set_parallel(true)
 	
+	#var tween2 = get_tree().create_tween()
+	#tween2.tween_property(freaky2.material, "shader_parameter/strength", 0.0, 1.0).set_trans(Tween.TRANS_SINE)
+	#tween2.finished.connect(func(): freaky2.visible = false)
+	##god how the fuck do i make them parallel
 
-
-
-# **Death & Respawn**
+# Death & Respawn
 func die():
-	if main_node:  
-		is_game_over = true  
-		main_node.death_glitch()  
-		await get_tree().create_timer(2).timeout
-		get_tree().change_scene_to_file("res://GameOver.tscn")
+	is_game_over = true  
+	main_node.death_glitch()  
+	await get_tree().create_timer(2).timeout
+	get_tree().change_scene_to_file("res://GameOver.tscn")
 
 func respawn():
 	health = 100

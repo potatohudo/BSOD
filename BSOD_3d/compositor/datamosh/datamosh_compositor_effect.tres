@@ -1,0 +1,9 @@
+[gd_resource type="CompositorEffect" format=3 uid="uid://c84wg0tlxmyha"]
+
+[resource]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false

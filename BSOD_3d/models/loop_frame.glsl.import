@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://dew2ixyna5v84"
+path="res://.godot/imported/loop_frame.glsl-fd50eb256a1d0f0b9e50e89733c0d3d9.res"
+
+[deps]
+
+source_file="res://models/loop_frame.glsl"
+dest_files=["res://.godot/imported/loop_frame.glsl-fd50eb256a1d0f0b9e50e89733c0d3d9.res"]
+
+[params]
+

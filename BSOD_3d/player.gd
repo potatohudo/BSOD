@@ -3,16 +3,16 @@ extends CharacterBody3D
 const BASE_SPEED = 4.0  
 const SPRINT_MUL = 1.5  
 const CROUCH_MUL = 0.5
-const SLIDE_JUMP_ACCEL = 5.0  
+const SLIDE_JUMP_ACCEL = 10.0  
 const SLIDE_BOOST = 1.2
 const TRICK_ACCEL_GAIN = 1.5  
 const ACCELERATION = 0.3  
 const DEFAULT_MAX_CHAIN_SPEED = 20.0  
-const SLIDE_THRESHOLD = 15.0  
 const CAMERA_SLIDE_OFFSET = -0.5
 const SLIDE_FRICTION = 0.992  
 const SLIDE_CANCEL_SPEED = 3.0  
 const SLIDE_DURATION = 1.0  
+const SLIDE_THRESHOLD = 15
 const MOMENTUM_DECAY = 2.0
 const WALL_IMPACT_KNOCKBACK = 40.0 
 const WALL_IMPACT_DECAY = 0.08
@@ -22,19 +22,21 @@ const WALL_JUMP_VELOCITY = 4.0
 const WALL_JUMP_PUSH = 10.0  
 const GRAVITY = -9.8
 
-const DASH_FORCE = 20.0  
-const DASH_COOLDOWN = 1.0  
+const DASH_FORCE = 22.0  
+const DASH_COOLDOWN = 3.0  
+const DASH_EFX = 1
 var can_dash = true  
+var dash_efx = false
 
 var speed = BASE_SPEED
 var health = 100
 var is_sliding = false
-var is_in_air = false  
 var can_wall_jump = false  
 var slide_timer = 0.0  
+var slide_cooldown_timer = 0.0
 var movement_points = 0
 var max_speed_cap = DEFAULT_MAX_CHAIN_SPEED  
-var should_slide_on_landing = false  
+
 var momentum = Vector3.ZERO
 
 @onready var marker: Node3D = $Marker3D  
@@ -52,7 +54,6 @@ var momentum = Vector3.ZERO
 
 var is_game_over = false  
 var crouching = false
-
 var camera_locked = false 
 
 func update_camera():
@@ -63,87 +64,76 @@ func update_camera():
 		_reset_collision_size()
 		marker.position.y = 0
 
-func show_dash_sprite(visible: bool):
-	if dash_sprite:
-		dash_sprite.visible = visible  
+
 
 func update_dash_sprite():
-	if not can_dash and is_in_air:
-		show_dash_sprite(true)  
+	if dash_efx == true:
+		dash_sprite.visible = true
 	else:
-		show_dash_sprite(false)  
+		dash_sprite.visible = false
 
 func _physics_process(delta: float) -> void:
 	if is_game_over:
 		return  
-		
+
 	if momentum.length() > 0.1:
 		momentum = momentum.lerp(Vector3.ZERO, MOMENTUM_DECAY * delta) 
 	else:
 		momentum = Vector3.ZERO  
 
-	var movement_override = momentum.length() > 0.1  
 	var direction = get_movement_direction()
-	
-	if not movement_override and direction.length() > 0:
-		velocity.x = direction.x * speed
-		velocity.z = direction.z * speed
+	var is_sprinting = Input.is_action_pressed("sprint") and not is_sliding and direction.length() > 0
+
+	# Sprinting & Acceleration
+	if is_sprinting:
+		speed = min(speed + ACCELERATION, max_speed_cap)  
 	else:
-		velocity.x = momentum.x  # Allows momentum to carry the player
-		velocity.z = momentum.z
+		var decay_rate = ACCELERATION * 0.5
+		if not is_on_floor():
+			decay_rate *= 0.25  # slower decay in air
+		speed = move_toward(speed, BASE_SPEED, decay_rate)
+
+	if is_sliding:
+		slide_timer -= delta
+		if slide_timer <= 0:
+			speed *= SLIDE_FRICTION
+			if speed < SLIDE_CANCEL_SPEED:
+				exit_slide()
 
 	if not is_on_floor():
 		velocity += Vector3(0, GRAVITY, 0) * delta
-		is_in_air = true
-
-		# Reset movement points & speed when stopping sprint
-		if not Input.is_action_pressed("sprint") or get_movement_direction().length() == 0 and is_on_floor():
-			momentum = momentum.lerp(Vector3.ZERO, MOMENTUM_DECAY * delta)
-			if momentum.length() < 0.1:
-				momentum = Vector3.ZERO  
-				speed = BASE_SPEED  
-				movement_points = 0  # Reset movement chain
-
-	# Update max speed cap based on movement points
-	max_speed_cap = DEFAULT_MAX_CHAIN_SPEED + (movement_points * TRICK_ACCEL_GAIN)
-
-
-	# Sprinting & Acceleration (Only when moving)
-	if Input.is_action_pressed("sprint") and not is_sliding and direction.length() > 0:
-		speed = min(speed + ACCELERATION, max_speed_cap)  
-
-
-	# Sliding Mechanics
-	if is_sliding:
-		slide_timer -= delta
-		speed *= SLIDE_FRICTION  
-
-		# Exit slide when speed is too low or off the ground
-		if speed < SLIDE_CANCEL_SPEED and is_on_floor():  
+		if is_sliding:
 			exit_slide()
 
-	# **Dash Mechanic**
+	if not is_sprinting and direction.length() == 0 and is_on_floor():
+		momentum = momentum.lerp(Vector3.ZERO, MOMENTUM_DECAY * delta)
+		if momentum.length() < 0.1:
+			momentum = Vector3.ZERO  
+			speed = BASE_SPEED  
+			movement_points = 0
+
+	max_speed_cap = DEFAULT_MAX_CHAIN_SPEED + (movement_points * TRICK_ACCEL_GAIN)
+
 	if Input.is_action_just_pressed("attack") and can_dash:
 		perform_dash()
 
-	# Jumping Mechanics
 	if Input.is_action_just_pressed("jump"):
-		if is_sliding:  
+		if is_sliding and is_on_floor():  
 			exit_slide_with_jump()
 		elif is_on_floor():
 			velocity.y = JUMP_VELOCITY  
 
-	# Crouch Handling
 	if Input.is_action_pressed("crouch") and not is_sliding:
-		_apply_crouch_collision()
-		crouching = true
+		if is_on_floor():
+			_apply_crouch_collision()
+			crouching = true
 	else:
 		_reset_collision_size()
 		crouching = false
+
 	if speed >= SLIDE_THRESHOLD:
 		check_wall_impact()
 
-	# Movement Handling
 	if direction.length() > 0:
 		velocity.x = direction.x * speed + momentum.x 
 		velocity.z = direction.z * speed + momentum.z
@@ -153,24 +143,20 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	# Death Check
 	if health <= 0 or global_transform.origin.y < -20:
 		die()
 
 	update_camera()
 	update_dash_sprite()
-	
-	if health < 20:
-		LH.visible = true
-	else:
-		LH.visible = false
+	LH.visible = health < 20
 
 func perform_dash():
 	if not can_dash:
 		return  
 
 	can_dash = false
-	
+	dash_efx = true
+
 	if not is_on_floor():  
 		movement_points += 1  
 
@@ -181,19 +167,17 @@ func perform_dash():
 	dash_direction = dash_direction.normalized()
 
 	var dash_force = DASH_FORCE
-	var dashing_in_air = not is_on_floor()
-
-	if speed >= SLIDE_THRESHOLD and dashing_in_air:
-		dash_force *= 1.5  
-
+	if not is_on_floor():
+		dash_force *= 2  
 	else:
-		dash_force *= 1.2  
+		dash_force *= 1.0
 
 	momentum = dash_direction * dash_force
-
 	velocity += momentum    
-	speed = max(speed, speed + dash_force)  
+	speed = max(speed, speed + dash_force * 0.5)
 
+	await get_tree().create_timer(DASH_EFX).timeout
+	dash_efx = false
 	await get_tree().create_timer(DASH_COOLDOWN).timeout
 	can_dash = true  
 
@@ -225,13 +209,10 @@ func check_wall_impact():
 		handle_wall_collision(camera_facing)
 
 func handle_wall_collision(direction: Vector3):
-	if not can_dash:
+	if dash_efx == true:
 		var knockback_force = -direction * WALL_IMPACT_KNOCKBACK  
-
 		apply_knockback(knockback_force)  
-		should_slide_on_landing = true  
 		movement_points += 1  
-
 	else: 
 		if speed >= 20:
 			var damage_taken = min(speed / 2, 100)  
@@ -240,46 +221,32 @@ func handle_wall_collision(direction: Vector3):
 		velocity = Vector3.ZERO
 		momentum = Vector3.ZERO  
 
-	# 🚀 Gradually regain control
 	await get_tree().create_timer(0.3).timeout  
 	momentum = momentum.lerp(Vector3.ZERO, WALL_IMPACT_DECAY)  
 
-# **Sliding Functions**
-func start_slide():
-	if not should_slide_on_landing:
-		return 
-	
-	is_sliding = true
-	slide_timer = SLIDE_DURATION  
-	speed = max(speed, SLIDE_THRESHOLD) * SLIDE_BOOST  
-	velocity = get_movement_direction() * speed  
-	should_slide_on_landing = false  
+func start_slide(): 
+	if not is_on_floor() or speed < SLIDE_THRESHOLD:
+		pass
+	else:
+		is_sliding = true
+		slide_timer = SLIDE_DURATION  
+		speed = max(speed, SLIDE_THRESHOLD) * SLIDE_BOOST  
+		velocity = get_movement_direction() * speed  
+		movement_points += 1
 
 func exit_slide():
 	is_sliding = false
-	speed = move_toward(speed, BASE_SPEED, ACCELERATION * 5)
-	should_slide_on_landing = false 
 	movement_points = 0
 	momentum = Vector3.ZERO 
 
 func exit_slide_with_jump():
+	is_sliding = false
 	exit_slide()  
 	velocity.y = JUMP_VELOCITY * 1.5 
-	speed = max(speed, SLIDE_THRESHOLD) * 2.0
-	should_slide_on_landing = false
-	movement_points += 1 
-	 
- 
+	speed = speed * 20
+	movement_points += 1
 
-	if is_sliding and not Input.is_action_pressed("sprint"):
-		exit_slide()
-
-
-
-# **Movement Helper**
 func get_movement_direction() -> Vector3:
-	
-	
 	var forward_direction = camera.global_transform.basis.z 
 	forward_direction.y = 0
 	forward_direction = forward_direction.normalized()
@@ -288,11 +255,9 @@ func get_movement_direction() -> Vector3:
 	right_direction.y = 0
 	right_direction = right_direction.normalized()
 
-
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	return (forward_direction * input_dir.y + right_direction * input_dir.x).normalized()
 
-# **Crouch Mechanics**
 func _apply_crouch_collision():
 	collision_shape.shape.height = 0.8  
 	collision_shape.position.y = 0.4  
@@ -302,7 +267,6 @@ func _reset_collision_size():
 	collision_shape.position.y = 0.8
 
 func apply_damage(amount: int):
-	# Play appropriate hurt sound based on damage amount
 	if amount >= 15 and amount <= 29:
 		hurt_sound_0.play()
 	elif amount >= 30 and amount <= 39:
@@ -319,22 +283,15 @@ func apply_damage(amount: int):
 
 	freaky.visible = true
 	freaky2.visible = true
-	
+
 	freaky.material.set_shader_parameter("strength", glitch_intensity)
 	freaky2.material.set_shader_parameter("strength", freaky_intensity)
 
 	var tween = get_tree().create_tween()
 	tween.tween_property(freaky.material, "shader_parameter/strength", 0.0, 2.0).set_trans(Tween.TRANS_SINE)
 	tween.finished.connect(func(): freaky.visible = false)
-	
 	tween.set_parallel(true)
-	
-	#var tween2 = get_tree().create_tween()
-	#tween2.tween_property(freaky2.material, "shader_parameter/strength", 0.0, 1.0).set_trans(Tween.TRANS_SINE)
-	#tween2.finished.connect(func(): freaky2.visible = false)
-	##god how the fuck do i make them parallel
 
-# Death & Respawn
 func die():
 	is_game_over = true  
 	main_node.death_glitch()  
@@ -344,4 +301,4 @@ func die():
 func respawn():
 	health = 100
 	global_transform.origin = Vector3(0, 1, 0)
-	is_game_over = false  
+	is_game_over = false

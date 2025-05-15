@@ -13,9 +13,9 @@
 [ext_resource type="Shader" path="res://datamoshing.gdshader" id="7_y4vo8"]
 [ext_resource type="Script" path="res://level_manager.gd" id="9_rlvy5"]
 [ext_resource type="Shader" path="res://low_health.gdshader" id="9_vf5oh"]
-[ext_resource type="Texture2D" uid="uid://28a225q8aax5" path="res://attack_hands.png" id="10_w2i1v"]
 [ext_resource type="Script" path="res://dash_sprite.gd" id="11_fa5td"]
 [ext_resource type="AudioStream" uid="uid://sacfddgutjrt" path="res://sounds/Track1_kangerscreammp3.wav" id="12_p0ute"]
+[ext_resource type="Texture2D" uid="uid://cb8d6ayiynkjv" path="res://sprites/attack_hands.png" id="13_j0ygm"]
 [ext_resource type="AudioStream" uid="uid://c0wn62dke1gql" path="res://sounds/Track2_VoiceAudio.wav" id="13_ou8n6"]
 [ext_resource type="AudioStream" uid="uid://dp116jp7otldi" path="res://sounds/Track3_VoiceAudio.wav" id="14_em0p2"]
 [ext_resource type="Script" path="res://texture_rect.gd" id="17_ocwrj"]
@@ -436,7 +436,7 @@ script = ExtResource("9_rlvy5")
 visible = false
 position = Vector2(638, 673)
 scale = Vector2(3.03062, 2.7875)
-texture = ExtResource("10_w2i1v")
+texture = ExtResource("13_j0ygm")
 script = ExtResource("11_fa5td")
 
 [node name="health" type="HSlider" parent="."]

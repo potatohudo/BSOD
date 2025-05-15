@@ -138,6 +138,7 @@ func handle_bonus_command(command: String):
 			command_output.append_text("\nCheat activated! (does nothing for now)")
 		"cat":
 			play_cat_animation()
+			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.die()
 		"dmg": 
 			toggle_pause()
 			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.apply_damage(15)
@@ -147,15 +148,6 @@ func handle_bonus_command(command: String):
 			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.apply_damage(40)
 		"heal":
 			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.apply_damage(-30)
-		"glitch": 
-			freaky.visible = true
-			datamoshing.visible=true
-			freaky2.visible=true
-			command_output.append_text("\nPress ENTER/TAB to enable/disable a stronger glitch. type STOP to disable all")
-		"stop":
-			freaky.visible = false
-			datamoshing.visible=false
-			freaky2.visible=false
 			
 		
 		"exit":
@@ -191,17 +183,3 @@ func death_glitch():
 
 
 	
-func _glitch_check():
-	while true:
-		await get_tree().create_timer(1.0).timeout  
-
-		var glitch_chance = (100 - health) / 100.0	# 🛑 Lower health = higher chance
-
-		if randf() < glitch_chance:	# 🛑 Random chance per second
-			var random_glitch = randi() % 3  
-
-				
-
-		# ❗ If health < 10, small glitch **always active**
-		if health < 10:
-			datamoshing.visible=true

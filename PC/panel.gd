@@ -4,8 +4,10 @@ extends Panel
 @onready var te = $TextEdit
 @onready var cmd = $RichTextLabel2
 @onready var console = self
-@onready var browser = $"../../Browser"
-@onready var window = $"../../Browser/Window"
+
+
+@onready var window = $"../../Browser/Control"
+@onready var npr = $"../../Browser/Control/NPR"
 
 func _process(_delta):
 	if Input.is_action_pressed("ui_cmd"):
@@ -27,8 +29,9 @@ func handle_command(command: String, cmd_output: RichTextLabel):
 	var parts = command.split(" ", false)
 
 	if command.to_lower() == "open browser":
-
-		window.show()
+		
+		window.visible = true
+		npr.visible = true
 		window.grab_focus()
 		window.set_process(true)
 		cmd_output.append_text("\n Browser opened.")
@@ -38,7 +41,7 @@ func handle_command(command: String, cmd_output: RichTextLabel):
 	elif parts.size() == 2 and parts[0].to_lower() == "open":
 		var level_path = "res://programs/" + parts[1] + ".tscn"
 		if ResourceLoader.exists(level_path):
-			cmd_output.append_text("\nLoading level: %s..." % parts[1])
+			cmd_output.append_text("\nLoading %s..." % parts[1])
 			$"../".open_file_window(parts[1], level_path, true)
 		else:
 			cmd_output.append_text("\nError: Wrong path (%s)" % level_path)

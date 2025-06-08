@@ -1,11 +1,15 @@
-[gd_scene load_steps=8 format=3 uid="uid://b5yvv32x8oiti"]
+[gd_scene load_steps=11 format=3 uid="uid://b5yvv32x8oiti"]
 
 [ext_resource type="Theme" uid="uid://ddqq0cdwdsgep" path="res://PC.tres" id="1_x2ivq"]
 [ext_resource type="Script" path="res://explorrer.gd" id="2_bnjd8"]
 [ext_resource type="Script" path="res://panel.gd" id="2_ewdi2"]
 [ext_resource type="Shader" path="res://jpeg.gdshader" id="2_qqo4g"]
-[ext_resource type="Script" path="res://sites/camera_2d.gd" id="4_efov7"]
 [ext_resource type="Script" path="res://browser.gd" id="4_s5pwc"]
+[ext_resource type="Texture2D" uid="uid://bik82tlmw431r" path="res://programs/window_frame.png" id="5_7846e"]
+[ext_resource type="Texture2D" uid="uid://bg308m82iw461" path="res://programs/hide.png" id="7_51t1g"]
+[ext_resource type="Texture2D" uid="uid://b2dkwij6apbjj" path="res://programs/close.png" id="8_yeyq4"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1evom"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_onpad"]
 shader = ExtResource("2_qqo4g")
@@ -201,81 +205,109 @@ offset_bottom = 40.0
 [node name="Browser" type="Control" parent="SubViewportContainer/SubViewport"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 300.0
+offset_bottom = 300.0
 script = ExtResource("4_s5pwc")
 
-[node name="Window" type="Window" parent="SubViewportContainer/SubViewport/Browser"]
-disable_3d = true
-handle_input_locally = false
-canvas_item_default_texture_filter = 0
-title = "Browser.exe"
-position = Vector2i(40, 36)
-size = Vector2i(700, 500)
-visible = false
-min_size = Vector2i(200, 150)
-max_size = Vector2i(800, 600)
-keep_title_visible = true
-content_scale_size = Vector2i(800, 600)
-content_scale_mode = 2
-content_scale_aspect = 4
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Browser"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="NPR" type="NinePatchRect" parent="SubViewportContainer/SubViewport/Browser/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 560.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(400, 300)
 theme = ExtResource("1_x2ivq")
+texture = ExtResource("5_7846e")
+region_rect = Rect2(0, -3, 64, 67)
+patch_margin_left = 1
+patch_margin_top = 1
+patch_margin_right = 1
+patch_margin_bottom = 1
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="SubViewportContainer/SubViewport/Browser/Window"]
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Browser/Control/NPR"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 30.0
+grow_horizontal = 2
+
+[node name="ResizeHandle" type="Control" parent="SubViewportContainer/SubViewport/Browser/Control/NPR"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(400.5, 299.5)
+
+[node name="SubViewportContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/Browser/Control/NPR"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="AspectRatioContainer" parent="SubViewportContainer/SubViewport/Browser/Control/NPR/SubViewportContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Loader" type="AspectRatioContainer" parent="SubViewportContainer/SubViewport/Browser/Control/NPR/SubViewportContainer/SubViewport"]
 clip_contents = true
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch = true
+layout_mode = 2
+alignment_horizontal = 0
+alignment_vertical = 0
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer/SubViewport/Browser/Window/SubViewportContainer"]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(840, 600)
-render_target_update_mode = 0
-
-[node name="Loader" type="Control" parent="SubViewportContainer/SubViewport/Browser/Window/SubViewportContainer/SubViewport"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Control1" type="Control" parent="SubViewportContainer/SubViewport/Browser/Control/NPR/SubViewportContainer/SubViewport"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Browser/Window/SubViewportContainer/SubViewport"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Panel2" type="Panel" parent="SubViewportContainer/SubViewport/Browser/Window/SubViewportContainer/SubViewport/Control"]
+[node name="Panel2" type="Panel" parent="SubViewportContainer/SubViewport/Browser/Control/NPR/SubViewportContainer/SubViewport/Control1"]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 18.0
 offset_right = 755.0
 offset_bottom = 45.0
 
-[node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Browser/Window/SubViewportContainer/SubViewport/Control/Panel2"]
+[node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Browser/Control/NPR/SubViewportContainer/SubViewport/Control1/Panel2"]
 layout_mode = 0
 offset_right = 730.0
 offset_bottom = 27.0
 wrap_mode = 1
 scroll_past_end_of_file = true
 
-[node name="ScrollCamera" type="Camera2D" parent="SubViewportContainer/SubViewport/Browser/Window/SubViewportContainer/SubViewport"]
-limit_left = 0
-limit_top = 0
-limit_right = 800
-limit_bottom = 600
-script = ExtResource("4_efov7")
+[node name="TitleBar" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Browser/Control/NPR"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 28.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Browser/Control/NPR/TitleBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+label_settings = SubResource("LabelSettings_1evom")
+
+[node name="Hide" type="Button" parent="SubViewportContainer/SubViewport/Browser/Control/NPR/TitleBar"]
+layout_mode = 2
+icon = ExtResource("7_51t1g")
+
+[node name="Close" type="Button" parent="SubViewportContainer/SubViewport/Browser/Control/NPR/TitleBar"]
+layout_mode = 2
+icon = ExtResource("8_yeyq4")
 
 [node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport"]
 visible = false

@@ -2,21 +2,25 @@
 
 [ext_resource type="Theme" uid="uid://ddqq0cdwdsgep" path="res://PC.tres" id="1_uuvh2"]
 [ext_resource type="Script" path="res://window.gd" id="2_sswg3"]
-[ext_resource type="Texture2D" uid="uid://drxpvp61560of" path="res://programs/Unbenannt.png" id="3_d2jv1"]
+[ext_resource type="Texture2D" uid="uid://bik82tlmw431r" path="res://programs/window_frame.png" id="3_s2rqk"]
 [ext_resource type="Texture2D" uid="uid://bg308m82iw461" path="res://programs/hide.png" id="3_uwjk0"]
 [ext_resource type="Texture2D" uid="uid://b2dkwij6apbjj" path="res://programs/close.png" id="4_lgfkn"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ix167"]
 
 [node name="Control" type="Control"]
+clip_contents = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource("1_uuvh2")
 script = ExtResource("2_sswg3")
+metadata/_edit_use_anchors_ = true
 
 [node name="NPR" type="NinePatchRect" parent="."]
 layout_mode = 1
@@ -25,12 +29,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(400, 300)
 theme = ExtResource("1_uuvh2")
-texture = ExtResource("3_d2jv1")
-patch_margin_left = 12
-patch_margin_top = 12
-patch_margin_right = 12
-patch_margin_bottom = 12
+texture = ExtResource("3_s2rqk")
+region_rect = Rect2(0, -3, 64, 67)
+patch_margin_left = 1
+patch_margin_top = 1
+patch_margin_right = 1
+patch_margin_bottom = 1
 
 [node name="Panel" type="Panel" parent="NPR"]
 layout_mode = 1
@@ -38,6 +44,32 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 30.0
 grow_horizontal = 2
+
+[node name="ResizeHandle" type="Control" parent="NPR"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(400.5, 299.5)
+
+[node name="Content" type="AspectRatioContainer" parent="NPR"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 17.0
+offset_top = 54.0
+offset_right = -14.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment_horizontal = 0
+alignment_vertical = 0
 
 [node name="TitleBar" type="HBoxContainer" parent="NPR"]
 layout_mode = 1
@@ -59,19 +91,3 @@ icon = ExtResource("3_uwjk0")
 [node name="Close" type="Button" parent="NPR/TitleBar"]
 layout_mode = 2
 icon = ExtResource("4_lgfkn")
-
-[node name="Content" type="Control" parent="NPR"]
-layout_mode = 2
-anchors_preset = 0
-offset_left = 6.0
-offset_top = -12.0
-offset_right = 6.0
-offset_bottom = 28.0
-
-[node name="ResizeHandle" type="Control" parent="NPR"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2

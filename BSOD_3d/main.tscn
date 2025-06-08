@@ -434,8 +434,8 @@ script = ExtResource("9_rlvy5")
 
 [node name="DashSprite" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(638, 673)
-scale = Vector2(3.03062, 2.7875)
+position = Vector2(630.86, 724.398)
+scale = Vector2(2.9707, 1.64799)
 texture = ExtResource("13_j0ygm")
 script = ExtResource("11_fa5td")
 

@@ -6,6 +6,7 @@ extends Control
 @onready var te = $Panel/TextEdit
 @onready var cmd = $Panel/RichTextLabel2
 @onready var loader = $"Loader"
+@onready var task_panel = $TaskPanel/Bar/HBoxContainer
 
 var file_system = {
 	"root": {
@@ -113,7 +114,6 @@ func open_file_window(name: String, content, separate: bool = false):
 				var text := file.get_as_text()
 				file.close()
 
-		# Create container to hold text editor and save button
 				var vbox = VBoxContainer.new()
 
 		# Text editor
@@ -122,6 +122,7 @@ func open_file_window(name: String, content, separate: bool = false):
 				text_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				text_edit.size_flags_vertical = Control.SIZE_EXPAND_FILL
 				text_edit.name = "TextEditor"
+				text_edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
 				vbox.add_child(text_edit)
 
 		# Save button
@@ -173,6 +174,29 @@ func open_file_window(name: String, content, separate: bool = false):
 
 	loader.add_child(file_window)
 	file_window.show()
+
+	var task_button = Button.new()
+	#task_button.text = name  # or use only icon if desired
+
+	# Optional: Set an icon (replace with your actual icon path)
+	var icon_path = "res://programs/explorer/icons/%s.png" % name.to_lower()
+	if ResourceLoader.exists(icon_path):
+		task_button.icon = load(icon_path)
+	else:
+		task_button.icon = load("res://programs/explorer/icons/default.png")
+	task_button.custom_minimum_size = Vector2(30, 30)
+
+	# Toggle visibility on button press
+	task_button.pressed.connect(func():
+		file_window.visible = !file_window.visible
+	)
+
+	# Optional: Clean up task button when window closes
+	file_window.tree_exiting.connect(func():
+		task_button.queue_free()
+	)
+
+	task_panel.add_child(task_button)
 
 func _make_error_label(msg: String) -> Label:
 	var label = Label.new()

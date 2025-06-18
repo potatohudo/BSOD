@@ -1,13 +1,12 @@
 extends Panel  
 
-@onready var button = $"../HBoxContainer2/Button"
+@onready var button = $"../TaskPanel/Button"
 @onready var te = $TextEdit
 @onready var cmd = $RichTextLabel2
 @onready var console = self
 
 
-@onready var window = $"../../Browser/Control"
-@onready var npr = $"../../Browser/Control/NPR"
+
 
 func _process(_delta):
 	if Input.is_action_pressed("ui_cmd"):
@@ -28,17 +27,17 @@ func handle_command(command: String, cmd_output: RichTextLabel):
 
 	var parts = command.split(" ", false)
 
-	if command.to_lower() == "open browser":
-		
-		window.visible = true
-		npr.visible = true
-		window.grab_focus()
-		window.set_process(true)
-		cmd_output.append_text("\n Browser opened.")
-		return
+	#if command.to_lower() == "open browser":
+		#
+		#window.visible = true
+		#npr.visible = true
+		#window.grab_focus()
+		#window.set_process(true)
+		#cmd_output.append_text("\n Browser opened.")
+		#return
 
-	# 🔎 Handle generic `open [program]`
-	elif parts.size() == 2 and parts[0].to_lower() == "open":
+	# Handle generic `open [program]`
+	if parts.size() == 2 and parts[0].to_lower() == "open":
 		var level_path = "res://programs/" + parts[1] + ".tscn"
 		if ResourceLoader.exists(level_path):
 			cmd_output.append_text("\nLoading %s..." % parts[1])

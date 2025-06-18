@@ -112,7 +112,7 @@ func set_title(text: String):
 func set_content(node: Control):
 	var content_container = $NPR/Content
 	content_container.add_child(node)
-
+	#node.wrap_mode = "boundary"
 func _gui_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		get_viewport().set_input_as_handled()

@@ -83,4 +83,4 @@ func _flicker_sun():
 	if is_day:
 		sky_mat.set_sun_angle_max(randf_range(40.0, 55.0))
 	else:
-		sky_mat.set_sun_angle_max(4.0)  # Ensure sun stays at 4 at night
+		sky_mat.set_sun_angle_max(4.0) 

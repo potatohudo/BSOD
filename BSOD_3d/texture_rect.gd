@@ -1,4 +1,6 @@
 extends TextureRect
 
-# Get a reference to the shader material on the TextureRect.
 @onready var mat = material
+
+#just dont touch the shaders, I will figure it out later
+##ignore all the framebuffer errors. 

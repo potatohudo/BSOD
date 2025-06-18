@@ -1,5 +1,5 @@
 extends Control
 
 
-@export var scroll = 1422
-@export var x = 802
+@onready var scroll = 1308
+#@export var x = 802

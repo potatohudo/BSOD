@@ -1,11 +1,11 @@
 extends Camera2D
 
-@onready var viewport_content = $"../Loader/.."  # Reference the scrollable content
-@onready var viewport = $"../"  # Reference the Viewport
+@onready var viewport_content = $"../Loader/.." 
+@onready var viewport = $"../" 
 
-var scroll_speed = 40  # Adjust scrolling speed
-var min_scroll = 0  # Top limit
-var max_scroll = 0  # Bottom limit (calculated automatically)
+var scroll_speed = 40  
+var min_scroll = 0  
+var max_scroll = 0  
 
 func _ready():
 	await get_tree().process_frame 
@@ -25,7 +25,7 @@ func update_scroll_limits():
 					site = child.get_node("Site")
 					break
 				elif child is Control:
-					# fallback if "Site" is the actual wrapper
+					
 					site = child
 					break
 

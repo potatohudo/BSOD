@@ -6,8 +6,6 @@ extends Control
 @onready var scrollbar = $ScrollContainer/VScrollBar
 
 
-
-# === State ===
 var dragging := false
 var drag_offset := Vector2.ZERO
 
@@ -51,18 +49,6 @@ func _unhandled_input(event):
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			scrollbar.value += 30
 			
-#func _update_scroll_max():
-	#var site = loader.get_child(0) if loader.get_child_count() > 0 else null
-	#if not site:
-		#return
-#
-	#var view_height = loader.size.y
-	#var content_height = site.size.y
-#
-#
-#
-	#scrollbar.max_value = max(content_height - view_height, 0)
-	#scrollbar.value = clamp(scrollbar.value, scrollbar.min_value, scrollbar.max_value)
 
 
 var previous_height := 0.0
@@ -111,8 +97,7 @@ func load_site(url: String):
 	for child in loader.get_children():
 		child.queue_free()
 
-	await get_tree().process_frame  # wait for cleanup to finish
-
+	await get_tree().process_frame  
 	# Load and add
 	var site_scene = load(site_path)
 	if site_scene:
@@ -126,8 +111,7 @@ func load_site(url: String):
 		loader.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		loader.size_flags_vertical = Control.SIZE_EXPAND_FILL
 
-		# Get scroll value from site's script
-		var site_scroll := 1500  # fallback value
+		var site_scroll := 1500  
 
 		if "scroll" in site_instance:
 			site_scroll = site_instance.scroll
@@ -137,5 +121,4 @@ func load_site(url: String):
 			scrollbar.max_value = 0
 			scrollbar.value = 0
 
-		# Apply initial scroll position
 		site_instance.position.y = -scrollbar.value

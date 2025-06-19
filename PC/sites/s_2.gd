@@ -1,4 +1,4 @@
 extends Control
 
-@onready var scroll = self.size.y
+@onready var scroll = 900
 #@onready var x = 709

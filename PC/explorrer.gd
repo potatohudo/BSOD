@@ -31,7 +31,16 @@ func _ready():
 	populate_tree()
 	item_list.item_selected.connect(_on_item_selected)
 	item_list.item_activated.connect(_on_item_activated)
-
+	var system_tasks = [
+		{ "name": "System", "cpu": 1.5, "usage_range": Vector2(0.3, 1.0) },
+		{ "name": "Idle", "cpu": 0.1, "usage_range": Vector2(0.05, 0.2) },
+		{ "name": "Kernel32", "cpu": 2.4, "usage_range": Vector2(1.0, 3.0) }
+	]
+	for t in system_tasks:
+		t["pid"] = next_pid
+		t["window"] = null
+		next_pid += 1
+		running_tasks[t.name] = t
 func populate_tree():
 	tree.clear()
 	var root = tree.create_item()
@@ -174,6 +183,7 @@ func open_file_window(name: String, content, separate: bool = false):
 
 	loader.add_child(file_window)
 	file_window.show()
+	register_task(name, file_window)
 
 	var task_button = Button.new()
 	#task_button.text = name  # or use only icon if desired
@@ -186,17 +196,39 @@ func open_file_window(name: String, content, separate: bool = false):
 		task_button.icon = load("res://programs/explorer/icons/default.png")
 	task_button.custom_minimum_size = Vector2(30, 30)
 
-	# Toggle visibility on button press
+	# will get removed, dont worry abt it
 	task_button.pressed.connect(func():
 		file_window.visible = !file_window.visible
 	)
 
-	# Optional: Clean up task button when window closes
 	file_window.tree_exiting.connect(func():
 		task_button.queue_free()
 	)
 
 	task_panel.add_child(task_button)
+
+var running_tasks: Dictionary = {}
+var next_pid := 1
+
+func register_task(name: String, window: Control):
+	if not running_tasks.has(name):
+		var task_info = {
+			"name": name,
+			"pid": next_pid,
+			"window": window,
+			"cpu": randf_range(1.0, 30.0)
+		}
+		next_pid += 1
+		running_tasks[name] = task_info
+
+	window.tree_exiting.connect(func():
+		running_tasks.erase(name)
+	)
+
+# TaskMgr calls this
+func get_running_tasks() -> Dictionary:
+	return running_tasks.duplicate(true)  # return a deep copy
+
 
 func _make_error_label(msg: String) -> Label:
 	var label = Label.new()

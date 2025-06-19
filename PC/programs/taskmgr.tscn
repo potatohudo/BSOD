@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://cylrkasqse7nf"]
+
+[ext_resource type="Theme" uid="uid://ddqq0cdwdsgep" path="res://PC.tres" id="1_4ltdi"]
+[ext_resource type="Script" path="res://programs/taskmgr.gd" id="1_hkl8i"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s8bg1"]
+bg_color = Color(0.847802, 0.880077, 0.978505, 1)
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_4ltdi")
+script = ExtResource("1_hkl8i")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s8bg1")
+
+[node name="Process" type="Label" parent="Panel"]
+layout_mode = 2
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 329.0
+offset_bottom = 57.0
+
+[node name="ItemList" type="ItemList" parent="Panel"]
+layout_mode = 2
+offset_left = 13.0
+offset_top = 86.0
+offset_right = 13.0
+offset_bottom = 86.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+offset_left = 13.0
+offset_top = 86.0
+offset_right = 781.0
+offset_bottom = 585.0
+
+[node name="Tasklist" type="GridContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

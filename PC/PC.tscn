@@ -13,7 +13,7 @@ shader_parameter/blockiness = 300.0
 shader_parameter/color_steps = 20.935
 shader_parameter/grain_amount = 0.031
 
-[node name="Control" type="Control"]
+[node name="Main" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

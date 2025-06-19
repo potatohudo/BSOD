@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3yj6668ir81s"]
+[gd_scene load_steps=6 format=3 uid="uid://b3yj6668ir81s"]
 
 [ext_resource type="Texture2D" uid="uid://c78j285uy4nr6" path="res://sites/sprites/Starry_Sky_01.jpg" id="1_4ajhx"]
+[ext_resource type="Script" path="res://sites/s_2.gd" id="1_eyq2p"]
 [ext_resource type="Texture2D" uid="uid://mwgwqgesmfr" path="res://sites/sprites/cooltext481640010885802.png" id="2_aj4t8"]
 [ext_resource type="FontFile" uid="uid://dyljrk6tbrmh3" path="res://times.ttf" id="3_ifyba"]
 
@@ -17,6 +18,7 @@ offset_right = 1.0
 offset_bottom = 301.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_eyq2p")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0

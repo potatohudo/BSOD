@@ -27,14 +27,6 @@ func handle_command(command: String, cmd_output: RichTextLabel):
 
 	var parts = command.split(" ", false)
 
-	#if command.to_lower() == "open browser":
-		#
-		#window.visible = true
-		#npr.visible = true
-		#window.grab_focus()
-		#window.set_process(true)
-		#cmd_output.append_text("\n Browser opened.")
-		#return
 
 	# Handle generic `open [program]`
 	if parts.size() == 2 and parts[0].to_lower() == "open":

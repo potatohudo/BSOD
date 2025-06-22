@@ -1,22 +1,36 @@
 extends Control
 
 @onready var task_list = $"ScrollContainer/Tasklist"
+@onready var kill_button = $"AspectRatioContainer/KillButton"
 
 var tasks := {}
-var usage_range = Vector2(0.5, 10.0)
+var usage = Vector2(100, 110)
+
+func get_usage() -> Vector2:
+	return usage
+
 var update_interval := 1.5
+var selected_task_name: String = ""
+
 var update_timer: Timer = null
 var explorer : Control = null  # reference to Explorer
+
 
 func _ready():
 	randomize()
 
-	# Look for the Explorer (assumes it's the parent or in scene tree)
+	
 	explorer = get_tree().get_root().get_node("/root/Main/SubViewportContainer/SubViewport/Explorer")  # e.g. "/root/Main/Explorer"
 	if not explorer:
 		push_error("Explorer node not found!")
-
+	
 	_start_update_timer()
+	
+	kill_button.pressed.connect(func():
+		if selected_task_name != "":
+			_on_end_task_pressed(selected_task_name)
+	)
+
 
 func _start_update_timer():
 	update_timer = Timer.new()
@@ -49,6 +63,7 @@ func _sync_task_list():
 func add_task_entry(task_info: Dictionary):
 	var hbox = HBoxContainer.new()
 	hbox.name = task_info.name
+	hbox.mouse_filter = Control.MOUSE_FILTER_PASS
 
 	var label = Label.new()
 	label.text = task_info.name
@@ -61,15 +76,28 @@ func add_task_entry(task_info: Dictionary):
 	cpu_label.custom_minimum_size = Vector2(60, 0)
 	hbox.add_child(cpu_label)
 
-	var end_button = Button.new()
-	end_button.text = "End"
-	end_button.pressed.connect(func():
-		_on_end_task_pressed(task_info.name)
+	# Make the whole row respond to clicks
+	hbox.gui_input.connect(func(event):
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			_select_task(task_info.name)
 	)
-	hbox.add_child(end_button)
 
 	task_list.add_child(hbox)
 	tasks[task_info.name] = hbox
+
+func _select_task(name: String):
+	# Clear old selection styles
+	for task_name in tasks.keys():
+		var row = tasks[task_name]
+		row.remove_theme_color_override("panel")
+
+	selected_task_name = name
+
+	if tasks.has(name):
+		tasks[name].add_theme_color_override("panel", Color(0.2, 0.4, 0.6, 0.4))  # subtle blue
+
+
+
 
 func remove_task_entry(name: String):
 	if tasks.has(name):
@@ -87,8 +115,19 @@ func _on_end_task_pressed(name: String):
 		explorer.running_tasks.erase(name)
 
 func _update_cpu_usage():
-	for task in tasks.values():
-		if task.has_node("CPU"):
-			var label = task.get_node("CPU")
-			var new_val = randf_range(usage_range.x, usage_range.y)
+	if not explorer:
+		return
+
+	var current_tasks = explorer.get_running_tasks()
+
+	for name in tasks.keys():
+		if not current_tasks.has(name):
+			continue
+
+		var task_info = current_tasks[name]
+		var range: Vector2 = task_info.get("usage", Vector2 (0.5, 3))
+
+		if tasks[name].has_node("CPU"):
+			var label = tasks[name].get_node("CPU")
+			var new_val = randf_range(range.x, range.y)
 			label.text = "%0.2f%%" % new_val

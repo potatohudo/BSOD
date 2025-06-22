@@ -1,9 +1,12 @@
-[gd_resource type="Theme" load_steps=18 format=3 uid="uid://ddqq0cdwdsgep"]
+[gd_resource type="Theme" load_steps=19 format=3 uid="uid://ddqq0cdwdsgep"]
 
 [ext_resource type="FontFile" uid="uid://bh2akjkru0pi7" path="res://micross.ttf" id="1_er0x3"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eji24"]
-bg_color = Color(0.388235, 0.388235, 0.388235, 0)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vt6xh"]
+bg_color = Color(0, 0, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0shwk"]
+bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lh0by"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -66,7 +69,8 @@ anti_aliasing_size = 5.013
 
 [resource]
 default_font = ExtResource("1_er0x3")
-Button/styles/focus = SubResource("StyleBoxFlat_eji24")
+Button/styles/focus = SubResource("StyleBoxFlat_vt6xh")
+Button/styles/normal = SubResource("StyleBoxFlat_0shwk")
 ItemList/colors/font_hovered_color = Color(1, 1, 1, 1)
 ItemList/colors/font_selected_color = Color(0.188235, 0, 1, 1)
 ItemList/styles/focus = SubResource("StyleBoxFlat_lh0by")

@@ -6,7 +6,11 @@ extends Control
 @onready var scrollbar = $ScrollContainer/VScrollBar
 
 
-var usage: Vector2 = Vector2(12.0, 16.0)
+var usage: Vector2 = Vector2(18.0, 22.0)
+
+func get_usage() -> Vector2:
+	return usage
+
 var dragging := false
 var drag_offset := Vector2.ZERO
 

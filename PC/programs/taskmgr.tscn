@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://programs/taskmgr.gd" id="1_hkl8i"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s8bg1"]
-bg_color = Color(0.847802, 0.880077, 0.978505, 1)
+bg_color = Color(0.218218, 0.283941, 0.636469, 1)
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -40,13 +40,33 @@ offset_right = 13.0
 offset_bottom = 86.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-layout_mode = 2
-offset_left = 13.0
-offset_top = 86.0
-offset_right = 781.0
-offset_bottom = 585.0
+layout_mode = 1
+offset_left = 21.0
+offset_top = 60.0
+offset_right = 680.0
+offset_bottom = 583.0
 
 [node name="Tasklist" type="GridContainer" parent="ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 170.0
+offset_top = 26.0
+offset_right = -22.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment_horizontal = 2
+alignment_vertical = 2
+
+[node name="KillButton" type="Button" parent="AspectRatioContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "kill task"

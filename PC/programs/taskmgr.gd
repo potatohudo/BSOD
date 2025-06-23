@@ -1,5 +1,8 @@
 extends Control
 
+#every second-or-so it checks the task list in ../explorrer and visualizes it accordingly.
+
+
 @onready var task_list = $"ScrollContainer/Tasklist"
 @onready var kill_button = $"AspectRatioContainer/KillButton"
 
@@ -30,7 +33,6 @@ func _ready():
 		if selected_task_name != "":
 			_on_end_task_pressed(selected_task_name)
 	)
-
 
 func _start_update_timer():
 	update_timer = Timer.new()

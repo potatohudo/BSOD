@@ -1,5 +1,7 @@
 extends Control
 
+#just don't touch this.
+
 @onready var title_bar = $NPR/TitleBar
 @onready var close_button = $NPR/TitleBar/Close
 @onready var hide_button = $NPR/TitleBar/Hide

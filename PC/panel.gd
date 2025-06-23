@@ -1,5 +1,7 @@
 extends Panel  
 
+#console logic. it handles commands and stuff
+
 @onready var button = $"../TaskPanel/Button"
 @onready var te = $TextEdit
 @onready var cmd = $RichTextLabel2

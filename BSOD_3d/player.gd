@@ -1,4 +1,6 @@
 extends CharacterBody3D
+#movement and player related stuff.
+
 
 const BASE_SPEED = 4.0  
 const SPRINT_MUL = 1.5  
@@ -46,7 +48,7 @@ var momentum = Vector3.ZERO
 @onready var dash_sprite = get_node("/root/Main/DashSprite") 
 @onready var health_bar: Slider = get_node("/root/Main/health")  
 @onready var freaky = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky") 
-@onready var freaky2 = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky2")
+@onready var freaky2 = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky/Freaky2")
 @onready var LH = get_node("/root/Main/SubViewportContainer/SubViewport/LowHealth")
 @onready var hurt_sound_0: AudioStreamPlayer = get_node("/root/Main/Hurt0")
 @onready var hurt_sound_1: AudioStreamPlayer = get_node("/root/Main/Hurt1")
@@ -63,6 +65,7 @@ func update_camera():
 	elif not is_sliding and not crouching:
 		_reset_collision_size()
 		marker.position.y = 0
+	#it does not work any other way :(
 
 
 
@@ -183,9 +186,12 @@ func perform_dash():
 
 var input_locked = false  
 
+
+
 func apply_knockback(force: Vector3):
 	momentum += force 
 	velocity += force
+#throw the player basically
 
 func check_wall_impact():
 	if speed < SLIDE_THRESHOLD or input_locked:
@@ -277,7 +283,8 @@ func apply_damage(amount: int):
 	health -= amount
 	health = max(health, 0)
 	health_bar.value = health
-
+	
+#shader logic
 	var glitch_intensity = clamp(amount / 50.0, 0.1, 1.0)
 	var freaky_intensity = clamp (amount / 50.0, 0.01, 1.0)
 

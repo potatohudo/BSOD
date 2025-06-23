@@ -14,7 +14,7 @@ var subviewport_container
 @onready var health = $SubViewportContainer/SubViewport/Node3D/CharacterBody3D.health
 @onready var freaky = $SubViewportContainer/SubViewport/Freaky
 @onready var datamoshing = $SubViewportContainer/SubViewport/Freaky/Datamoshing
-@onready var freaky2 = $SubViewportContainer/SubViewport/Freaky2
+@onready var freaky2 = $SubViewportContainer/SubViewport/Freaky/Freaky2
 
 
 func _ready() -> void:
@@ -179,7 +179,3 @@ func death_glitch():
 	get_tree().paused = true
 	await get_tree().create_timer(glitch_timer).timeout
 	get_tree().paused = false
-
-
-
-	

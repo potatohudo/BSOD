@@ -1,5 +1,8 @@
 extends Control
 
+#I KNOW ITS MISSPELLED FUKC OFF
+#file related stuff
+
 @onready var tree = $HBoxContainer/Tree
 @onready var item_list = $VBoxContainer2/ItemList
 @onready var rtlabel = $VBoxContainer2/RichTextLabel
@@ -31,6 +34,7 @@ func _ready():
 	populate_tree()
 	item_list.item_selected.connect(_on_item_selected)
 	item_list.item_activated.connect(_on_item_activated)
+	
 	var system_tasks = [
 		{ "name": "System", "cpu": 1.5, "usage": Vector2(20, 30) },
 		{ "name": "Idle", "cpu": 0.1, "usage": Vector2(0.05, 0.2) },
@@ -102,92 +106,102 @@ func _on_item_activated(index: int):
 		else:
 			open_file_window(file_name, file_data)
 
-func open_file_window(name: String, content, separate: bool = false):
+func open_file_window(name: String, content, separate: bool = false): #I dont remember what "separate" means. i think if its active, it will not duplicate windows 
 	var file_window_scene = preload("res://window.tscn")
 	var file_window = file_window_scene.instantiate()
-
 	file_window.set_title(name)
 	file_window.position = Vector2(100, 100)
 	file_window.size = Vector2(600, 400)
 
+	var ext: String = ""
+	if typeof(content) == TYPE_STRING:
+		ext = content.get_extension()
+
+
+	var usage := Vector2(1.0, 3.0) #default usage if its not found. i know this variable repeats but i am too lazy to fix it
+
 	if separate and content is String:
-		if content.ends_with(".tscn") and ResourceLoader.exists(content):
-			var res = load(content)
-			await get_tree().process_frame
-			if res is PackedScene:
-				var scene_instance = res.instantiate()
-				file_window.set_content(scene_instance)
+		match ext:
+			"tscn": #if it is a scene. aka actual "program" and not file. i mean its still a file but SSSHUUSHHH
+				if ResourceLoader.exists(content):
+					var res = load(content)
+					await get_tree().process_frame
+					if res is PackedScene:
+						var inst = res.instantiate()
+						file_window.set_content(inst)
 
-				var custom_usage := Vector2(1.0, 3.0)
+						if inst.has_method("get_usage"): #checks for CPU usage parameter. can be seen in the begining of each script
+							usage = inst.get_usage()
+						elif inst.has_method("usage") and typeof(inst.get("usage")) == TYPE_VECTOR2:
+							usage = inst.get("usage")
+						else:
+							push_error("No usage found in scene")
 
-				if scene_instance.has_method("get_usage"):
-					custom_usage = scene_instance.get_usage()
-				elif scene_instance.has_method("usage") and typeof(scene_instance.get("usage")) == TYPE_VECTOR2:
-					custom_usage = scene_instance.get("usage")
-				else:
-					push_error("No usage found in scene")
-				register_task(name, file_window, custom_usage)
-					
-			else:
-				file_window.set_content(_make_error_label("Failed to instantiate .tscn."))
-		
-		elif content.ends_with(".txt") and FileAccess.file_exists(content):
-			var file := FileAccess.open(content, FileAccess.READ)
-			if file:
-				var text := file.get_as_text()
-				file.close()
+						register_task(name, file_window, usage)
 
-				var vbox = VBoxContainer.new()
-
-		# Text editor
-				var text_edit = TextEdit.new()
-				text_edit.text = text
-				text_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				text_edit.size_flags_vertical = Control.SIZE_EXPAND_FILL
-				text_edit.name = "TextEditor"
-				text_edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-				vbox.add_child(text_edit)
-
-		# Save button
-				var save_button = Button.new()
-				save_button.text = "Save"
-				save_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-				save_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-				vbox.add_child(save_button)
-
-		# Connect button to save logic
-				save_button.pressed.connect(func():
-					var edited_text = text_edit.text
-					var save_file := FileAccess.open(content, FileAccess.WRITE)
-					if save_file:
-						save_file.store_string(edited_text)
-						save_file.close()
-						print("Saved to: ", content)
 					else:
-						print("Failed to save to: ", content)
-					)
+						file_window.set_content(_make_error_label("Failed to instantiate scene."))
+				else:
+					file_window.set_content(_make_error_label("Scene not found:\n" + content))
 
-				file_window.set_content(vbox)
-			else:
-				file_window.set_content(_make_error_label("Failed to open file: " + content))
+			"txt":
+				if FileAccess.file_exists(content):
+					var file := FileAccess.open(content, FileAccess.READ)
+					if file:
+						var text := file.get_as_text()
+						file.close()
 
+						var vbox = VBoxContainer.new()
+						var text_edit = TextEdit.new()
+						text_edit.text = text
+						text_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+						text_edit.size_flags_vertical = Control.SIZE_EXPAND_FILL
+						text_edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+						text_edit.name = "TextEditor"
+						vbox.add_child(text_edit)
 
-		elif content.ends_with(".png") and ResourceLoader.exists(content):
-			var tex = load(content)
-			if tex is Texture2D:
-				var tex_rect = TextureRect.new()
-				tex_rect.texture = tex
-				tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-				tex_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				tex_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
-				file_window.set_content(tex_rect)
-			else:
-				file_window.set_content(_make_error_label("Not a valid image texture."))
-		
-		else:
-			file_window.set_content(_make_error_label("File not found or unsupported:\n" + content))
+						var save_button = Button.new()
+						save_button.text = "Save"
+						save_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+						save_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+						vbox.add_child(save_button)
 
-	else:
+						save_button.pressed.connect(func():
+							var edited_text = text_edit.text
+							var save_file := FileAccess.open(content, FileAccess.WRITE)
+							if save_file:
+								save_file.store_string(edited_text)
+								save_file.close()
+								print("Saved to:", content)
+							else:
+								print("Failed to save to:", content)
+						)
+
+						file_window.set_content(vbox)
+					else:
+						file_window.set_content(_make_error_label("Failed to open file:\n" + content))
+				else:
+					file_window.set_content(_make_error_label("File not found:\n" + content))
+
+			"png":
+				if ResourceLoader.exists(content):
+					var tex = load(content)
+					if tex is Texture2D:
+						var tex_rect = TextureRect.new()
+						tex_rect.texture = tex
+						tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+						tex_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+						tex_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
+						file_window.set_content(tex_rect)
+					else:
+						file_window.set_content(_make_error_label("Not a valid texture."))
+				else:
+					file_window.set_content(_make_error_label("Image not found:\n" + content))
+
+			_:
+				file_window.set_content(_make_error_label("Unsupported or unknown file type:\n" + content))
+
+	else: #
 		var label = RichTextLabel.new()
 		label.text = str(content)
 		label.scroll_active = true
@@ -198,32 +212,22 @@ func open_file_window(name: String, content, separate: bool = false):
 	loader.add_child(file_window)
 	file_window.show()
 	
-
+##task manager related stuff. 
+	# Task button
 	var task_button = Button.new()
-	#task_button.text = name  # or use only icon if desired
+	var icon_path = "res://programs/explorer/icons/%s.png" % name.get_basename().to_lower()
+	task_button.icon = load(icon_path) if ResourceLoader.exists(icon_path) else load("res://programs/explorer/icons/default.png")
 
-	# Optional: Set an icon (replace with your actual icon path)
-	var icon_path = "res://programs/explorer/icons/%s.png" % name.to_lower()
-	if ResourceLoader.exists(icon_path):
-		task_button.icon = load(icon_path)
-	else:
-		task_button.icon = load("res://programs/explorer/icons/default.png")
 	task_button.custom_minimum_size = Vector2(30, 30)
-
-	# will get removed, dont worry abt it
-	task_button.pressed.connect(func():
-		file_window.visible = !file_window.visible
-	)
-
-	file_window.tree_exiting.connect(func():
-		task_button.queue_free()
-	)
-
+	task_button.pressed.connect(func(): file_window.visible = !file_window.visible)
+	file_window.tree_exiting.connect(func(): task_button.queue_free())
 	task_panel.add_child(task_button)
+
 
 var running_tasks: Dictionary = {}
 var next_pid := 1
 
+#adds task to the list, so taskmgr can grab and visualize it later on
 func register_task(name: String, window: Control, usage := Vector2(1.0, 3.0)):
 	if not running_tasks.has(name):
 		var task_info = {
@@ -241,11 +245,11 @@ func register_task(name: String, window: Control, usage := Vector2(1.0, 3.0)):
 	)
 
 
-# TaskMgr calls this
+# taskmgr calls this
 func get_running_tasks() -> Dictionary:
 	return running_tasks.duplicate(true)  # return a deep copy
 
-
+##other ig
 func _make_error_label(msg: String) -> Label:
 	var label = Label.new()
 	label.text = "[Error]\n" + msg

@@ -135,10 +135,10 @@ fit_content = true
 [node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Explorer"]
 clip_contents = true
 layout_mode = 0
-offset_left = 7.935
-offset_top = 391.935
-offset_right = 337.5
-offset_bottom = 563.98
+offset_left = 20.0
+offset_top = 53.0
+offset_right = 349.49
+offset_bottom = 565.0
 script = ExtResource("2_ewdi2")
 
 [node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Explorer/Panel"]

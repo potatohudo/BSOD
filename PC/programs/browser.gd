@@ -26,10 +26,10 @@ var corner_margin := 16
 var original_window_size := Vector2.ZERO
 
 var site_registry = {
-	"home": "res://browser.tscn",
-	"meow.com": "res://sites/s1.tscn",
-	"void.net": "res://sites/s2.tscn",
-	"8chan.org": "res://sites/forum.tscn"
+	"home": "res://PC/browser.tscn",
+	"meow.com": "res://PC/sites/s1.tscn",
+	"void.net": "res://PC/sites/s2.tscn",
+	"8chan.org": "res://PC/sites/forum.tscn"
 }
 
 func _ready():
@@ -80,12 +80,6 @@ func _on_title_bar_input(event):
 			dragging = false
 	elif event is InputEventMouseMotion and dragging:
 		global_position = get_global_mouse_position() - drag_offset
-
-
-
-
-func _on_TE_text_submitted(new_text: String) -> void:
-	load_site(new_text.strip_edges().to_lower())
 
 func load_site(url: String):
 	if not url in site_registry:

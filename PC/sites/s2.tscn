@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://b3yj6668ir81s"]
 
-[ext_resource type="Texture2D" uid="uid://c78j285uy4nr6" path="res://sites/sprites/Starry_Sky_01.jpg" id="1_4ajhx"]
-[ext_resource type="Script" path="res://sites/s_2.gd" id="1_eyq2p"]
-[ext_resource type="Texture2D" uid="uid://mwgwqgesmfr" path="res://sites/sprites/cooltext481640010885802.png" id="2_aj4t8"]
-[ext_resource type="FontFile" uid="uid://dyljrk6tbrmh3" path="res://times.ttf" id="3_ifyba"]
+[ext_resource type="Texture2D" uid="uid://c78j285uy4nr6" path="res://pc/sites/sprites/Starry_Sky_01.jpg" id="1_4ajhx"]
+[ext_resource type="Script" path="res://pc/sites/s_2.gd" id="1_eyq2p"]
+[ext_resource type="Texture2D" uid="uid://mwgwqgesmfr" path="res://pc/sites/sprites/cooltext481640010885802.png" id="2_aj4t8"]
+[ext_resource type="FontFile" uid="uid://bekgh70snxweq" path="res://times.ttf" id="3_ifyba"]
 
 [sub_resource type="Theme" id="Theme_4gu52"]
 default_font = ExtResource("3_ifyba")

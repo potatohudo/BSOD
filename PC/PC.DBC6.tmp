@@ -1,0 +1,230 @@
+[gd_scene load_steps=7 format=3 uid="uid://b5yvv32x8oiti"]
+
+[ext_resource type="Theme" uid="uid://ddqq0cdwdsgep" path="res://PC.tres" id="1_x2ivq"]
+[ext_resource type="Script" path="res://explorrer.gd" id="2_bnjd8"]
+[ext_resource type="Script" path="res://panel.gd" id="2_ewdi2"]
+[ext_resource type="Shader" path="res://jpeg.gdshader" id="2_qqo4g"]
+[ext_resource type="Texture2D" uid="uid://fwyfi5ghxjnn" path="res://programs/icons/tp.png" id="4_ah76q"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_onpad"]
+shader = ExtResource("2_qqo4g")
+shader_parameter/washout_intensity = 0.6
+shader_parameter/blur_amount = 0.813
+shader_parameter/blockiness = 300.0
+shader_parameter/color_steps = 20.935
+shader_parameter/grain_amount = 0.031
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(800, 600)
+render_target_update_mode = 4
+
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Explorer" type="Control" parent="SubViewportContainer/SubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_x2ivq")
+script = ExtResource("2_bnjd8")
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Explorer"]
+layout_mode = 0
+offset_left = 527.0
+offset_top = 22.0
+offset_right = 777.0
+offset_bottom = 54.0
+text = "[filepath]"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Explorer"]
+layout_mode = 0
+offset_left = 39.0
+offset_top = 27.0
+offset_right = 167.0
+offset_bottom = 131.0
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Explorer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 382.0
+offset_top = 53.0
+offset_right = -25.0
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Tree" type="Tree" parent="SubViewportContainer/SubViewport/Explorer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.57
+column_titles_visible = true
+hide_folding = true
+hide_root = true
+scroll_horizontal_enabled = false
+scroll_vertical_enabled = false
+
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Explorer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Explorer"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 534.0
+offset_top = 55.0
+offset_right = -31.0
+offset_bottom = -33.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+text = "[INFO]bhnhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+fit_content = true
+
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Explorer"]
+clip_contents = true
+layout_mode = 0
+offset_left = 20.0
+offset_top = 53.0
+offset_right = 349.49
+offset_bottom = 565.0
+script = ExtResource("2_ewdi2")
+
+[node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Explorer/Panel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 128.585
+offset_right = 306.0
+offset_bottom = 167.585
+wrap_mode = 1
+scroll_past_end_of_file = true
+scroll_fit_content_height = true
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Explorer/Panel"]
+visible = false
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 208.0
+offset_bottom = 96.0
+text = "_______________________"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Explorer/Panel"]
+clip_contents = false
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 300.0
+offset_bottom = 96.0
+scroll_active = false
+scroll_following = true
+
+[node name="TaskPanel" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Explorer"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -27.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Explorer/TaskPanel"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "cmd
+"
+
+[node name="Bar" type="Panel" parent="SubViewportContainer/SubViewport/Explorer/TaskPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Explorer/TaskPanel/Bar"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Loader" type="Control" parent="SubViewportContainer/SubViewport/Explorer"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TPButton" type="Button" parent="SubViewportContainer/SubViewport/Explorer"]
+layout_mode = 0
+offset_left = 758.0
+offset_top = 1.0
+offset_right = 798.0
+offset_bottom = 39.0
+icon = ExtResource("4_ah76q")
+flat = true
+
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport"]
+visible = false
+material = SubResource("ShaderMaterial_onpad")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[connection signal="item_selected" from="SubViewportContainer/SubViewport/Explorer/HBoxContainer/Tree" to="SubViewportContainer/SubViewport/Explorer" method="_on_tree_item_selected"]
+[connection signal="pressed" from="SubViewportContainer/SubViewport/Explorer/TaskPanel/Button" to="SubViewportContainer/SubViewport/Explorer/Panel" method="_on_button_pressed"]
+[connection signal="pressed" from="SubViewportContainer/SubViewport/Explorer/TPButton" to="SubViewportContainer/SubViewport/Explorer" method="_on_tp_button_pressed"]

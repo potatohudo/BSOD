@@ -1,6 +1,5 @@
 extends Control
 
-#I KNOW ITS MISSPELLED FUKC OFF
 #file related stuff
 
 @onready var tree = $HBoxContainer/Tree
@@ -11,19 +10,21 @@ extends Control
 @onready var loader = $"Loader"
 @onready var task_panel = $TaskPanel/Bar/HBoxContainer
 
+
+
 var file_system = {
 	"root": {
 		"HKEY_CLASSES_ROOT": {
-			"txtfile": { "example.txt": "res://programs/explorer/example.txt" },
-			"pngfile": { "image.png": "res://programs/explorer/image.png" }
+			"txtfile": { "example.txt": "res://PC/programs/explorer/example.txt" },
+			"pngfile": { "image.png": "res://PC/programs/explorer/image.png" }
 		},
 		"HKEY_CURRENT_USER": {
 			"Software": {
-				"MyApp": { "config.ini": "res://programs/explorer/config-ini.txt" }
+				"MyApp": { "config.ini": "res://PC/programs/explorer/config-ini.txt" }
 			}
 		},
 		"HKEY_LOCAL_MACHINE": {
-			"System": { "kernel.sys": "res://programs/explorer/kernel-sys.txt" }
+			"System": { "kernel.sys": "res://PC/programs/explorer/kernel-sys.txt" }
 		}
 	}
 }
@@ -31,10 +32,21 @@ var file_system = {
 var current_path = "root"
 
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	DisplayServer.window_set_size(Vector2i(800, 600))
 	populate_tree()
 	item_list.item_selected.connect(_on_item_selected)
 	item_list.item_activated.connect(_on_item_activated)
-	
+
+func _process(_delta):
+
+	if Input.is_action_just_pressed("fs"):
+		match DisplayServer.window_get_mode():
+			DisplayServer.WINDOW_MODE_FULLSCREEN:
+				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.WINDOW_MODE_WINDOWED:
+				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+
 	var system_tasks = [
 		{ "name": "System", "cpu": 1.5, "usage": Vector2(20, 30) },
 		{ "name": "Idle", "cpu": 0.1, "usage": Vector2(0.05, 0.2) },
@@ -106,23 +118,20 @@ func _on_item_activated(index: int):
 		else:
 			open_file_window(file_name, file_data)
 
-func open_file_window(name: String, content, separate: bool = false): #I dont remember what "separate" means. i think if its active, it will not duplicate windows 
-	var file_window_scene = preload("res://window.tscn")
+func open_file_window(name: String, content, separate: bool = false):
+	var file_window_scene = preload("res://PC/window.tscn")
 	var file_window = file_window_scene.instantiate()
 	file_window.set_title(name)
 	file_window.position = Vector2(100, 100)
 	file_window.size = Vector2(600, 400)
 
-	var ext: String = ""
-	if typeof(content) == TYPE_STRING:
-		ext = content.get_extension()
+	var usage := Vector2(1.0, 3.0)  
 
+	if separate and typeof(content) == TYPE_STRING:
+		var ext = content.get_extension()
 
-	var usage := Vector2(1.0, 3.0) #default usage if its not found. i know this variable repeats but i am too lazy to fix it
-
-	if separate and content is String:
 		match ext:
-			"tscn": #if it is a scene. aka actual "program" and not file. i mean its still a file but SSSHUUSHHH
+			"tscn":
 				if ResourceLoader.exists(content):
 					var res = load(content)
 					await get_tree().process_frame
@@ -130,15 +139,14 @@ func open_file_window(name: String, content, separate: bool = false): #I dont re
 						var inst = res.instantiate()
 						file_window.set_content(inst)
 
-						if inst.has_method("get_usage"): #checks for CPU usage parameter. can be seen in the begining of each script
+						if inst.has_method("get_usage"):
 							usage = inst.get_usage()
-						elif inst.has_method("usage") and typeof(inst.get("usage")) == TYPE_VECTOR2:
+						elif inst.has("usage") and typeof(inst.get("usage")) == TYPE_VECTOR2:
 							usage = inst.get("usage")
 						else:
 							push_error("No usage found in scene")
 
 						register_task(name, file_window, usage)
-
 					else:
 						file_window.set_content(_make_error_label("Failed to instantiate scene."))
 				else:
@@ -201,7 +209,20 @@ func open_file_window(name: String, content, separate: bool = false): #I dont re
 			_:
 				file_window.set_content(_make_error_label("Unsupported or unknown file type:\n" + content))
 
-	else: #
+	elif separate and typeof(content) == TYPE_OBJECT and content is PackedScene:
+		var inst = content.instantiate()
+		file_window.set_content(inst)
+
+		if inst.has_method("get_usage"):
+			usage = inst.get_usage()
+		elif inst.has_method("usage") and typeof(inst.get("usage")) == TYPE_VECTOR2:
+			usage = inst.get("usage")
+		else:
+			push_error("No usage found in direct PackedScene")
+
+		register_task(name, file_window, usage)
+
+	else:
 		var label = RichTextLabel.new()
 		label.text = str(content)
 		label.scroll_active = true
@@ -211,14 +232,12 @@ func open_file_window(name: String, content, separate: bool = false): #I dont re
 
 	loader.add_child(file_window)
 	file_window.show()
-	
-##task manager related stuff. 
-	# Task button
-	var task_button = Button.new()
-	var icon_path = "res://programs/explorer/icons/%s.png" % name.get_basename().to_lower()
-	task_button.icon = load(icon_path) if ResourceLoader.exists(icon_path) else load("res://programs/explorer/icons/default.png")
 
+	var task_button = Button.new()
+	var icon_path = "res://PC/programs/icons/%s.png" % name.get_basename().to_lower()
+	task_button.icon = load(icon_path) if ResourceLoader.exists(icon_path) else load("res://PC/programs/icons/default.png")
 	task_button.custom_minimum_size = Vector2(30, 30)
+
 	task_button.pressed.connect(func(): file_window.visible = !file_window.visible)
 	file_window.tree_exiting.connect(func(): task_button.queue_free())
 	task_panel.add_child(task_button)
@@ -254,3 +273,22 @@ func _make_error_label(msg: String) -> Label:
 	var label = Label.new()
 	label.text = "[Error]\n" + msg
 	return label
+
+#teleporter button
+func _on_tp_button_pressed() -> void:
+
+	var tp_scene = preload("res://PC/teleporter.tscn")
+	var instance = tp_scene.instantiate()
+	var file_window_scene = preload("res://PC/window.tscn")
+	var file_window = file_window_scene.instantiate()
+
+	file_window.set_title("TELEPORT?")
+	file_window.position = Vector2(100, 100)
+	file_window.size = Vector2(550, 220)
+	file_window.set_content(instance)
+
+
+	loader.add_child(file_window)
+	file_window.show()
+	file_window.resizable=false
+	register_task(" ", file_window, Vector2(0,-1))

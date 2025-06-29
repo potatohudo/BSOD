@@ -1,0 +1,80 @@
+[gd_scene load_steps=6 format=3 uid="uid://56p8vw8s3lo3"]
+
+[ext_resource type="Script" path="res://sites/s_1.gd" id="1_1fl3d"]
+[ext_resource type="FontFile" uid="uid://dyljrk6tbrmh3" path="res://times.ttf" id="1_xu8lg"]
+[ext_resource type="Texture2D" uid="uid://b4ghg53ufrjuf" path="res://sites/sprites/Screenshot 2025-04-03 091911.png" id="2_om8xi"]
+
+[sub_resource type="Theme" id="Theme_ko7cr"]
+
+[sub_resource type="Theme" id="Theme_pr7nq"]
+default_font = ExtResource("1_xu8lg")
+
+[node name="Site" type="Control"]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -2.0
+offset_bottom = 708.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_1fl3d")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = SubResource("Theme_ko7cr")
+texture = ExtResource("2_om8xi")
+stretch_mode = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_direction = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 88.0
+offset_top = 75.0
+offset_right = -76.0
+offset_bottom = -57.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+theme = SubResource("Theme_pr7nq")
+text = "mmeow meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow 
+meow 
+meow 
+meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meowow meow meow meow
+w meow meow meow meow meow meow meow meow meow 
+meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow ow eow me
+meow meow mmeow memeow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow eow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow vvv
+"
+fit_content = true
+scroll_active = false
+selection_enabled = true
+text_direction = 1
+structured_text_bidi_override = 3

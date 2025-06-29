@@ -32,7 +32,7 @@ func handle_command(command: String, cmd_output: RichTextLabel):
 
 	# Handle generic `open [program]`
 	if parts.size() == 2 and parts[0].to_lower() == "open":
-		var level_path = "res://programs/" + parts[1] + ".tscn"
+		var level_path = "res://PC/programs/" + parts[1] + ".tscn"
 		if ResourceLoader.exists(level_path):
 			cmd_output.append_text("\nLoading %s..." % parts[1])
 			$"../".open_file_window(parts[1], level_path, true)

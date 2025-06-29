@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://56p8vw8s3lo3"]
 
-[ext_resource type="Script" path="res://sites/s_1.gd" id="1_1fl3d"]
-[ext_resource type="FontFile" uid="uid://dyljrk6tbrmh3" path="res://times.ttf" id="1_xu8lg"]
-[ext_resource type="Texture2D" uid="uid://b4ghg53ufrjuf" path="res://sites/sprites/Screenshot 2025-04-03 091911.png" id="2_om8xi"]
+[ext_resource type="Script" path="res://pc/sites/s_1.gd" id="1_1fl3d"]
+[ext_resource type="FontFile" uid="uid://bekgh70snxweq" path="res://times.ttf" id="1_xu8lg"]
+[ext_resource type="Texture2D" uid="uid://b4ghg53ufrjuf" path="res://pc/sites/sprites/Screenshot 2025-04-03 091911.png" id="2_om8xi"]
 
 [sub_resource type="Theme" id="Theme_ko7cr"]
 

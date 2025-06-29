@@ -1,0 +1,100 @@
+[gd_resource type="Theme" load_steps=19 format=3 uid="uid://ddqq0cdwdsgep"]
+
+[ext_resource type="FontFile" uid="uid://bh2akjkru0pi7" path="res://micross.ttf" id="1_iq1iu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vt6xh"]
+bg_color = Color(0, 0, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0shwk"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lh0by"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5pl0s"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yqakd"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vbefr"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tnb52"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t2txd"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7df5l"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxuui"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_db8vq"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vbeo5"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mq53k"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q2sus"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j7opv"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dhcsq"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gv83g"]
+bg_color = Color(0, 0, 0, 1)
+border_width_top = 1
+border_width_right = 3
+border_width_bottom = 2
+border_color = Color(0.295845, 0.296223, 0.330636, 1)
+border_blend = true
+corner_detail = 1
+expand_margin_left = 10.0
+expand_margin_top = 30.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+shadow_color = Color(0.917647, 0.917647, 0.917647, 0.117647)
+shadow_size = 10
+anti_aliasing = false
+anti_aliasing_size = 5.013
+
+[resource]
+default_font = ExtResource("1_iq1iu")
+Button/styles/focus = SubResource("StyleBoxFlat_vt6xh")
+Button/styles/normal = SubResource("StyleBoxFlat_0shwk")
+ItemList/colors/font_hovered_color = Color(1, 1, 1, 1)
+ItemList/colors/font_selected_color = Color(0.188235, 0, 1, 1)
+ItemList/styles/focus = SubResource("StyleBoxFlat_lh0by")
+ItemList/styles/hovered = SubResource("StyleBoxFlat_5pl0s")
+ItemList/styles/panel = SubResource("StyleBoxFlat_yqakd")
+ItemList/styles/selected = SubResource("StyleBoxFlat_vbefr")
+ItemList/styles/selected_focus = SubResource("StyleBoxFlat_tnb52")
+Panel/styles/panel = SubResource("StyleBoxFlat_t2txd")
+TextEdit/styles/focus = SubResource("StyleBoxFlat_7df5l")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_xxuui")
+Tree/colors/children_hl_line_color = Color(0, 0, 0, 1)
+Tree/colors/font_selected_color = Color(0, 0, 1, 1)
+Tree/colors/parent_hl_line_color = Color(0, 0, 0, 1)
+Tree/colors/relationship_line_color = Color(0, 0, 0, 1)
+Tree/constants/children_hl_line_width = 0
+Tree/constants/draw_guides = 0
+Tree/constants/draw_relationship_lines = 0
+Tree/constants/inner_item_margin_left = 5
+Tree/styles/button_pressed = SubResource("StyleBoxFlat_db8vq")
+Tree/styles/custom_button_pressed = SubResource("StyleBoxFlat_vbeo5")
+Tree/styles/focus = SubResource("StyleBoxFlat_mq53k")
+Tree/styles/panel = SubResource("StyleBoxFlat_q2sus")
+Tree/styles/selected = SubResource("StyleBoxFlat_j7opv")
+Tree/styles/selected_focus = SubResource("StyleBoxFlat_dhcsq")
+Window/colors/title_color = Color(0, 0, 1, 1)
+Window/fonts/title_font = ExtResource("1_iq1iu")
+Window/styles/embedded_border = SubResource("StyleBoxFlat_gv83g")

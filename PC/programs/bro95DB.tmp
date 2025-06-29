@@ -1,0 +1,68 @@
+[gd_scene load_steps=2 format=3 uid="uid://cc753xbsmx2hg"]
+
+[ext_resource type="Script" path="res://programs/browser.gd" id="1_fjn82"]
+
+[node name="Browser" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_fjn82")
+
+[node name="ScrollContainer" type="MarginContainer" parent="."]
+layout_direction = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 30.0
+offset_right = -1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Loader" type="AspectRatioContainer" parent="ScrollContainer"]
+clip_contents = true
+layout_direction = 2
+layout_mode = 2
+ratio = 0.001
+stretch_mode = 3
+alignment_horizontal = 0
+alignment_vertical = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="VScrollBar" type="VScrollBar" parent="ScrollContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 100.0
+offset_right = 700.0
+offset_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel2" type="Panel" parent="Control"]
+layout_mode = 0
+offset_left = -96.0
+offset_top = 1.0
+offset_right = 635.0
+offset_bottom = 28.0
+
+[node name="TextEdit" type="TextEdit" parent="Control/Panel2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+wrap_mode = 1
+scroll_past_end_of_file = true
+metadata/_edit_lock_ = true

@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0bseh68kxw6b"]
+
+[ext_resource type="Script" path="res://pc/programs/coordinator.gd" id="1_ege5g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f8r0m"]
+bg_color = Color(0.767776, 0.918587, 0.989917, 1)
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ege5g")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f8r0m")
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.033
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 341.0
+offset_top = 2.2
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 0
+alignment_horizontal = 2
+alignment_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="AspectRatioContainer"]
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+text = "info infor ifpr
+selected coords: you mom"
+fit_content = true

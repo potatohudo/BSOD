@@ -119,7 +119,7 @@ func _on_item_activated(index: int):
 			open_file_window(file_name, file_data)
 
 func open_file_window(name: String, content, separate: bool = false):
-	var file_window_scene = preload("res://PC/window.tscn")
+	var file_window_scene = preload("res://pc/window.tscn")
 	var file_window = file_window_scene.instantiate()
 	file_window.set_title(name)
 	file_window.position = Vector2(100, 100)
@@ -234,8 +234,8 @@ func open_file_window(name: String, content, separate: bool = false):
 	file_window.show()
 
 	var task_button = Button.new()
-	var icon_path = "res://PC/programs/icons/%s.png" % name.get_basename().to_lower()
-	task_button.icon = load(icon_path) if ResourceLoader.exists(icon_path) else load("res://PC/programs/icons/default.png")
+	var icon_path = "res://pc/programs/icons/%s.png" % name.get_basename().to_lower()
+	task_button.icon = load(icon_path) if ResourceLoader.exists(icon_path) else load("res://pc/programs/icons/default.png")
 	task_button.custom_minimum_size = Vector2(30, 30)
 
 	task_button.pressed.connect(func(): file_window.visible = !file_window.visible)

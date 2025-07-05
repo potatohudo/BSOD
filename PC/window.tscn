@@ -1,10 +1,10 @@
 [gd_scene load_steps=7 format=3 uid="uid://bajsulg5vl3ed"]
 
-[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_uuvh2"]
-[ext_resource type="Script" path="res://pc/window.gd" id="2_sswg3"]
-[ext_resource type="Texture2D" uid="uid://o4u4tgtyp7eb" path="res://pc/programs/window_frame.png" id="3_s2rqk"]
-[ext_resource type="Texture2D" uid="uid://bjj877g85is2o" path="res://pc/programs/hide.png" id="3_uwjk0"]
-[ext_resource type="Texture2D" uid="uid://fvb8gatdr1p1" path="res://pc/programs/close.png" id="4_lgfkn"]
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://PC/PC.tres" id="1_uuvh2"]
+[ext_resource type="Script" path="res://PC/window.gd" id="2_sswg3"]
+[ext_resource type="Texture2D" uid="uid://o4u4tgtyp7eb" path="res://PC/programs/window_frame.png" id="3_s2rqk"]
+[ext_resource type="Texture2D" uid="uid://bjj877g85is2o" path="res://PC/programs/hide.png" id="3_uwjk0"]
+[ext_resource type="Texture2D" uid="uid://fvb8gatdr1p1" path="res://PC/programs/close.png" id="4_lgfkn"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ix167"]
 

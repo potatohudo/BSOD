@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://blwdhr35s84cj"]
 
-[ext_resource type="Script" path="res://pc/programs/coordinator.gd" id="1_ege5g"]
+[ext_resource type="Script" path="res://PC/programs/coordinator.gd" id="1_ege5g"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f8r0m"]
 bg_color = Color(0.767776, 0.918587, 0.989917, 1)

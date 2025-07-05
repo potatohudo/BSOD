@@ -20,5 +20,5 @@ func _return():
 	$BS.visible = true
 	bsod_active = false  
 	await get_tree().create_timer(1).timeout  
-	get_tree().change_scene_to_file("res://PC/PC.tscn")  
+	get_tree().change_scene_to_file("res://pc/pc.tscn")  
 #yeah there will be a different gameover screen

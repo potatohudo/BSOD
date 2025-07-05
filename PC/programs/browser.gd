@@ -26,10 +26,10 @@ var corner_margin := 16
 var original_window_size := Vector2.ZERO
 
 var site_registry = {
-	"home": "res://PC/browser.tscn",
-	"meow.com": "res://PC/sites/s1.tscn",
-	"void.net": "res://PC/sites/s2.tscn",
-	"8chan.org": "res://PC/sites/forum.tscn"
+	"home": "res://pc/browser.tscn",
+	"meow.com": "res://pc/sites/s1.tscn",
+	"void.net": "res://pc/sites/s2.tscn",
+	"8chan.org": "res://pc/sites/forum.tscn"
 }
 
 func _ready():

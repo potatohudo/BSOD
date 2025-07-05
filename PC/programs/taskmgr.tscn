@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://5h42w7yjofcs"]
 
-[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_4ltdi"]
-[ext_resource type="Script" path="res://pc/programs/taskmgr.gd" id="1_hkl8i"]
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://PC/PC.tres" id="1_4ltdi"]
+[ext_resource type="Script" path="res://PC/programs/taskmgr.gd" id="1_hkl8i"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s8bg1"]
 bg_color = Color(0.218218, 0.283941, 0.636469, 1)

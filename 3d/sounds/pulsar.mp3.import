@@ -3,12 +3,12 @@
 importer="mp3"
 type="AudioStreamMP3"
 uid="uid://b7rslx60p4jwr"
-path="res://.godot/imported/pulsar.mp3-4cbd4262069abfadc9e048b491cb373d.mp3str"
+path="res://.godot/imported/pulsar.mp3-1746314e42ad94de3f337be8eb1c51a2.mp3str"
 
 [deps]
 
-source_file="res://sounds/pulsar.mp3"
-dest_files=["res://.godot/imported/pulsar.mp3-4cbd4262069abfadc9e048b491cb373d.mp3str"]
+source_file="res://3d/sounds/pulsar.mp3"
+dest_files=["res://.godot/imported/pulsar.mp3-1746314e42ad94de3f337be8eb1c51a2.mp3str"]
 
 [params]
 

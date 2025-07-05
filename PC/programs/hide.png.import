@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bg308m82iw461"
-path="res://.godot/imported/hide.png-b38190bd4133411b290389ce7640c2a2.ctex"
+uid="uid://bjj877g85is2o"
+path="res://.godot/imported/hide.png-c5544db42d32de6a417aba0f5897779c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://programs/hide.png"
-dest_files=["res://.godot/imported/hide.png-b38190bd4133411b290389ce7640c2a2.ctex"]
+source_file="res://pc/programs/hide.png"
+dest_files=["res://.godot/imported/hide.png-c5544db42d32de6a417aba0f5897779c.ctex"]
 
 [params]
 

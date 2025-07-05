@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bax0rjj27kwpw"
-path="res://.godot/imported/fountain.blend-6f5562316542be1e408df17c0861e445.scn"
+path="res://.godot/imported/fountain.blend-999c043d580026d1fac726fee96473d3.scn"
 
 [deps]
 
-source_file="res://models/fountain.blend"
-dest_files=["res://.godot/imported/fountain.blend-6f5562316542be1e408df17c0861e445.scn"]
+source_file="res://3d/models/fountain.blend"
+dest_files=["res://.godot/imported/fountain.blend-999c043d580026d1fac726fee96473d3.scn"]
 
 [params]
 

@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://sacfddgutjrt"
-path="res://.godot/imported/Track1_kangerscreammp3.wav-4e42cbdba2f0cd00a8c75e61ba6f22d0.sample"
+path="res://.godot/imported/Track1_kangerscreammp3.wav-6b460b73bbf296af0e33c5316bf815e2.sample"
 
 [deps]
 
-source_file="res://sounds/Track1_kangerscreammp3.wav"
-dest_files=["res://.godot/imported/Track1_kangerscreammp3.wav-4e42cbdba2f0cd00a8c75e61ba6f22d0.sample"]
+source_file="res://3d/sounds/Track1_kangerscreammp3.wav"
+dest_files=["res://.godot/imported/Track1_kangerscreammp3.wav-6b460b73bbf296af0e33c5316bf815e2.sample"]
 
 [params]
 

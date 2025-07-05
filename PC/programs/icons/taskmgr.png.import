@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ly72yrf2wumu"
-path="res://.godot/imported/taskmgr.png-41a9918179b2504d8c67bc74428debf7.ctex"
+uid="uid://ck23c7m80mhs0"
+path="res://.godot/imported/taskmgr.png-eed52b897e654ab58421ba558a2baedf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://programs/icons/taskmgr.png"
-dest_files=["res://.godot/imported/taskmgr.png-41a9918179b2504d8c67bc74428debf7.ctex"]
+source_file="res://pc/programs/icons/taskmgr.png"
+dest_files=["res://.godot/imported/taskmgr.png-eed52b897e654ab58421ba558a2baedf.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dhcqohl0ipv3h"
-path="res://.godot/imported/unmountable-boot-volume.png-75e2f7963743723c4afe95a99cb5bf18.ctex"
+path="res://.godot/imported/unmountable-boot-volume.png-fc75b29fd556dd1b654b864d1ea70fc6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unmountable-boot-volume.png"
-dest_files=["res://.godot/imported/unmountable-boot-volume.png-75e2f7963743723c4afe95a99cb5bf18.ctex"]
+source_file="res://3d/unmountable-boot-volume.png"
+dest_files=["res://.godot/imported/unmountable-boot-volume.png-fc75b29fd556dd1b654b864d1ea70fc6.ctex"]
 
 [params]
 

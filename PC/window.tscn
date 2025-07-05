@@ -1,10 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://deard2qr01ge8"]
+[gd_scene load_steps=7 format=3 uid="uid://bajsulg5vl3ed"]
 
-[ext_resource type="Theme" uid="uid://ddqq0cdwdsgep" path="res://pc/PC.tres" id="1_uuvh2"]
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_uuvh2"]
 [ext_resource type="Script" path="res://pc/window.gd" id="2_sswg3"]
-[ext_resource type="Texture2D" uid="uid://bik82tlmw431r" path="res://pc/programs/window_frame.png" id="3_s2rqk"]
-[ext_resource type="Texture2D" uid="uid://bg308m82iw461" path="res://pc/programs/hide.png" id="3_uwjk0"]
-[ext_resource type="Texture2D" uid="uid://b2dkwij6apbjj" path="res://pc/programs/close.png" id="4_lgfkn"]
+[ext_resource type="Texture2D" uid="uid://o4u4tgtyp7eb" path="res://pc/programs/window_frame.png" id="3_s2rqk"]
+[ext_resource type="Texture2D" uid="uid://bjj877g85is2o" path="res://pc/programs/hide.png" id="3_uwjk0"]
+[ext_resource type="Texture2D" uid="uid://fvb8gatdr1p1" path="res://pc/programs/close.png" id="4_lgfkn"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ix167"]
 

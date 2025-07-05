@@ -3,12 +3,12 @@
 importer="mp3"
 type="AudioStreamMP3"
 uid="uid://do3n0f8mn0bwp"
-path="res://.godot/imported/walking-on-broken-glass-211815.mp3-57719a7471dec8f882306fb2d843324a.mp3str"
+path="res://.godot/imported/walking-on-broken-glass-211815.mp3-ac0260a265437a3ccc62c9e10949fbda.mp3str"
 
 [deps]
 
-source_file="res://sounds/walking-on-broken-glass-211815.mp3"
-dest_files=["res://.godot/imported/walking-on-broken-glass-211815.mp3-57719a7471dec8f882306fb2d843324a.mp3str"]
+source_file="res://3d/sounds/walking-on-broken-glass-211815.mp3"
+dest_files=["res://.godot/imported/walking-on-broken-glass-211815.mp3-ac0260a265437a3ccc62c9e10949fbda.mp3str"]
 
 [params]
 

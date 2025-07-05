@@ -20,7 +20,7 @@ var subviewport_container
 func _ready() -> void:
 
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 	
 	pause_menu = $PauseMenu
 	command_input = $PauseMenu/TextEdit

@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://d0bseh68kxw6b"]
+[gd_scene load_steps=3 format=3 uid="uid://blwdhr35s84cj"]
 
 [ext_resource type="Script" path="res://pc/programs/coordinator.gd" id="1_ege5g"]
 

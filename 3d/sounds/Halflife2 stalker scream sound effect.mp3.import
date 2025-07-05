@@ -3,12 +3,12 @@
 importer="mp3"
 type="AudioStreamMP3"
 uid="uid://dgsao6vpwncqw"
-path="res://.godot/imported/Halflife2 stalker scream sound effect.mp3-6ccbcc7ecaf010d72da38b9cbde32873.mp3str"
+path="res://.godot/imported/Halflife2 stalker scream sound effect.mp3-02450b693743fb08a204aa710f5b2c55.mp3str"
 
 [deps]
 
-source_file="res://sounds/Halflife2 stalker scream sound effect.mp3"
-dest_files=["res://.godot/imported/Halflife2 stalker scream sound effect.mp3-6ccbcc7ecaf010d72da38b9cbde32873.mp3str"]
+source_file="res://3d/sounds/Halflife2 stalker scream sound effect.mp3"
+dest_files=["res://.godot/imported/Halflife2 stalker scream sound effect.mp3-02450b693743fb08a204aa710f5b2c55.mp3str"]
 
 [params]
 

@@ -1,10 +1,10 @@
 [gd_scene load_steps=7 format=3 uid="uid://b5yvv32x8oiti"]
 
-[ext_resource type="Theme" uid="uid://ddqq0cdwdsgep" path="res://pc/PC.tres" id="1_x2ivq"]
-[ext_resource type="Script" path="res://pc/explorrer.gd" id="2_bnjd8"]
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_x2ivq"]
+[ext_resource type="Script" path="res://pc/explorer.gd" id="2_bnjd8"]
 [ext_resource type="Script" path="res://pc/panel.gd" id="2_ewdi2"]
 [ext_resource type="Shader" path="res://pc/jpeg.gdshader" id="2_qqo4g"]
-[ext_resource type="Texture2D" uid="uid://fwyfi5ghxjnn" path="res://pc/programs/icons/tp.png" id="4_054ed"]
+[ext_resource type="Texture2D" uid="uid://dbtnd6mcdirw0" path="res://pc/programs/icons/tp.png" id="4_054ed"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_onpad"]
 shader = ExtResource("2_qqo4g")

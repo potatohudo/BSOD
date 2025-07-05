@@ -10,10 +10,9 @@ config_version=5
 
 [application]
 
-config/name="BSOD"
-run/main_scene="res://pc/PC.tscn"
+config/name="BSOD(recode)"
+run/main_scene="res://PC/pc.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-boot_splash/bg_color=Color(0, 0, 0, 1)
 config/icon="res://icon.svg"
 
 [autoload]
@@ -24,13 +23,6 @@ Global="*res://global.gd"
 
 window/size/viewport_width=800
 window/size/viewport_height=600
-window/stretch/mode="viewport"
-
-[importer_defaults]
-
-animation_library={
-"animation/fps": 30.0
-}
 
 [input]
 

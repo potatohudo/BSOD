@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://btiqpmm1vxm67"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7xgc6"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ycss1"]
+
+[node name="Node3D" type="Node3D"]
+process_mode = 3
+
+[node name="floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
+shape = SubResource("BoxShape3D_7xgc6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor"]
+transform = Transform3D(14.3873, 0, 0, 0, 1, 0, 0, 0, 20.0074, 0, 0, 0)
+mesh = SubResource("BoxMesh_ycss1")
+
+[node name="PlayerSpawn" type="Marker3D" parent="floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)

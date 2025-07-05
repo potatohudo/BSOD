@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://28a225q8aax5"
-path="res://.godot/imported/attack_hands.png-1527d31c127c225d92fa3987b69aed5e.ctex"
+uid="uid://7b5l0umkgmbp"
+path="res://.godot/imported/attack_hands.png-b81566fb67d0347fed46e082207a558f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://attack_hands.png"
-dest_files=["res://.godot/imported/attack_hands.png-1527d31c127c225d92fa3987b69aed5e.ctex"]
+source_file="res://3d/attack_hands.png"
+dest_files=["res://.godot/imported/attack_hands.png-b81566fb67d0347fed46e082207a558f.ctex"]
 
 [params]
 

@@ -36,6 +36,6 @@ func tp(coordinates: String) -> void:
 
 		# Then go to Main
 		DisplayServer.window_set_size(Vector2i(1280, 800))
-		get_tree().change_scene_to_file("res://3d/Main.tscn")
+		get_tree().change_scene_to_file("res://3d/main.tscn")
 	else:
 		print("Invalid coordinates: '%s'" % coordinates)

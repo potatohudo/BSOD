@@ -15,16 +15,16 @@ extends Control
 var file_system = {
 	"root": {
 		"HKEY_CLASSES_ROOT": {
-			"txtfile": { "example.txt": "res://PC/programs/explorer/example.txt" },
-			"pngfile": { "image.png": "res://PC/programs/explorer/image.png" }
+			"txtfile": { "example.txt": "res://pc/programs/explorer/example.txt" },
+			"pngfile": { "image.png": "res://pc/programs/explorer/image.png" }
 		},
 		"HKEY_CURRENT_USER": {
 			"Software": {
-				"MyApp": { "config.ini": "res://PC/programs/explorer/config-ini.txt" }
+				"MyApp": { "config.ini": "res://pc/programs/explorer/config-ini.txt" }
 			}
 		},
 		"HKEY_LOCAL_MACHINE": {
-			"System": { "kernel.sys": "res://PC/programs/explorer/kernel-sys.txt" }
+			"System": { "kernel.sys": "res://pc/programs/explorer/kernel-sys.txt" }
 		}
 	}
 }
@@ -277,9 +277,9 @@ func _make_error_label(msg: String) -> Label:
 #teleporter button
 func _on_tp_button_pressed() -> void:
 
-	var tp_scene = preload("res://PC/teleporter.tscn")
+	var tp_scene = preload("res://pc/teleporter.tscn")
 	var instance = tp_scene.instantiate()
-	var file_window_scene = preload("res://PC/window.tscn")
+	var file_window_scene = preload("res://pc/window.tscn")
 	var file_window = file_window_scene.instantiate()
 
 	file_window.set_title("TELEPORT?")

@@ -12,6 +12,7 @@ extends Control
 
 
 
+
 var file_system = {
 	"root": {
 		"HKEY_CLASSES_ROOT": {

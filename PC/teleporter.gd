@@ -1,16 +1,15 @@
 extends Control
 
 @onready var textedit = $AspectRatioContainer/TextEdit
-var usage: Vector2 = Vector2(0, -2)
 
-# Dictionary of coordinates and their level names
+
 var level_lookup: Dictionary = {
 	"12.42.0": "track",
 	"00.00.1": "level_test",
 	"11.11.1": "ARCHIVE",
 	"00.00.2": "level_test_2"
 }
-
+var usage: Vector2 = Vector2(0, -2)
 func get_usage() -> Vector2:
 	return usage
 
@@ -30,12 +29,16 @@ func tp(coordinates: String) -> void:
 		var level_name = level_lookup[coordinates]
 		var level_path = "res://3d/levels/%s.tscn" % level_name
 		print("Teleporting to: ", level_path)
-
-		# Save it for the next scene
+		await get_tree().create_timer(0.5).timeout
+		
 		Global.target_level_path = level_path
+		Global.just_teleported = true
+		get_tree().get_root().set_transparent_background(true)
 
-		# Then go to Main
-		DisplayServer.window_set_size(Vector2i(1280, 800))
+		await get_tree().create_timer(2.0).timeout
+		DisplayServer.window_set_size(Vector2i(1, 1))
+		await get_tree().create_timer(0.5).timeout
+
 		get_tree().change_scene_to_file("res://3d/main.tscn")
 	else:
 		print("Invalid coordinates: '%s'" % coordinates)

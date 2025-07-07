@@ -50,7 +50,7 @@ func handle_command(command: String, cmd_output: RichTextLabel):
 			
 
 		_:
-			cmd_output.append_text("\n>learn how to type dumbass")
+			cmd_output.append_text("\n>learn how to type")
 			
 func _on_button_pressed() -> void:
 	if console.visible:

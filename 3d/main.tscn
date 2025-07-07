@@ -1,7 +1,7 @@
 [gd_scene load_steps=54 format=3 uid="uid://fk0ie8pjbpln"]
 
-[ext_resource type="Script" path="res://3d/main.gd" id="1_36q8j"]
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
+[ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
 [ext_resource type="Script" path="res://3d/camera_3d.gd" id="2_e55b0"]
 [ext_resource type="Shader" path="res://3d/glitch.gdshader" id="3_ktawk"]
 [ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
@@ -22,10 +22,10 @@ size = Vector3(10, 1, 10)
 
 [sub_resource type="BoxMesh" id="BoxMesh_xu3bg"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_5kxqv"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_mk1hg"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_t308c"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_15u6t"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sv75o"]
@@ -33,21 +33,22 @@ resource_local_to_scene = true
 shader = ExtResource("7_6cqs6")
 shader_parameter/strength = 0.0
 shader_parameter/triggered = true
-shader_parameter/screen_texture = SubResource("ViewportTexture_t308c")
-shader_parameter/motion_vectors = SubResource("ViewportTexture_5kxqv")
+shader_parameter/screen_texture = SubResource("ViewportTexture_15u6t")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_mk1hg")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ih1cd"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_i001q"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_84lxs"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k5hur"]
 resource_local_to_scene = true
 shader = ExtResource("7_y4vo8")
+shader_parameter/datamosh_strength = 0.0
 shader_parameter/strength = 0.0
 shader_parameter/block_size = 1.0
-shader_parameter/motion_vectors = SubResource("ViewportTexture_i001q")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_84lxs")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_nijhe"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
@@ -244,7 +245,7 @@ shader_parameter/glitch_button = 0
 
 [node name="Main" type="Node"]
 process_mode = 1
-script = ExtResource("1_36q8j")
+script = ExtResource("1_h31h8")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 process_mode = 3
@@ -254,7 +255,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 6
+size_flags_vertical = 3
 stretch = true
 stretch_shrink = 3
 
@@ -262,7 +264,7 @@ stretch_shrink = 3
 process_mode = 3
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
-size = Vector2i(266, 200)
+size = Vector2i(400, 266)
 render_target_update_mode = 4
 
 [node name="Node3D" type="Node3D" parent="SubViewportContainer/SubViewport"]
@@ -353,10 +355,13 @@ shadow_enabled = true
 
 [node name="PauseMenu" type="Panel" parent="."]
 process_mode = 3
-offset_left = 66.0
-offset_top = 36.0
-offset_right = 766.0
-offset_bottom = 636.0
+anchors_preset = -1
+anchor_left = 0.08
+anchor_top = 0.08
+anchor_right = 0.08
+anchor_bottom = 0.091
+offset_right = 700.0
+offset_bottom = 600.0
 theme = SubResource("Theme_jpke2")
 script = ExtResource("5_uhvg7")
 metadata/_edit_use_anchors_ = true

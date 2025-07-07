@@ -1,13 +1,13 @@
 shader_type canvas_item;
 
-uniform sampler2D screen_texture;   // Main viewport texture (set via TextureRect)
-uniform sampler2D motion_vectors;   // Motion vector texture (assign a noise texture for testing)
-uniform float strength : hint_range(0.0, 1.0) = 0.5;  // How strongly pixels are displaced
-uniform bool triggered = false;     // When true, apply the datamosh effect
+uniform sampler2D screen_texture;
+uniform sampler2D motion_vectors;
+uniform float strength : hint_range(0.0, 1.0) = 0.5;
+uniform bool triggered = false;
 
 void fragment() {
     vec2 uv = UV;
-    // Get the base color from the main viewport texture.
+
     vec4 base_color = texture(screen_texture, uv);
 
     if (triggered) {

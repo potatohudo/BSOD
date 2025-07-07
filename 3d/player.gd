@@ -49,6 +49,7 @@ var momentum = Vector3.ZERO
 @onready var health_bar: Slider = get_node("/root/Main/health")  
 @onready var freaky = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky") 
 @onready var freaky2 = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky/Freaky2")
+@onready var dm = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky/Datamoshing")
 @onready var LH = get_node("/root/Main/SubViewportContainer/SubViewport/LowHealth")
 @onready var hurt_sound_0: AudioStreamPlayer = get_node("/root/Main/Hurt0")
 @onready var hurt_sound_1: AudioStreamPlayer = get_node("/root/Main/Hurt1")
@@ -285,19 +286,31 @@ func apply_damage(amount: int):
 	health_bar.value = health
 	
 #shader logic
-	var glitch_intensity = clamp(amount / 50.0, 0.1, 1.0)
-	var freaky_intensity = clamp (amount / 50.0, 0.01, 1.0)
+	var freaky_intensity = clamp(amount / 50.0, 0.1, 1.0)
+	var freaky2_intensity = clamp(amount / 50.0, 0.01, 1.0)
+	var dm_intensity = clamp(amount / 50.0, 0.1, 1.0)
 
 	freaky.visible = true
 	freaky2.visible = true
+	dm.visible = true
 
-	freaky.material.set_shader_parameter("strength", glitch_intensity)
-	freaky2.material.set_shader_parameter("strength", freaky_intensity)
+	freaky.material.set_shader_parameter("strength", freaky_intensity)
+	freaky2.material.set_shader_parameter("strength", freaky2_intensity)
+	dm.material.set_shader_parameter("strength", dm_intensity)
 
-	var tween = get_tree().create_tween()
+	var tween = get_tree().create_tween().set_parallel(true)
+
 	tween.tween_property(freaky.material, "shader_parameter/strength", 0.0, 2.0).set_trans(Tween.TRANS_SINE)
-	tween.finished.connect(func(): freaky.visible = false)
-	tween.set_parallel(true)
+	tween.tween_property(freaky2.material, "shader_parameter/strength", 0.0, 2.0).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(dm.material, "shader_parameter/strength", 0.0, 2.0).set_trans(Tween.TRANS_SINE)
+
+	tween.finished.connect(func():
+		freaky.visible = false
+		freaky2.visible = false
+		dm.visible = false
+	)
+
+
 
 func die():
 	is_game_over = true  

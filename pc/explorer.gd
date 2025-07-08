@@ -34,7 +34,6 @@ var current_path = "root"
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	DisplayServer.window_set_size(Vector2i(800, 600))
 	populate_tree()
 	item_list.item_selected.connect(_on_item_selected)
 	item_list.item_activated.connect(_on_item_activated)
@@ -120,11 +119,23 @@ func _on_item_activated(index: int):
 			open_file_window(file_name, file_data)
 
 func open_file_window(name: String, content, separate: bool = false):
+	await get_tree().create_timer(0.1).timeout
 	var file_window_scene = preload("res://pc/window.tscn")
 	var file_window = file_window_scene.instantiate()
 	file_window.set_title(name)
 	file_window.position = Vector2(100, 100)
 	file_window.size = Vector2(600, 400)
+	file_window.resizable = false
+
+	file_window.scale = Vector2(0.9, 0.9)
+	file_window.modulate.a = 0.0
+
+	loader.add_child(file_window)
+	file_window.show()
+
+	#file_window.play_open_animation()
+
+	await get_tree().create_timer(0.2).timeout
 
 	var usage := Vector2(1.0, 3.0)  
 

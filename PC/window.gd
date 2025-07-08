@@ -7,6 +7,8 @@ extends Control
 @onready var hide_button = $NPR/TitleBar/Hide
 @onready var resize_handle = $NPR/ResizeHandle
 
+
+
 var dragging := false
 var drag_offset := Vector2.ZERO
 
@@ -36,6 +38,9 @@ func _ready():
 		elif event is InputEventMouseMotion and dragging:
 			global_position = get_global_mouse_position() - drag_offset
 	)
+	var scale = Vector2(0.9, 0.9)
+	modulate.a = 0.0
+	play_open_animation()
 
 
 
@@ -128,3 +133,11 @@ func set_content(node: Control):
 func _gui_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		get_viewport().set_input_as_handled()
+
+func play_open_animation():
+	scale = Vector2(0.9, 0.9)
+	modulate.a = 0.0
+
+	var tween := create_tween()
+	tween.tween_property(self, "modulate:a", 1.0, 0.3)
+	

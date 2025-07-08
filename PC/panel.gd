@@ -52,10 +52,3 @@ func handle_command(command: String, cmd_output: RichTextLabel):
 		_:
 			cmd_output.append_text("\n>learn how to type")
 			
-func _on_button_pressed() -> void:
-	if console.visible:
-		console.hide()
-	else:
-		console.visible = true
-		console.position.y = get_viewport().get_visible_rect().size.y - 200
-		te.grab_focus()

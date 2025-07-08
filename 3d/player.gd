@@ -147,8 +147,8 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	if health <= 0 or global_transform.origin.y < -20:
-		die()
+	#if health <= 0 or global_transform.origin.y < -20:
+		#die()
 
 	update_camera()
 	update_dash_sprite()

@@ -12,10 +12,10 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cdfbd"]
 bg_color = Color(0, 0, 0, 1)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_5kxqv"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_k8gn4"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_t308c"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_saqkg"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1fbyj"]
@@ -23,13 +23,13 @@ resource_local_to_scene = true
 shader = ExtResource("6_f8npp")
 shader_parameter/strength = 0.001
 shader_parameter/triggered = true
-shader_parameter/screen_texture = SubResource("ViewportTexture_t308c")
-shader_parameter/motion_vectors = SubResource("ViewportTexture_5kxqv")
+shader_parameter/screen_texture = SubResource("ViewportTexture_saqkg")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_k8gn4")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ooye2"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_i001q"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_vtwbr"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b5vbf"]
@@ -38,7 +38,7 @@ shader = ExtResource("8_tavt4")
 shader_parameter/datamosh_strength = 0.011
 shader_parameter/strength = 0.085
 shader_parameter/block_size = 1.0
-shader_parameter/motion_vectors = SubResource("ViewportTexture_i001q")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_vtwbr")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_flsyp"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
@@ -186,20 +186,20 @@ text = "[INFO]bhnhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
 fit_content = true
 
 [node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Explorer"]
-clip_contents = true
 layout_mode = 0
 offset_left = 20.0
 offset_top = 53.0
 offset_right = 349.49
-offset_bottom = 565.0
+offset_bottom = 517.14
 script = ExtResource("2_ewdi2")
 
 [node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Explorer/Panel"]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 128.585
-offset_right = 306.0
-offset_bottom = 167.585
+offset_left = -0.285
+offset_top = 470.0
+offset_right = 295.715
+offset_bottom = 509.0
+text = ">"
 wrap_mode = 1
 scroll_past_end_of_file = true
 scroll_fit_content_height = true
@@ -315,5 +315,4 @@ mouse_filter = 2
 texture = SubResource("ViewportTexture_flsyp")
 
 [connection signal="item_selected" from="SubViewportContainer/SubViewport/Explorer/HBoxContainer/Tree" to="SubViewportContainer/SubViewport/Explorer" method="_on_tree_item_selected"]
-[connection signal="pressed" from="SubViewportContainer/SubViewport/Explorer/TaskPanel/Button" to="SubViewportContainer/SubViewport/Explorer/Panel" method="_on_button_pressed"]
 [connection signal="pressed" from="SubViewportContainer/SubViewport/Explorer/TPButton" to="SubViewportContainer/SubViewport/Explorer" method="_on_tp_button_pressed"]

@@ -1,6 +1,7 @@
-[gd_resource type="Theme" load_steps=19 format=3 uid="uid://cavhfpcrouqti"]
+[gd_resource type="Theme" load_steps=20 format=3 uid="uid://cavhfpcrouqti"]
 
 [ext_resource type="FontFile" uid="uid://nmgc52iyao8f" path="res://pc/micross.ttf" id="1_pm4tx"]
+[ext_resource type="FontFile" uid="uid://dsbil0bx7b7yg" path="res://w95fa.woff" id="2_ro2pu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vt6xh"]
 bg_color = Color(0, 0, 1, 1)
@@ -68,7 +69,7 @@ anti_aliasing = false
 anti_aliasing_size = 5.013
 
 [resource]
-default_font = ExtResource("1_pm4tx")
+default_font = ExtResource("2_ro2pu")
 Button/styles/focus = SubResource("StyleBoxFlat_vt6xh")
 Button/styles/normal = SubResource("StyleBoxFlat_0shwk")
 ItemList/colors/font_hovered_color = Color(1, 1, 1, 1)

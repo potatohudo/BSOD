@@ -12,10 +12,10 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cdfbd"]
 bg_color = Color(0, 0, 0, 1)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_k8gn4"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_6icj4"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_saqkg"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_4xe3u"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1fbyj"]
@@ -23,13 +23,13 @@ resource_local_to_scene = true
 shader = ExtResource("6_f8npp")
 shader_parameter/strength = 0.001
 shader_parameter/triggered = true
-shader_parameter/screen_texture = SubResource("ViewportTexture_saqkg")
-shader_parameter/motion_vectors = SubResource("ViewportTexture_k8gn4")
+shader_parameter/screen_texture = SubResource("ViewportTexture_4xe3u")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_6icj4")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ooye2"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_vtwbr"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_sdcix"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b5vbf"]
@@ -38,7 +38,7 @@ shader = ExtResource("8_tavt4")
 shader_parameter/datamosh_strength = 0.011
 shader_parameter/strength = 0.085
 shader_parameter/block_size = 1.0
-shader_parameter/motion_vectors = SubResource("ViewportTexture_vtwbr")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_sdcix")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_flsyp"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
@@ -74,9 +74,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 111.0
+offset_left = 112.0
 offset_top = 2.0
-offset_right = -126.0
+offset_right = -133.0
 offset_bottom = -7.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -85,7 +85,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
-size = Vector2i(960, 794)
+size = Vector2i(952, 794)
 size_2d_override = Vector2i(800, 600)
 size_2d_override_stretch = true
 render_target_update_mode = 4
@@ -189,8 +189,8 @@ fit_content = true
 layout_mode = 0
 offset_left = 20.0
 offset_top = 53.0
-offset_right = 349.49
-offset_bottom = 517.14
+offset_right = 349.0
+offset_bottom = 517.0
 script = ExtResource("2_ewdi2")
 
 [node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Explorer/Panel"]
@@ -216,10 +216,10 @@ text = "_______________________"
 [node name="RichTextLabel2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Explorer/Panel"]
 clip_contents = false
 layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 300.0
-offset_bottom = 96.0
+offset_left = 8.0
+offset_top = 6.0
+offset_right = 308.0
+offset_bottom = 451.0
 scroll_active = false
 scroll_following = true
 

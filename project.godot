@@ -13,11 +13,13 @@ config_version=5
 config/name="BSOD(recode)"
 run/main_scene="res://main_menu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
+boot_splash/bg_color=Color(0, 0, 0, 1)
 config/icon="res://icon.svg"
 
 [autoload]
 
 Global="*res://global.gd"
+Save="*res://save.gd"
 
 [display]
 

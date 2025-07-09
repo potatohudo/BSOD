@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=3 uid="uid://cjtfiihwdafl6"]
+
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_v4a3d"]
+[ext_resource type="Script" path="res://bios.gd" id="2_t4oow"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gapew"]
+bg_color = Color(0, 0, 1, 1)
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_v4a3d")
+script = ExtResource("2_t4oow")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gapew")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 37.0
+offset_top = 31.0
+offset_right = 359.0
+offset_bottom = 262.0
+text = "[BIOS]
+AND SETTINGS
+PLACEHOLDER FOR NOW
+   /\\_/\\
+  ( - .  - )
+   /        \\             ___  
+  |            \\        /
+  |  |   |   _ |__/
+    "
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+offset_left = -90.77
+offset_top = 207.94
+offset_right = 186.23
+offset_bottom = 267.94
+text = "BACK"
+flat = true
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

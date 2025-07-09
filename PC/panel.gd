@@ -47,6 +47,8 @@ func handle_command(command: String, cmd_output: RichTextLabel):
 			cmd_output.append_text("\n>Are you sure? (y/n)")
 		"settings":
 			cmd_output.append_text("\n>")
+		"save":
+			Save.save_game()
 			
 
 		_:

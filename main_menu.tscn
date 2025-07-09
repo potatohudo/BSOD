@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bnclps4msda17"]
+[gd_scene load_steps=15 format=3 uid="uid://bnclps4msda17"]
 
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_mfimt"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="2_3tlvh"]
@@ -12,6 +12,9 @@ bg_color = Color(0, 0, 0, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_pv7yt"]
 font_size = 51
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8rs12"]
+bg_color = Color(0, 0, 0, 1)
+
 [sub_resource type="ViewportTexture" id="ViewportTexture_5kxqv"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
@@ -21,7 +24,7 @@ viewport_path = NodePath("SubViewportContainer/SubViewport")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y50rn"]
 resource_local_to_scene = true
 shader = ExtResource("2_3tlvh")
-shader_parameter/strength = 0.011
+shader_parameter/strength = 1.0
 shader_parameter/triggered = true
 shader_parameter/screen_texture = SubResource("ViewportTexture_t308c")
 shader_parameter/motion_vectors = SubResource("ViewportTexture_5kxqv")
@@ -94,6 +97,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_getqq")
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Control"]
+layout_mode = 0
 offset_left = 45.0
 offset_top = 44.195
 offset_right = 347.0
@@ -101,23 +105,38 @@ offset_bottom = 114.195
 text = "[BSOD]"
 label_settings = SubResource("LabelSettings_pv7yt")
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Control"]
-offset_left = 47.0
-offset_top = 141.595
-offset_right = 539.4
-offset_bottom = 294.595
+[node name="Info" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Control"]
+layout_mode = 0
+offset_left = 47.71
+offset_top = 140.445
+offset_right = 361.71
+offset_bottom = 379.445
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Control/Info"]
+layout_mode = 2
 text = " Award Modular BIOS v4.50PG, An Energy Star Ally
  Copyright (C) 6b42-12c66, □□□□ Software, Inc.
 □□□□□ P5a ACPI BIOS Revision 1011 Beta 005
 80486DX2 CPU at 66MHz
 
-select an option to continue"
+cpu . . . . . . . . . . . . . OK
+gpu . . . . . . . . . . . . . OK
+memory . . . . . . . . . NONE
+
+
+choose an option to continue
+
+
+"
+visible_characters = 0
+visible_ratio = 0.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Control"]
+layout_mode = 0
 offset_left = 65.69
-offset_top = 371.97
+offset_top = 445.41
 offset_right = 165.69
-offset_bottom = 505.69
+offset_bottom = 531.24
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Control/VBoxContainer"]
 layout_mode = 2
@@ -139,6 +158,34 @@ size_flags_vertical = 3
 text = "credits"
 flat = true
 alignment = 0
+
+[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Control2"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "LOADING"
+
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Control2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8rs12")
 
 [node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
 texture_filter = 1
@@ -178,3 +225,4 @@ wait_time = 0.3
 autostart = true
 
 [connection signal="pressed" from="SubViewportContainer/SubViewport/Control/VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="SubViewportContainer/SubViewport/Control/VBoxContainer/Button2" to="." method="_on_button_2_pressed"]

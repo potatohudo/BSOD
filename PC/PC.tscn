@@ -267,6 +267,7 @@ icon = ExtResource("4_054ed")
 flat = true
 
 [node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
+visible = false
 texture_filter = 1
 material = SubResource("ShaderMaterial_1fbyj")
 use_parent_material = true

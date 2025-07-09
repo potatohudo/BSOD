@@ -13,22 +13,7 @@ extends Control
 
 
 
-var file_system = {
-	"root": {
-		"HKEY_CLASSES_ROOT": {
-			"txtfile": { "example.txt": "res://pc/programs/explorer/example.txt" },
-			"pngfile": { "image.png": "res://pc/programs/explorer/image.png" }
-		},
-		"HKEY_CURRENT_USER": {
-			"Software": {
-				"MyApp": { "config.ini": "res://pc/programs/explorer/config-ini.txt" }
-			}
-		},
-		"HKEY_LOCAL_MACHINE": {
-			"System": { "kernel.sys": "res://pc/programs/explorer/kernel-sys.txt" }
-		}
-	}
-}
+
 
 var current_path = "root"
 
@@ -62,15 +47,23 @@ func populate_tree():
 	var root = tree.create_item()
 	root.set_text(0, "root")
 	root.set_metadata(0, "root")
-	add_folders(root, file_system["root"], "root")
+	add_folders(root, Save.file_system["root"], "root")
 
 func add_folders(parent, directory, parent_path):
 	for name in directory.keys():
-		if directory[name] is Dictionary:
+		var entry = directory[name]
+
+		# Skip files (dictionaries that have "filecontent")
+		if typeof(entry) == TYPE_DICTIONARY and entry.has("filecontent"):
+			continue
+
+		# This is a folder (either a nested folder or valid legacy format)
+		if typeof(entry) == TYPE_DICTIONARY:
 			var item = tree.create_item(parent)
 			item.set_text(0, name)
 			item.set_metadata(0, parent_path + "/" + name)
-			add_folders(item, directory[name], parent_path + "/" + name)
+			add_folders(item, entry, parent_path + "/" + name)
+
 
 func _on_tree_item_selected():
 	var selected_item = tree.get_selected()
@@ -83,13 +76,16 @@ func update_file_list():
 	var folder = get_folder_at_path(current_path)
 	if folder:
 		for item in folder.keys():
-			if folder[item] is Dictionary:
-				continue
-			item_list.add_item(item)
+			var entry = folder[item]
+			if typeof(entry) == TYPE_DICTIONARY and entry.has("filecontent"):
+				item_list.add_item(item)
+
+
+
 
 func get_folder_at_path(path_str):
 	var keys = path_str.split("/")
-	var folder = file_system
+	var folder = Save.file_system
 	for key in keys:
 		if key in folder and folder[key] is Dictionary:
 			folder = folder[key]
@@ -101,47 +97,50 @@ func _on_item_selected(index: int):
 	var file_name = item_list.get_item_text(index)
 	var folder = get_folder_at_path(current_path)
 	if folder and file_name in folder:
-		rtlabel.text = "[b]File:[/b] " + file_name + "\n" + "[i]Contents:[/i] " + str(folder[file_name])
+		var entry = folder[file_name]
+		var saved_data = Save.get_file_data(file_name)
+		var content = saved_data.get("content", entry.get("filecontent", ""))
+		rtlabel.text = "[b]File:[/b] " + file_name + "\n" + "[i]Contents:[/i] " + str(content)
+
+
 
 func _on_item_activated(index: int):
 	var file_name = item_list.get_item_text(index)
 	var folder = get_folder_at_path(current_path)
-	if folder and file_name in folder:
-		var file_data = folder[file_name]
-		if typeof(file_data) == TYPE_STRING and (
-			file_data.begins_with("res://") or
-			file_data.ends_with(".tscn") or
-			file_data.ends_with(".gd") or
-			file_data.ends_with(".txt") 
-		):
-			open_file_window(file_name, file_data, true)
-		else:
-			open_file_window(file_name, file_data)
 
-func open_file_window(name: String, content, separate: bool = false):
+	if folder and folder.has(file_name):
+		var file_entry = folder[file_name]
+		if typeof(file_entry) == TYPE_DICTIONARY and file_entry.has("filecontent"):
+			var editable = file_entry.get("editable", true)
+			var saved_data = Save.get_file_data(file_name)
+			var file_data = saved_data.get("content", file_entry["filecontent"])
+			open_file_window(file_name, file_data, true, editable)
+
+
+
+
+
+func open_file_window(name: String, content, separate: bool = false, editable: bool = true):
 	await get_tree().create_timer(0.1).timeout
 	var file_window_scene = preload("res://pc/window.tscn")
 	var file_window = file_window_scene.instantiate()
 	file_window.set_title(name)
 	file_window.position = Vector2(100, 100)
 	file_window.size = Vector2(600, 400)
-	file_window.resizable = false
-
+	file_window.resizable = true
 	file_window.scale = Vector2(0.9, 0.9)
 	file_window.modulate.a = 0.0
 
 	loader.add_child(file_window)
 	file_window.show()
 
-	#file_window.play_open_animation()
-
 	await get_tree().create_timer(0.2).timeout
 
-	var usage := Vector2(1.0, 3.0)  
+	var usage: Vector2 = Vector2(1.0, 3.0)
 
+	# If opening as a special type window (image, scene etc)
 	if separate and typeof(content) == TYPE_STRING:
-		var ext = content.get_extension()
-
+		var ext = content.get_extension().to_lower()
 		match ext:
 			"tscn":
 				if ResourceLoader.exists(content):
@@ -150,59 +149,17 @@ func open_file_window(name: String, content, separate: bool = false):
 					if res is PackedScene:
 						var inst = res.instantiate()
 						file_window.set_content(inst)
-
 						if inst.has_method("get_usage"):
 							usage = inst.get_usage()
 						elif inst.has("usage") and typeof(inst.get("usage")) == TYPE_VECTOR2:
 							usage = inst.get("usage")
 						else:
 							push_error("No usage found in scene")
-
 						register_task(name, file_window, usage)
 					else:
 						file_window.set_content(_make_error_label("Failed to instantiate scene."))
 				else:
 					file_window.set_content(_make_error_label("Scene not found:\n" + content))
-
-			"txt":
-				if FileAccess.file_exists(content):
-					var file := FileAccess.open(content, FileAccess.READ)
-					if file:
-						var text := file.get_as_text()
-						file.close()
-
-						var vbox = VBoxContainer.new()
-						var text_edit = TextEdit.new()
-						text_edit.text = text
-						text_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-						text_edit.size_flags_vertical = Control.SIZE_EXPAND_FILL
-						text_edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-						text_edit.name = "TextEditor"
-						vbox.add_child(text_edit)
-
-						var save_button = Button.new()
-						save_button.text = "Save"
-						save_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-						save_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-						vbox.add_child(save_button)
-
-						save_button.pressed.connect(func():
-							var edited_text = text_edit.text
-							var save_file := FileAccess.open(content, FileAccess.WRITE)
-							if save_file:
-								save_file.store_string(edited_text)
-								save_file.close()
-								print("Saved to:", content)
-							else:
-								print("Failed to save to:", content)
-						)
-
-						file_window.set_content(vbox)
-					else:
-						file_window.set_content(_make_error_label("Failed to open file:\n" + content))
-				else:
-					file_window.set_content(_make_error_label("File not found:\n" + content))
-
 			"png":
 				if ResourceLoader.exists(content):
 					var tex = load(content)
@@ -217,30 +174,46 @@ func open_file_window(name: String, content, separate: bool = false):
 						file_window.set_content(_make_error_label("Not a valid texture."))
 				else:
 					file_window.set_content(_make_error_label("Image not found:\n" + content))
-
 			_:
 				file_window.set_content(_make_error_label("Unsupported or unknown file type:\n" + content))
 
 	elif separate and typeof(content) == TYPE_OBJECT and content is PackedScene:
 		var inst = content.instantiate()
 		file_window.set_content(inst)
-
 		if inst.has_method("get_usage"):
 			usage = inst.get_usage()
-		elif inst.has_method("usage") and typeof(inst.get("usage")) == TYPE_VECTOR2:
+		elif inst.has("usage") and typeof(inst.get("usage")) == TYPE_VECTOR2:
 			usage = inst.get("usage")
 		else:
 			push_error("No usage found in direct PackedScene")
-
 		register_task(name, file_window, usage)
 
 	else:
-		var label = RichTextLabel.new()
-		label.text = str(content)
-		label.scroll_active = true
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		file_window.set_content(label)
+		# Standard text file editor window
+		var vbox = VBoxContainer.new()
+		var text_edit = TextEdit.new()
+		text_edit.text = str(content)  # <- fixed error
+		text_edit.editable = true
+		text_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		text_edit.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		text_edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+		text_edit.name = "TextEditor"
+		vbox.add_child(text_edit)
+
+		var save_button = Button.new()
+		save_button.text = "Save"
+		save_button.disabled = not editable
+		save_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		save_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		vbox.add_child(save_button)
+
+		save_button.pressed.connect(func():
+			var edited_text: String = text_edit.text
+			Save.set_file_content(name, edited_text)
+			print("Saved virtual file:", name)
+		)
+
+		file_window.set_content(vbox)
 
 	loader.add_child(file_window)
 	file_window.show()

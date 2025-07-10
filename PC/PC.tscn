@@ -199,7 +199,6 @@ offset_left = -0.285
 offset_top = 470.0
 offset_right = 295.715
 offset_bottom = 509.0
-text = ">"
 wrap_mode = 1
 scroll_past_end_of_file = true
 scroll_fit_content_height = true
@@ -267,7 +266,6 @@ icon = ExtResource("4_054ed")
 flat = true
 
 [node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
-visible = false
 texture_filter = 1
 material = SubResource("ShaderMaterial_1fbyj")
 use_parent_material = true

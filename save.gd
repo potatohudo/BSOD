@@ -3,9 +3,15 @@ extends Node
 var current_save := {}
 
 func _ready() -> void:
-	save_game()
 	_normalize_file_system(file_system["root"])
 	load_game()
+
+	# Only create default save if it doesn't already exist
+	if not current_save.has("text_files"):
+		_create_default_save()
+		save_game()
+
+
 
 func save_game():
 	var file = FileAccess.open("user://savegame.json", FileAccess.WRITE)
@@ -77,12 +83,31 @@ func set_file_content(name: String, content: String) -> void:
 	current_save["text_files"] = files
 	save_game()
 
+func _create_default_save() -> void:
+	var text_files: Dictionary = {}
+	_fill_defaults(file_system["root"], text_files)
+	current_save["text_files"] = text_files
+
+func _fill_defaults(fs: Dictionary, text_files: Dictionary) -> void:
+	for key in fs.keys():
+		var value = fs[key]
+		if typeof(value) == TYPE_DICTIONARY:
+			if value.has("filecontent"):
+				text_files[key] = { "content": value["filecontent"] }
+			else:
+				_fill_defaults(value, text_files)
 
 # Helper to normalize raw string entries into {"filecontent": ..., "editable": true}
 func _normalize_file_system(fs: Dictionary) -> void:
 	for key in fs.keys():
-		var val = fs[key]
-		if typeof(val) == TYPE_DICTIONARY:
-			_normalize_file_system(val)
-		elif typeof(val) == TYPE_STRING:
-			fs[key] = { "filecontent": val, "editable": true }
+		var value = fs[key]
+		if typeof(value) == TYPE_DICTIONARY:
+			# if it's already a file dictionary (has filecontent), skip it
+			if value.has("filecontent"):
+				continue
+			_normalize_file_system(value)
+		elif typeof(value) == TYPE_STRING:
+			fs[key] = {
+				"filecontent": value,
+				"editable": true
+			}

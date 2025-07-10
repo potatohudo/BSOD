@@ -103,7 +103,6 @@ func _on_item_selected(index: int):
 		rtlabel.text = "[b]File:[/b] " + file_name + "\n" + "[i]Contents:[/i] " + str(content)
 
 
-
 func _on_item_activated(index: int):
 	var file_name = item_list.get_item_text(index)
 	var folder = get_folder_at_path(current_path)
@@ -112,19 +111,23 @@ func _on_item_activated(index: int):
 		var file_entry = folder[file_name]
 		if typeof(file_entry) == TYPE_DICTIONARY and file_entry.has("filecontent"):
 			var editable = file_entry.get("editable", true)
-			var saved_data = Save.get_file_data(file_name)
-			var file_data = saved_data.get("content", file_entry["filecontent"])
-			open_file_window(file_name, file_data, true, editable)
+
+			# Program mode if it's a .tscn or .png
+			var ext = file_name.get_extension().to_lower()
+			var is_program = ext in ["tscn", "png"]
+
+			var content = file_entry["filecontent"] if is_program else Save.get_file_data(file_name).get("content", file_entry["filecontent"])
+
+
+			open_file_window(file_name, content, is_program, editable)
 
 
 
-
-
-func open_file_window(name: String, content, separate: bool = false, editable: bool = true):
+func open_file_window(name: String, content, program: bool = false, editable: bool = true):
 	await get_tree().create_timer(0.1).timeout
 	var file_window_scene = preload("res://pc/window.tscn")
 	var file_window = file_window_scene.instantiate()
-	file_window.set_title(name)
+	file_window.set_title(name.get_basename() if program else name)
 	file_window.position = Vector2(100, 100)
 	file_window.size = Vector2(600, 400)
 	file_window.resizable = true
@@ -133,14 +136,12 @@ func open_file_window(name: String, content, separate: bool = false, editable: b
 
 	loader.add_child(file_window)
 	file_window.show()
-
 	await get_tree().create_timer(0.2).timeout
 
 	var usage: Vector2 = Vector2(1.0, 3.0)
+	var ext = name.get_extension().to_lower()
 
-	# If opening as a special type window (image, scene etc)
-	if separate and typeof(content) == TYPE_STRING:
-		var ext = content.get_extension().to_lower()
+	if program and typeof(content) == TYPE_STRING and content.begins_with("res://"):
 		match ext:
 			"tscn":
 				if ResourceLoader.exists(content):
@@ -160,6 +161,7 @@ func open_file_window(name: String, content, separate: bool = false, editable: b
 						file_window.set_content(_make_error_label("Failed to instantiate scene."))
 				else:
 					file_window.set_content(_make_error_label("Scene not found:\n" + content))
+
 			"png":
 				if ResourceLoader.exists(content):
 					var tex = load(content)
@@ -175,29 +177,17 @@ func open_file_window(name: String, content, separate: bool = false, editable: b
 				else:
 					file_window.set_content(_make_error_label("Image not found:\n" + content))
 			_:
-				file_window.set_content(_make_error_label("Unsupported or unknown file type:\n" + content))
-
-	elif separate and typeof(content) == TYPE_OBJECT and content is PackedScene:
-		var inst = content.instantiate()
-		file_window.set_content(inst)
-		if inst.has_method("get_usage"):
-			usage = inst.get_usage()
-		elif inst.has("usage") and typeof(inst.get("usage")) == TYPE_VECTOR2:
-			usage = inst.get("usage")
-		else:
-			push_error("No usage found in direct PackedScene")
-		register_task(name, file_window, usage)
+				file_window.set_content(_make_error_label("Unsupported or unknown program file type:\n" + name))
 
 	else:
 		# Standard text file editor window
 		var vbox = VBoxContainer.new()
 		var text_edit = TextEdit.new()
-		text_edit.text = str(content)  # <- fixed error
+		text_edit.text = str(content)
 		text_edit.editable = true
 		text_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		text_edit.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		text_edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-		text_edit.name = "TextEditor"
 		vbox.add_child(text_edit)
 
 		var save_button = Button.new()
@@ -215,8 +205,8 @@ func open_file_window(name: String, content, separate: bool = false, editable: b
 
 		file_window.set_content(vbox)
 
-	loader.add_child(file_window)
-	file_window.show()
+	#loader.add_child(file_window)
+	#file_window.show()
 
 	var task_button = Button.new()
 	var icon_path = "res://pc/programs/icons/%s.png" % name.get_basename().to_lower()
@@ -226,6 +216,8 @@ func open_file_window(name: String, content, separate: bool = false, editable: b
 	task_button.pressed.connect(func(): file_window.visible = !file_window.visible)
 	file_window.tree_exiting.connect(func(): task_button.queue_free())
 	task_panel.add_child(task_button)
+
+
 
 
 var running_tasks: Dictionary = {}

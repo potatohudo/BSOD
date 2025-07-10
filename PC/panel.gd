@@ -29,13 +29,12 @@ func handle_command(command: String, cmd_output: RichTextLabel):
 
 	var parts = command.split(" ", false)
 
-
-	# Handle generic `open [program]`
 	if parts.size() == 2 and parts[0].to_lower() == "open":
-		var level_path = "res://pc/programs/" + parts[1] + ".tscn"
+		var program_name = parts[1] + ".tscn"
+		var level_path = "res://pc/programs/" + program_name
 		if ResourceLoader.exists(level_path):
 			cmd_output.append_text("\nLoading %s..." % parts[1])
-			$"../".open_file_window(parts[1], level_path, true)
+			$"../".open_file_window(program_name, level_path, true)
 		else:
 			cmd_output.append_text("\nError: Wrong path (%s)" % level_path)
 		return

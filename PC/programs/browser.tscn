@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://bw1dljc3v0ycb"]
+[gd_scene load_steps=3 format=3 uid="uid://bw1dljc3v0ycb"]
 
 [ext_resource type="Script" path="res://pc/programs/browser.gd" id="1_fjn82"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8kfj4"]
+bg_color = Color(0, 0, 1, 1)
 
 [node name="Browser" type="Control"]
 layout_mode = 3
@@ -12,6 +15,37 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_fjn82")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8kfj4")
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 42.0
+offset_top = 149.0
+offset_right = -21.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment_vertical = 0
+
+[node name="Label" type="Label" parent="AspectRatioContainer"]
+layout_mode = 2
+text = "this is a.browser
+
+i was debugging ts for half an hour because i thought the content wasnt opening but i forgot that browser does not have a layout so it looks empty. im so stupid
+
+yeah enter something in the upper.thing, "
+autowrap_mode = 3
 
 [node name="ScrollContainer" type="MarginContainer" parent="."]
 layout_direction = 2

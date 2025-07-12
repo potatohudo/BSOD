@@ -31,6 +31,8 @@ func tp(coordinates: String) -> void:
 		var level_path = "res://3d/levels/%s.tscn" % level_name
 		print("Teleporting to: ", level_path)
 		await get_tree().create_timer(0.5).timeout
+		$AudioStreamPlayer.play()
+
 		
 		Global.target_level_path = level_path
 		Global.just_teleported = true

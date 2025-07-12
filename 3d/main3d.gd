@@ -30,11 +30,8 @@ func _ready() -> void:
 	pause_menu.visible = false
 	
 	await get_tree().process_frame
+	print(">im in your walls")
 	subviewport_container = get_node_or_null("SubViewportContainer")
-	if subviewport_container == null:
-		print("Error: SubViewportContainer not found in Main!")
-	else:
-		print("SubViewportContainer successfully stored in Main.")
 	settings_manager.set_main_reference(self)
 	DisplayServer.window_set_size(Vector2i(1280, 800))
 	
@@ -112,7 +109,7 @@ func handle_reset_confirmation(command: String):
 		"y", "yes":
 			command_output.append_text("\nResetting...")
 			is_confirming_reset = false
-			health = 0
+			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.apply_damage(health)
 			get_tree().paused = false
 		"n", "no":
 			command_output.append_text("\nReset canceled.")

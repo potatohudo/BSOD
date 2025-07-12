@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://b5yvv32x8oiti"]
+[gd_scene load_steps=18 format=3 uid="uid://b5yvv32x8oiti"]
 
 [ext_resource type="Script" path="res://pc/pc.gd" id="1_s2x3t"]
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_x2ivq"]
@@ -8,6 +8,7 @@
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="6_f8npp"]
 [ext_resource type="Script" path="res://3d/texture_rect.gd" id="7_ypihe"]
 [ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="8_tavt4"]
+[ext_resource type="AudioStream" uid="uid://nsyrhb4df0hn" path="res://pc/sounds/noise.mp3" id="9_hluph"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cdfbd"]
 bg_color = Color(0, 0, 0, 1)
@@ -312,6 +313,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 texture = SubResource("ViewportTexture_flsyp")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_hluph")
+volume_db = -4.685
+autoplay = true
+parameters/looping = true
 
 [connection signal="item_selected" from="SubViewportContainer/SubViewport/Explorer/HBoxContainer/Tree" to="SubViewportContainer/SubViewport/Explorer" method="_on_tree_item_selected"]
 [connection signal="pressed" from="SubViewportContainer/SubViewport/Explorer/TPButton" to="SubViewportContainer/SubViewport/Explorer" method="_on_tp_button_pressed"]

@@ -2,7 +2,7 @@ extends CharacterBody3D
 #movement and player related stuff.
 
 
-const BASE_SPEED = 4.0  
+const BASE_SPEED = 3.0  
 const SPRINT_MUL = 1.5  
 const CROUCH_MUL = 0.5
 const SLIDE_JUMP_ACCEL = 10.0  
@@ -147,8 +147,8 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	#if health <= 0 or global_transform.origin.y < -20:
-		#die()
+	if health <= 0 or global_transform.origin.y < -20000:
+		die()
 
 	update_camera()
 	update_dash_sprite()
@@ -184,6 +184,8 @@ func perform_dash():
 	dash_efx = false
 	await get_tree().create_timer(DASH_COOLDOWN).timeout
 	can_dash = true  
+	
+
 
 var input_locked = false  
 
@@ -200,20 +202,25 @@ func check_wall_impact():
 
 	var space_state = get_world_3d().direct_space_state
 	var origin = global_transform.origin
-	var camera_facing = -camera.global_transform.basis.z  
-	camera_facing.y = 0  
+	var camera_facing = -camera.global_transform.basis.z
+	camera_facing.y = 0
 	camera_facing = camera_facing.normalized()
 
-	var check_distance = 1.5  
+	var check_distance = 1.5
 	var query = PhysicsRayQueryParameters3D.create(origin, origin + camera_facing * check_distance)
-	query.exclude = [self] 
-	query.collide_with_areas = false  
-	query.collide_with_bodies = true  
+	query.exclude = [self]
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
 
 	var result = space_state.intersect_ray(query)
 
-	if result:  
-		handle_wall_collision(camera_facing)
+	if result:
+		var normal = result.normal
+		var angle = rad_to_deg(acos(normal.dot(Vector3.UP)))
+		
+		if angle > 45:  # You can tweak this threshold. 45 degrees is a good "wall vs slope" divider.
+			handle_wall_collision(camera_facing)
+
 
 func handle_wall_collision(direction: Vector3):
 	if dash_efx == true:
@@ -311,8 +318,8 @@ func apply_damage(amount: int):
 	)
 
 
-
 func die():
+	print("died!")
 	is_game_over = true  
 	main_node.death_glitch()  
 	await get_tree().create_timer(2).timeout

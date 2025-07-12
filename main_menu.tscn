@@ -1,10 +1,12 @@
-[gd_scene load_steps=15 format=3 uid="uid://bnclps4msda17"]
+[gd_scene load_steps=17 format=3 uid="uid://bnclps4msda17"]
 
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_mfimt"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="2_3tlvh"]
 [ext_resource type="Script" path="res://main_menu.gd" id="2_hwvh2"]
 [ext_resource type="Script" path="res://3d/texture_rect.gd" id="3_yti4h"]
 [ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="4_lxcef"]
+[ext_resource type="AudioStream" uid="uid://xxeud11r6ijm" path="res://main_menu.mp3" id="6_kpkwb"]
+[ext_resource type="AudioStream" uid="uid://drhpnwnmambj5" path="res://startup.mp3" id="7_b4gni"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_getqq"]
 bg_color = Color(0, 0, 0, 1)
@@ -223,6 +225,13 @@ mouse_filter = 2
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.3
 autostart = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_kpkwb")
+autoplay = true
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_b4gni")
 
 [connection signal="pressed" from="SubViewportContainer/SubViewport/Control/VBoxContainer/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="SubViewportContainer/SubViewport/Control/VBoxContainer/Button2" to="." method="_on_button_2_pressed"]

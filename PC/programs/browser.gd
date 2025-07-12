@@ -82,27 +82,30 @@ func _on_title_bar_input(event):
 		global_position = get_global_mouse_position() - drag_offset
 
 func load_site(url: String):
-	if not url in site_registry:
-		push_error("Unknown site: %s" % url)
-		return
+	var site_path: String
 
-
-	var site_path = site_registry[url]
-	if not ResourceLoader.exists(site_path):
-		push_error("Scene does not exist at: %s" % site_path)
-		return
+	# Determine path or fall back to 404
+	if url in site_registry:
+		site_path = site_registry[url]
+		if not ResourceLoader.exists(site_path):
+			push_warning("Scene at path %s not found. Falling back to 404." % site_path)
+			site_path = "res://pc/sites/404.tscn"
+	else:
+		print("Unknown site: %s. Loading 404." % url)
+		site_path = "res://pc/sites/404.tscn"
 
 	# Clean loader
 	for child in loader.get_children():
 		child.queue_free()
 
-	await get_tree().process_frame  
-	# Load and add
+	await get_tree().process_frame
+
+	# Load and add site
 	var site_scene = load(site_path)
 	if site_scene:
 		var site_instance = site_scene.instantiate()
 		loader.add_child(site_instance)
-		
+
 		loader.anchor_left = 0
 		loader.anchor_top = 0
 		loader.anchor_right = 1
@@ -110,12 +113,11 @@ func load_site(url: String):
 		loader.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		loader.size_flags_vertical = Control.SIZE_EXPAND_FILL
 
-		var site_scroll := 1500  
-
+		var site_scroll := 1500
 		if "scroll" in site_instance:
 			site_scroll = site_instance.scroll
 			scrollbar.max_value = max(site_scroll - loader.size.y, 0)
-			scrollbar.value = 0  # Reset to top
+			scrollbar.value = 0
 		else:
 			scrollbar.max_value = 0
 			scrollbar.value = 0

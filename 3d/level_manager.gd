@@ -16,6 +16,7 @@ func load_level(level_path: String):
 	if not level_holder or not subviewport_container:
 		return  
 	call_deferred("_load_level", level_path)
+	#level_holder.init_morph()
 
 func _load_level(level_path: String):
 	for child in level_holder.get_children():

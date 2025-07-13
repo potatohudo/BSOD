@@ -11,6 +11,9 @@ var mdt2 = MeshDataTool.new()
 var original_vertices := PackedVector3Array()
 var vertex_map = {}
 var t := 0.0  
+var wheel_spinning := false
+var wheel_spin_timeout := 0.2  # seconds
+var wheel_timer := 0.0
 
 func _ready():
 	var mesh1 = map1.mesh
@@ -26,7 +29,7 @@ func _ready():
 	vertex_map = generate_vertex_map(mesh1, mesh2)
 	
 	original_arrays = map1.mesh.surface_get_arrays(0)
-
+	
 
 
 func _unhandled_input(event):
@@ -37,26 +40,33 @@ func _unhandled_input(event):
 		t = clamp(t - 0.05, 0.0, 1.0)
 		morph()
 
+
+
 func morph():
+	# Create a fresh mesh
 	var new_mesh := ArrayMesh.new()
-	new_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, original_arrays)
 
-	mdt1.clear()
-	mdt1.create_from_surface(new_mesh, 0)
+	# Copy original arrays (otherwise you'll lose data like UVs, normals, etc.)
+	var new_arrays = original_arrays.duplicate(true)  # deep copy
 
-	for i in mdt1.get_vertex_count():
+	var vertices = new_arrays[Mesh.ARRAY_VERTEX]
+
+	for i in vertices.size():
 		var base = original_vertices[i]
 		var target = mdt2.get_vertex(vertex_map[i][0])
-		var morphed = base.lerp(target, t)
-		mdt1.set_vertex(i, morphed)
+		vertices[i] = base.lerp(target, t)
 
-	mdt1.commit_to_surface(new_mesh)
+	new_arrays[Mesh.ARRAY_VERTEX] = vertices
 
-	map1.mesh = null
-	await get_tree().process_frame  
+	# Add the morphed surface to the new mesh
+	new_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, new_arrays)
 
-	map1.mesh = new_mesh 
+	# Assign the new mesh to the MeshInstance3D
+	map1.mesh = new_mesh
+
+	# Update collision shape
 	update_collision()
+
 
 
 
@@ -85,14 +95,17 @@ func update_collision():
 	var vertices = arrays[Mesh.ARRAY_VERTEX]
 	var indices = arrays[Mesh.ARRAY_INDEX]
 
-	if indices.is_empty():
+	if indices == null or indices.is_empty():
 		push_error("Mesh has no index array! Collision shape may not work properly.")
 		return
 
 	var new_data = PackedVector3Array()
 	for i in indices:
-		new_data.append(vertices[i])
+		var local_vert = vertices[i]
+		var world_vert = map1.global_transform * local_vert
+		new_data.append(world_vert)
 
 	var shape := ConcavePolygonShape3D.new()
 	shape.data = new_data
 	collider.shape = shape
+	collider.global_transform = map1.global_transform

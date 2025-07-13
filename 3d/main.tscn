@@ -1,9 +1,10 @@
-[gd_scene load_steps=54 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=55 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
 [ext_resource type="Script" path="res://3d/camera_3d.gd" id="2_e55b0"]
 [ext_resource type="Shader" path="res://3d/glitch.gdshader" id="3_ktawk"]
+[ext_resource type="Script" path="res://3d/level_holder.gd" id="4_7xnc3"]
 [ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
 [ext_resource type="Script" path="res://3d/settings.gd" id="7_4qtkp"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="7_6cqs6"]
@@ -296,6 +297,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
 
 [node name="LevelHolder" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D"]
 process_mode = 1
+script = ExtResource("4_7xnc3")
+
+[node name="HScrollBar" type="HScrollBar" parent="SubViewportContainer/SubViewport/Node3D/LevelHolder"]
+anchors_preset = -1
+anchor_right = 0.489
+anchor_bottom = 0.17
+offset_left = 126.0
+offset_top = 4.0
+offset_right = 289.4
+offset_bottom = -33.22
+scale = Vector2(0.425, 0.425)
 
 [node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
 visible = false

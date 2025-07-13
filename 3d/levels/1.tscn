@@ -43,14 +43,15 @@ visible = false
 shape = SubResource("ConcavePolygonShape3D_y37f0")
 
 [node name="Map2" type="MeshInstance3D" parent="."]
-transform = Transform3D(4.16541, 0, 0, 0, 1, 0, 0, 0, 4.49738, -1, -13.8908, 2)
-visibility_range_begin = 2847.7
+transform = Transform3D(6.0037, 0, 0, 0, 1, 0, 0, 0, 5.91112, -1, -13.8908, 2)
+visibility_range_begin = 4096.0
 mesh = ExtResource("3_1rbcf")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Map2"]
 visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Map2/StaticBody3D"]
+visible = false
 shape = SubResource("ConcavePolygonShape3D_hjba5")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]

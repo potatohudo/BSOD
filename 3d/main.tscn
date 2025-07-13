@@ -11,7 +11,7 @@
 [ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="7_y4vo8"]
 [ext_resource type="Script" path="res://3d/level_manager.gd" id="9_rlvy5"]
 [ext_resource type="Shader" path="res://3d/low_health.gdshader" id="9_vf5oh"]
-[ext_resource type="AudioStream" uid="uid://sacfddgutjrt" path="res://3d/sounds/Track1_kangerscreammp3.wav" id="12_p0ute"]
+[ext_resource type="AudioStream" uid="uid://cfyc0gmsnnx4r" path="res://3d/sounds/hurt_test.mp3" id="13_drwl6"]
 [ext_resource type="Texture2D" uid="uid://cb8d6ayiynkjv" path="res://3d/sprites/attack_hands.png" id="13_j0ygm"]
 [ext_resource type="AudioStream" uid="uid://c0wn62dke1gql" path="res://3d/sounds/Track2_VoiceAudio.wav" id="13_ou8n6"]
 [ext_resource type="AudioStream" uid="uid://dp116jp7otldi" path="res://3d/sounds/Track3_VoiceAudio.wav" id="14_em0p2"]
@@ -448,7 +448,7 @@ offset_bottom = 778.0
 editable = false
 
 [node name="Hurt0" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("12_p0ute")
+stream = ExtResource("13_drwl6")
 
 [node name="Hurt1" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_ou8n6")

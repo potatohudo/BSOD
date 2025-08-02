@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bk0lfgelpyem5"]
+
+[ext_resource type="ArrayMesh" uid="uid://x220c17lw2np" path="res://3d/models/mercury.obj" id="1_f1s6p"]
+[ext_resource type="Script" path="res://3d/levels/1.gd" id="1_y56ar"]
+
+[node name="Node3D" type="Node3D" node_paths=PackedStringArray("mesh_instance")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -335.958, 0)
+script = ExtResource("1_y56ar")
+mesh_instance = NodePath("Map1")
+
+[node name="Map1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 320.306, 0)
+mesh = ExtResource("1_f1s6p")

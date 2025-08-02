@@ -1,127 +1,64 @@
 extends Node3D
 
-@onready var map1 = $Map1
-@onready var map2 = $Map2
-@onready var collider = $StaticBody3D/Collision
-@onready var original_arrays = []
-
-
-var mdt1 = MeshDataTool.new()
-var mdt2 = MeshDataTool.new()
-var original_vertices := PackedVector3Array()
-var vertex_map = {}
-var t := 0.0  
-var wheel_spinning := false
-var wheel_spin_timeout := 0.2  # seconds
-var wheel_timer := 0.0
+@export var mesh_instance: MeshInstance3D
+@export var lat_segments: int = 8
+@export var lon_segments: int = 16
+@export var box_thickness: float = 0.3
+@export var padding: float = 0.1
 
 func _ready():
-	await get_tree().process_frame
-	var mesh1 = map1.mesh
-	var mesh2 = map2.mesh
-
-	mdt1.create_from_surface(mesh1, 0)
-	mdt2.create_from_surface(mesh2, 0)
-
-	# Store the original vertex positions from map1
-	for i in mdt1.get_vertex_count():
-		original_vertices.append(mdt1.get_vertex(i))
-
-	vertex_map = generate_vertex_map(mesh1, mesh2)
-	
-	original_arrays = map1.mesh.surface_get_arrays(0)
-	collider.global_transform = map1.global_transform
-	update_collision()
-	
-	
-
-
-func _unhandled_input(event):
-	if Input.is_action_pressed("wheel_up"):
-		t = clamp(t + 0.05, 0.0, 1.0)
-		morph()
-	elif Input.is_action_pressed("wheel_down"):
-		t = clamp(t - 0.05, 0.0, 1.0)
-		morph()
-
-
-
-func morph():
-	# Create a fresh mesh
-	var new_mesh := ArrayMesh.new()
-
-	# Copy original arrays (otherwise you'll lose data like UVs, normals, etc.)
-	var new_arrays = original_arrays.duplicate(true)  # deep copy
-
-	var vertices = new_arrays[Mesh.ARRAY_VERTEX]
-
-	for i in vertices.size():
-		var base = original_vertices[i]
-		var target = mdt2.get_vertex(vertex_map[i][0])
-		vertices[i] = base.lerp(target, t)
-
-	new_arrays[Mesh.ARRAY_VERTEX] = vertices
-
-	# Add the morphed surface to the new mesh
-	new_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, new_arrays)
-
-	# Assign the new mesh to the MeshInstance3D
-	map1.mesh = new_mesh
-
-	# Update collision shape
-	update_collision()
-
-
-
-
-func generate_vertex_map(mesh1, mesh2):
-	var mdt1 = MeshDataTool.new()
-	var mdt2 = MeshDataTool.new()
-	mdt1.create_from_surface(mesh1, 0)
-	mdt2.create_from_surface(mesh2, 0)
-
-	var map = {}
-	for i in mdt1.get_vertex_count():
-		var closest_idx = -1
-		var closest_dist = INF
-		var v1 = mdt1.get_vertex(i)
-		for j in mdt2.get_vertex_count():
-			var v2 = mdt2.get_vertex(j)
-			var dist = v1.distance_squared_to(v2)
-			if dist < closest_dist:
-				closest_dist = dist
-				closest_idx = j
-		map[i] = [closest_idx]
-	return map
-
-func update_collision():
-	var indices = original_arrays[Mesh.ARRAY_INDEX]
-	if indices == null or indices.is_empty():
-		push_error("Original mesh has no index data.")
+	if not mesh_instance:
+		push_error("mesh_instance is not assigned in inspector!")
 		return
 
-	var new_data = PackedVector3Array()
+	var aabb = mesh_instance.mesh.get_aabb()
+	if aabb.size == Vector3.ZERO:
+		push_error("Mesh AABB is zero! Check mesh import settings or ensure it has geometry.")
+		return
 
-	# Get the mesh's global transform so we can match it exactly
-	var mesh_global_xform = map1.global_transform
-	var collider_global_xform = collider.global_transform
+	var radius = aabb.size.x / 2.0 - 1.0
+	var center_local = aabb.position + aabb.size * 0.5
+	var mesh_xform = mesh_instance.global_transform
 
-	# Transform difference: from mesh space to collider local space
-	var mesh_to_collider = collider_global_xform.affine_inverse() * mesh_global_xform
+	for lat in range(lat_segments):
+		var lat0 = deg_to_rad(-90.0 + lat * (180.0 / lat_segments))
+		var lat1 = deg_to_rad(-90.0 + (lat + 1.0) * (180.0 / lat_segments))
 
-	for i in indices:
-		var base = original_vertices[i]
-		var target = mdt2.get_vertex(vertex_map[i][0])
-		var morphed = base.lerp(target, t)
+		for lon in range(lon_segments):
+			var lon0 = deg_to_rad(lon * (360.0 / lon_segments))
+			var lon1 = deg_to_rad((lon + 1.0) * (360.0 / lon_segments))
 
-		# Transform the morphed vertex so it's correct in collider's local space
-		var local_vert = mesh_to_collider * morphed
-		new_data.append(local_vert)
+			var lat_mid = (lat0 + lat1) * 0.5
+			var lon_mid = (lon0 + lon1) * 0.5
 
-	# Create and assign the shape
-	var shape := ConcavePolygonShape3D.new()
-	shape.data = new_data
-	collider.shape = shape
+			var local_center = Vector3(
+				radius * cos(lat_mid) * cos(lon_mid),
+				radius * sin(lat_mid),
+				radius * cos(lat_mid) * sin(lon_mid)
+			) + center_local
 
-	# Make sure the collider's transform matches the mesh's transform
-	collider.global_transform = mesh_global_xform
+			var tile_center = mesh_xform * local_center
+
+			var up = (tile_center - (mesh_xform * center_local)).normalized()
+			var right = Vector3.UP.cross(up).normalized()
+			if right.length() < 0.001:
+				right = Vector3.FORWARD
+			var forward = up.cross(right).normalized()
+			var basis = Basis(right, up, forward)
+
+			var lat_arc = radius * abs(lat1 - lat0)
+			var lon_arc = radius * cos(lat_mid) * abs(lon1 - lon0)
+			var size = Vector3(lon_arc + padding, box_thickness, lat_arc + padding)
+
+			var shape = BoxShape3D.new()
+			shape.size = size * 2.0
+
+			var body = StaticBody3D.new()
+			var col_shape = CollisionShape3D.new()
+			col_shape.shape = shape
+			col_shape.transform = Transform3D(basis, tile_center)
+
+			body.add_child(col_shape)
+
+			# Force adding to scene root for visibility
+			get_tree().current_scene.add_child(body)

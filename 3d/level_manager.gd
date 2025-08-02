@@ -6,7 +6,6 @@ extends Node
 @onready var indicator1: AnimatedSprite2D = get_node_or_null("/root/Main/SubViewportContainer/SubViewport/POR_Idle")
 @onready var player_camera: Camera3D = get_node("/root/Main/SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D")
 
-# Morph data
 var map1
 var map2
 var collider
@@ -17,16 +16,14 @@ var original_arrays = []
 var vertex_map = {}
 var t := 0.0
 var hidden_points: Array = []
+var morph_enabled = false
 
 func _ready():
 	await get_tree().process_frame
-
 	if Global.target_level_path != "":
 		load_level(Global.target_level_path)
 		Global.target_level_path = ""
 	indicator1.play()
-	
-
 
 func load_level(level_path: String):
 	if not level_holder or not subviewport_container:
@@ -38,46 +35,68 @@ func _load_level(level_path: String):
 		child.queue_free()
 
 	var level_scene = ResourceLoader.load(level_path)
-	if level_scene:
-		var new_level = level_scene.instantiate()
-		if new_level:
-			level_holder.add_child(new_level, true)
-			new_level.visible = true
+	if not level_scene:
+		return
 
-			# 🔹 Find morph targets in the new map
-			map1 = new_level.get_node_or_null("Map1")
-			map2 = new_level.get_node_or_null("Map2")
-			hidden_points = map2.get_tree().get_nodes_in_group("hidden")
+	var new_level = level_scene.instantiate()
+	if not new_level:
+		return
 
-			collider = new_level.get_node_or_null("StaticBody3D/Collision")
-			if map1 and map2 and collider:
-				init_morph()
-				collider.global_transform = map1.global_transform
-				update_collision()
-			
+	level_holder.add_child(new_level, true)
+	new_level.visible = true
+
+	map1 = new_level.get_node_or_null("Map1")
+	if not map1:
+		print("[WARN] Map1 not found.")
+
+	map2 = new_level.get_node_or_null("Map2")
+	if not map2:
+		print("[INFO] Map2 not found. morphing disabled. Generate collision manually.")
+		hidden_points.clear()
+		morph_enabled = false
+	else:
+		hidden_points = map2.get_tree().get_nodes_in_group("hidden")
+		if hidden_points.is_empty():
+			print("[INFO] No hidden points found in Map2.")
+		morph_enabled = true
+
+	collider = new_level.get_node_or_null("StaticBody3D/Collision")
+	if not collider:
+		print("[WARN] Collider not found.")
+
+	if morph_enabled and map1 and map2 and collider:
+		init_morph()
+		collider.global_transform = map1.global_transform
+		update_collision()
 
 	subviewport_container.queue_redraw()
 
-# --------------------------------
-# Morph setup & logic
-# --------------------------------
-
-
-
 func init_morph():
-	var mesh1 = map1.mesh
-	var mesh2 = map2.mesh
+	if not map1 or not map1.mesh:
+		print("[ERROR] Map1 mesh missing.")
+		return
+	if not map2 or not map2.mesh:
+		print("[ERROR] Map2 mesh missing.")
+		return
+	if map1.mesh.get_surface_count() == 0 or map2.mesh.get_surface_count() == 0:
+		print("[ERROR] Mesh missing surfaces.")
+		return
 
-	mdt1.create_from_surface(mesh1, 0)
-	mdt2.create_from_surface(mesh2, 0)
+	mdt1.clear()
+	mdt2.clear()
+	mdt1.create_from_surface(map1.mesh, 0)
+	mdt2.create_from_surface(map2.mesh, 0)
+
+	if mdt1.get_vertex_count() == 0 or mdt2.get_vertex_count() == 0:
+		print("[ERROR] One of the meshes has no vertices.")
+		return
 
 	original_vertices.clear()
 	for i in mdt1.get_vertex_count():
 		original_vertices.append(mdt1.get_vertex(i))
 
-	vertex_map = generate_vertex_map(mesh1, mesh2)
-	original_arrays = mesh1.surface_get_arrays(0)
-
+	vertex_map = generate_vertex_map(map1.mesh, map2.mesh)
+	original_arrays = map1.mesh.surface_get_arrays(0)
 	update_collision()
 
 func _unhandled_input(event):
@@ -91,8 +110,9 @@ func _unhandled_input(event):
 			morph()
 			morph_timer = morph_display_time
 
-
 func morph():
+	if not morph_enabled:
+		return
 	var new_mesh := ArrayMesh.new()
 	var new_arrays = original_arrays.duplicate(true)
 	var vertices = new_arrays[Mesh.ARRAY_VERTEX]
@@ -128,9 +148,11 @@ func generate_vertex_map(mesh1, mesh2):
 	return map
 
 func update_collision():
+	if not morph_enabled or not map1 or not collider or original_arrays.is_empty():
+		return
 	var indices = original_arrays[Mesh.ARRAY_INDEX]
 	if indices == null or indices.is_empty():
-		push_error("Original mesh has no index data.")
+		push_error("Original mesh has no index array.")
 		return
 
 	var new_data = PackedVector3Array()
@@ -139,42 +161,33 @@ func update_collision():
 	var mesh_to_collider = collider_global_xform.affine_inverse() * mesh_global_xform
 
 	for i in indices:
+		if i < 0 or i >= original_vertices.size():
+			continue
 		var base = original_vertices[i]
-		var target = mdt2.get_vertex(vertex_map[i][0])
+		var target_index = vertex_map[i][0] if i in vertex_map else -1
+		if target_index < 0 or target_index >= mdt2.get_vertex_count():
+			continue
+		var target = mdt2.get_vertex(target_index)
 		var morphed = base.lerp(target, t)
 		var local_vert = mesh_to_collider * morphed
 		new_data.append(local_vert)
+
+	if new_data.is_empty():
+		print("[WARN] Collision data empty — shape not updated.")
+		return
 
 	var shape := ConcavePolygonShape3D.new()
 	shape.data = new_data
 	collider.shape = shape
 	collider.global_transform = mesh_global_xform
-	
-# -------------------
-# Sprite logic
-# -------------------
 
-var morph_display_time := 0.0 # seconds to show morph indicator after scrolling
+# Sprite logic
+var morph_display_time := 0.0
 var morph_timer := 0.0
 
-func show_idle_indicator():
-	if indicator1:
-		indicator1.visible = true
-		indicator1.play() # plays its own idle animation
-	if indicator:
-		indicator.visible = false
-		indicator.stop()
-
-func show_morph_indicator():
-	if indicator:
-		indicator.visible = true
-		indicator.play() # plays the morph animation
-	if indicator1:
-		indicator1.visible = false
-		indicator1.stop()
-
 func _process(delta):
-	# Rotate indicator based on t (0 → 0°, 1 → 45°)
+	if not morph_enabled or hidden_points.is_empty():
+		return
 	if indicator:
 		indicator.rotation_degrees = t * 45.0
 	if indicator1:
@@ -182,22 +195,19 @@ func _process(delta):
 
 	var hidden_on_screen = false
 	var hidden_in_center = false
-
 	var cam_pos = player_camera.global_transform.origin
 	var cam_dir = -player_camera.global_transform.basis.z.normalized()
 
 	for point in hidden_points:
+		if not point:
+			continue
 		var to_point = (point.global_transform.origin - cam_pos).normalized()
 		var dot = cam_dir.dot(to_point)
-
-		# Is it on screen? (about 90° FOV check)
 		if dot > 0.8:
 			hidden_on_screen = true
-		# Is it directly in front? (~11° cone)
 		if dot > 0.98:
 			hidden_in_center = true
 
-	# Control indicator
 	if hidden_on_screen:
 		indicator.visible = true
 		indicator1.visible = false
@@ -209,16 +219,3 @@ func _process(delta):
 		indicator1.visible = true
 		if not indicator1.is_playing():
 			indicator1.play()
-
-
-		
-func is_looking_at_hidden() -> bool:
-	var cam_pos = player_camera.global_transform.origin
-	var cam_dir = -player_camera.global_transform.basis.z.normalized()
-
-	for point in hidden_points:
-		var to_point = (point.global_transform.origin - cam_pos).normalized()
-		var dot = cam_dir.dot(to_point)
-		if dot > 0.98: # ~cos(11°), tweak for detection cone
-			return true
-	return false

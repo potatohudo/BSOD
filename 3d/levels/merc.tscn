@@ -11,3 +11,6 @@ mesh_instance = NodePath("Map1")
 [node name="Map1" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 320.306, 0)
 mesh = ExtResource("1_f1s6p")
+
+[node name="Marker3D" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 512.007, 0)

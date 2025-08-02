@@ -7,18 +7,16 @@ extends Node3D
 @export var padding: float = 0.1
 
 func _ready():
-	if not mesh_instance:
-		push_error("mesh_instance is not assigned in inspector!")
-		return
+	if mesh_instance and mesh_instance.mesh:
+		generate_sphere_tiles(mesh_instance.mesh)
 
-	var aabb = mesh_instance.mesh.get_aabb()
-	if aabb.size == Vector3.ZERO:
-		push_error("Mesh AABB is zero! Check mesh import settings or ensure it has geometry.")
-		return
 
-	var radius = aabb.size.x / 2.0 - 1.0
+func generate_sphere_tiles(mesh: Mesh):
+	var aabb: AABB = mesh.get_aabb()
+	var radius = aabb.size.x / 2.0
 	var center_local = aabb.position + aabb.size * 0.5
-	var mesh_xform = mesh_instance.global_transform
+
+	var mesh_transform = mesh_instance.global_transform
 
 	for lat in range(lat_segments):
 		var lat0 = deg_to_rad(-90.0 + lat * (180.0 / lat_segments))
@@ -31,19 +29,20 @@ func _ready():
 			var lat_mid = (lat0 + lat1) * 0.5
 			var lon_mid = (lon0 + lon1) * 0.5
 
-			var local_center = Vector3(
+			var local_tile_center = Vector3(
 				radius * cos(lat_mid) * cos(lon_mid),
 				radius * sin(lat_mid),
 				radius * cos(lat_mid) * sin(lon_mid)
 			) + center_local
 
-			var tile_center = mesh_xform * local_center
+			var tile_center = mesh_transform * local_tile_center
 
-			var up = (tile_center - (mesh_xform * center_local)).normalized()
+			var up = (tile_center - (mesh_transform * center_local)).normalized()
 			var right = Vector3.UP.cross(up).normalized()
 			if right.length() < 0.001:
 				right = Vector3.FORWARD
 			var forward = up.cross(right).normalized()
+
 			var basis = Basis(right, up, forward)
 
 			var lat_arc = radius * abs(lat1 - lat0)
@@ -59,6 +58,4 @@ func _ready():
 			col_shape.transform = Transform3D(basis, tile_center)
 
 			body.add_child(col_shape)
-
-			# Force adding to scene root for visibility
-			get_tree().current_scene.add_child(body)
+			add_child(body)

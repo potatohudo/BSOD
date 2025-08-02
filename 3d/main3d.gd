@@ -25,7 +25,7 @@ func _ready() -> void:
 	pause_menu = $PauseMenu
 	command_input = $PauseMenu/TextEdit
 	command_output = $PauseMenu/RichTextLabel
-
+	
 	
 	pause_menu.visible = false
 	
@@ -34,6 +34,7 @@ func _ready() -> void:
 	subviewport_container = get_node_or_null("SubViewportContainer")
 	settings_manager.set_main_reference(self)
 	DisplayServer.window_set_size(Vector2i(1280, 800))
+	
 	
 	
 

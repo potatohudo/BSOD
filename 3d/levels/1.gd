@@ -16,6 +16,7 @@ var wheel_spin_timeout := 0.2  # seconds
 var wheel_timer := 0.0
 
 func _ready():
+	await get_tree().process_frame
 	var mesh1 = map1.mesh
 	var mesh2 = map2.mesh
 
@@ -29,6 +30,9 @@ func _ready():
 	vertex_map = generate_vertex_map(mesh1, mesh2)
 	
 	original_arrays = map1.mesh.surface_get_arrays(0)
+	collider.global_transform = map1.global_transform
+	update_collision()
+	
 	
 
 
@@ -91,21 +95,33 @@ func generate_vertex_map(mesh1, mesh2):
 	return map
 
 func update_collision():
-	var arrays = map1.mesh.surface_get_arrays(0)
-	var vertices = arrays[Mesh.ARRAY_VERTEX]
-	var indices = arrays[Mesh.ARRAY_INDEX]
-
+	var indices = original_arrays[Mesh.ARRAY_INDEX]
 	if indices == null or indices.is_empty():
-		push_error("Mesh has no index array! Collision shape may not work properly.")
+		push_error("Original mesh has no index data.")
 		return
 
 	var new_data = PackedVector3Array()
-	for i in indices:
-		var local_vert = vertices[i]
-		var world_vert = map1.global_transform * local_vert
-		new_data.append(world_vert)
 
+	# Get the mesh's global transform so we can match it exactly
+	var mesh_global_xform = map1.global_transform
+	var collider_global_xform = collider.global_transform
+
+	# Transform difference: from mesh space to collider local space
+	var mesh_to_collider = collider_global_xform.affine_inverse() * mesh_global_xform
+
+	for i in indices:
+		var base = original_vertices[i]
+		var target = mdt2.get_vertex(vertex_map[i][0])
+		var morphed = base.lerp(target, t)
+
+		# Transform the morphed vertex so it's correct in collider's local space
+		var local_vert = mesh_to_collider * morphed
+		new_data.append(local_vert)
+
+	# Create and assign the shape
 	var shape := ConcavePolygonShape3D.new()
 	shape.data = new_data
 	collider.shape = shape
-	collider.global_transform = map1.global_transform
+
+	# Make sure the collider's transform matches the mesh's transform
+	collider.global_transform = mesh_global_xform

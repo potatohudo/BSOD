@@ -1,15 +1,15 @@
-[gd_scene load_steps=55 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=70 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
 [ext_resource type="Script" path="res://3d/camera_3d.gd" id="2_e55b0"]
 [ext_resource type="Shader" path="res://3d/glitch.gdshader" id="3_ktawk"]
-[ext_resource type="Script" path="res://3d/level_holder.gd" id="4_7xnc3"]
 [ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
 [ext_resource type="Script" path="res://3d/settings.gd" id="7_4qtkp"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="7_6cqs6"]
 [ext_resource type="Texture2D" uid="uid://dk30ciya5qldy" path="res://3d/sprites/catexp/Untitled-3.png" id="7_jkdwh"]
 [ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="7_y4vo8"]
+[ext_resource type="Texture2D" uid="uid://gc66jmxju5g5" path="res://3d/sprites/por/star_sprite.png" id="8_54vq2"]
 [ext_resource type="Script" path="res://3d/level_manager.gd" id="9_rlvy5"]
 [ext_resource type="Shader" path="res://3d/low_health.gdshader" id="9_vf5oh"]
 [ext_resource type="AudioStream" uid="uid://cfyc0gmsnnx4r" path="res://3d/sounds/hurt_test.mp3" id="13_drwl6"]
@@ -65,6 +65,113 @@ shader_parameter/warp_intensity = 0.005
 shader_parameter/dissolve_intensity = 0.5
 shader_parameter/dissolve_threshold = 0.6
 shader_parameter/motion_vectors = SubResource("ViewportTexture_nijhe")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uyuk1"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(0, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n07kn"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(250, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gscqp"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(500, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ngx6y"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(750, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dtjhc"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(0, 251, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1j77p"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(250, 251, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ru0fu"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(500, 251, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4nkmn"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(750, 251, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sm18c"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(0, 502, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lwpf7"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(250, 502, 250, 251)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vmomf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uyuk1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n07kn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gscqp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ngx6y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dtjhc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1j77p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ru0fu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4nkmn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sm18c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lwpf7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 15.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x87uw"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(0, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_egxub"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(250, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hn0uk"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(500, 0, 250, 251)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mtpr1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x87uw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_egxub")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hn0uk")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="Theme" id="Theme_jpke2"]
 resource_local_to_scene = true
@@ -297,9 +404,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
 
 [node name="LevelHolder" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D"]
 process_mode = 1
-script = ExtResource("4_7xnc3")
 
 [node name="HScrollBar" type="HScrollBar" parent="SubViewportContainer/SubViewport/Node3D/LevelHolder"]
+visible = false
 anchors_preset = -1
 anchor_right = 0.489
 anchor_bottom = 0.17
@@ -361,12 +468,24 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="POR_Full" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport"]
+visible = false
+position = Vector2(200, 40)
+scale = Vector2(0.18, 0.18)
+sprite_frames = SubResource("SpriteFrames_vmomf")
+
+[node name="POR_Idle" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport"]
+position = Vector2(200, 40)
+scale = Vector2(0.13, 0.13)
+sprite_frames = SubResource("SpriteFrames_mtpr1")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.934658, -0.235653, -0.266236, -1.54024e-09, -0.748805, 0.66279, -0.355547, -0.619482, -0.699877, 0.614161, 8.31196, -8.11746)
 shadow_enabled = true
 
 [node name="PauseMenu" type="Panel" parent="."]
 process_mode = 3
+visible = false
 anchors_preset = -1
 anchor_left = 0.08
 anchor_top = 0.08

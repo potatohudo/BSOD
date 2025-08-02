@@ -29,6 +29,11 @@ window/stretch/mode="viewport"
 window/per_pixel_transparency/allowed=true
 window/vsync/vsync_mode=0
 
+[global_group]
+
+hidden="hidden objects in the 4d space"
+POI="point of interest"
+
 [input]
 
 ui_accept={

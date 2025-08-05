@@ -2,8 +2,8 @@ extends Node
 
 @onready var level_holder: Node3D = get_node_or_null("/root/Main/SubViewportContainer/SubViewport/Node3D/LevelHolder")
 @onready var subviewport_container: SubViewportContainer = get_node_or_null("/root/Main/SubViewportContainer")
-@onready var indicator: AnimatedSprite2D = get_node_or_null("/root/Main/SubViewportContainer/SubViewport/POR_Full")
-@onready var indicator1: AnimatedSprite2D = get_node_or_null("/root/Main/SubViewportContainer/SubViewport/POR_Idle")
+@onready var indicator: AnimatedSprite2D = get_node_or_null("/root/Main/POR/POR_Full")
+@onready var indicator1: AnimatedSprite2D = get_node_or_null("/root/Main/POR/POR_Idle")
 @onready var player_camera: Camera3D = get_node("/root/Main/SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D")
 
 var map1
@@ -100,15 +100,14 @@ func init_morph():
 	update_collision()
 
 func _unhandled_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			t = clamp(t + 0.03, 0.0, 1.0)
-			morph()
-			morph_timer = morph_display_time
-		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			t = clamp(t - 0.03, 0.0, 1.0)
-			morph()
-			morph_timer = morph_display_time
+	if Input.is_action_pressed("wheel_up"):
+		t = clamp(t + 0.03, 0.0, 1.0)
+		morph()
+		morph_timer = morph_display_time
+	elif Input.is_action_pressed("wheel_down"):
+		t = clamp(t - 0.03, 0.0, 1.0)
+		morph()
+		morph_timer = morph_display_time
 
 func morph():
 	if not morph_enabled:

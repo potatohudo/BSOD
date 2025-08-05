@@ -54,10 +54,13 @@ var momentum = Vector3.ZERO
 @onready var hurt_sound_0: AudioStreamPlayer = get_node("/root/Main/Hurt0")
 @onready var hurt_sound_1: AudioStreamPlayer = get_node("/root/Main/Hurt1")
 @onready var hurt_sound_2: AudioStreamPlayer = get_node("/root/Main/Hurt2")
+@onready var por = get_node("/root/Main/POR")
+@onready var flashlight = $Marker3D/Camera3D/SpotLight3D
 
 var is_game_over = false  
 var crouching = false
 var camera_locked = false 
+var light = false
 
 func update_camera():
 	if is_sliding or crouching:
@@ -153,6 +156,10 @@ func _physics_process(delta: float) -> void:
 	update_camera()
 	update_dash_sprite()
 	LH.visible = health < 20
+	
+	if Input.is_action_just_pressed("f"):
+		flashlight.visible = not flashlight.visible
+		por.visible = not flashlight.visible
 
 func perform_dash():
 	if not can_dash:
@@ -185,6 +192,7 @@ func perform_dash():
 	await get_tree().create_timer(DASH_COOLDOWN).timeout
 	can_dash = true  
 	
+
 
 
 var input_locked = false  

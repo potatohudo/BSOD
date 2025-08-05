@@ -1,16 +1,99 @@
-[gd_scene load_steps=3 format=3 uid="uid://bk0lfgelpyem5"]
+[gd_scene load_steps=11 format=3 uid="uid://bk0lfgelpyem5"]
 
 [ext_resource type="ArrayMesh" uid="uid://x220c17lw2np" path="res://3d/models/mercury.obj" id="1_f1s6p"]
 [ext_resource type="Script" path="res://3d/levels/1.gd" id="1_y56ar"]
+[ext_resource type="ArrayMesh" uid="uid://c8kt2upprxj2s" path="res://3d/models/fountain.obj" id="4_2s70x"]
+[ext_resource type="Script" path="res://3d/levels/fountain.gd" id="5_eccr1"]
+[ext_resource type="Shader" path="res://3d/sphere.gdshader" id="5_wtsxy"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_5vn37"]
+radius = 50.0
+height = 100.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uucln"]
+render_priority = 0
+shader = ExtResource("5_wtsxy")
+shader_parameter/albedo = Color(1, 1, 1, 0)
+shader_parameter/roughness = 0.15
+shader_parameter/refraction = 0.5
+shader_parameter/refraction_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/distortion_amount = 0.05
+shader_parameter/reflection_strength = 1.0
+shader_parameter/normal_strength = 0.0
+shader_parameter/edge_color = Color(0, 0, 0, 1)
+shader_parameter/surface_contribution = 0.2
+shader_parameter/specular_contribution = 0.2
+shader_parameter/refraction_contribution = 1.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mcptq"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_um7g4"]
+
+[sub_resource type="Environment" id="Environment_six8a"]
+background_mode = 3
+background_energy_multiplier = 0.35
+ambient_light_energy = 0.54
+reflected_light_source = 1
+ssr_fade_in = 0.665742
+ssr_depth_tolerance = 42.91
+fog_light_color = Color(0, 0, 0, 1)
+volumetric_fog_detail_spread = 5.79562
+volumetric_fog_ambient_inject = 1.21
 
 [node name="Node3D" type="Node3D" node_paths=PackedStringArray("mesh_instance")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -335.958, 0)
+process_priority = 1
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, -217.803, 0)
 script = ExtResource("1_y56ar")
 mesh_instance = NodePath("Map1")
+overlap_factor = 3.0
+num_columns = 400
+column_min_height = 8.0
+column_max_height = 50.0
+column_width = 25.0
 
 [node name="Map1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 320.306, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 300.772, 0)
 mesh = ExtResource("1_f1s6p")
 
-[node name="Marker3D" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 512.007, 0)
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(0.666667, 0, 0, 0, 0.666667, 0, 0, 0, 0.666667, -5.84479, 177.564, 1.76543)
+light_bake_mode = 1
+shadow_enabled = true
+distance_fade_enabled = true
+omni_range = 74.29
+
+[node name="Node3D" type="Node3D" parent="."]
+script = ExtResource("5_eccr1")
+min_spawn_radius = 8.0
+spawn_radius = 30.0
+spawn_height = 30.0
+jellyfish_count_per_fountain = 20
+
+[node name="Fountain" type="MeshInstance3D" parent="Node3D" groups=["Fountain"]]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0.142568, 146.812, 0.661092)
+mesh = ExtResource("4_2s70x")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 497.168, 0)
+mesh = SubResource("SphereMesh_5vn37")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(30, 0, 0, 0, 30, 0, 0, 0, 30, 0, 171.774, -33.1436)
+visible = false
+material_override = SubResource("ShaderMaterial_uucln")
+material_overlay = SubResource("ShaderMaterial_mcptq")
+mesh = SubResource("SphereMesh_um7g4")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.666667, 0, 0, 0, -0.226011, 0.627187, 0, -0.627187, -0.226011, 0, 830.926, 0)
+visible = false
+light_negative = true
+shadow_enabled = true
+shadow_blur = 0.0
+directional_shadow_max_distance = 8192.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_six8a")

@@ -1,9 +1,10 @@
-[gd_scene load_steps=70 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=71 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
 [ext_resource type="Script" path="res://3d/camera_3d.gd" id="2_e55b0"]
 [ext_resource type="Shader" path="res://3d/glitch.gdshader" id="3_ktawk"]
+[ext_resource type="PackedScene" uid="uid://b1xqiy3ueimpa" path="res://3d/models/LES/les.tscn" id="4_dw5ax"]
 [ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
 [ext_resource type="Script" path="res://3d/settings.gd" id="7_4qtkp"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="7_6cqs6"]
@@ -379,6 +380,7 @@ render_target_update_mode = 4
 
 [node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.76837e-07, 2.91825, -0.303359)
+visible = false
 
 [node name="CharacterBody3D" parent="SubViewportContainer/SubViewport/Node3D" instance=ExtResource("1_arn5h")]
 process_mode = 1
@@ -388,6 +390,17 @@ process_mode = 1
 [node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.42205, 0.284705)
 script = ExtResource("2_e55b0")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.231125, -0.776971)
+visible = false
+light_energy = 10.447
+light_indirect_energy = 8.162
+light_volumetric_fog_energy = 5.724
+shadow_enabled = true
+spot_range = 56.486
+spot_angle = 31.4611
+spot_angle_attenuation = 0.15932
 
 [node name="floor" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
@@ -415,6 +428,9 @@ offset_top = 4.0
 offset_right = 289.4
 offset_bottom = -33.22
 scale = Vector2(0.425, 0.425)
+
+[node name="LES" parent="SubViewportContainer/SubViewport/Node3D/LevelHolder" instance=ExtResource("4_dw5ax")]
+patrol_radius = 50.0
 
 [node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
 visible = false
@@ -468,20 +484,19 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="POR_Full" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport"]
+[node name="POR" type="Node2D" parent="."]
+
+[node name="POR_Full" type="AnimatedSprite2D" parent="POR"]
 visible = false
-position = Vector2(200, 40)
-scale = Vector2(0.18, 0.18)
+position = Vector2(600, 100)
+scale = Vector2(0.434, 0.434)
 sprite_frames = SubResource("SpriteFrames_vmomf")
 
-[node name="POR_Idle" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport"]
-position = Vector2(200, 40)
-scale = Vector2(0.13, 0.13)
+[node name="POR_Idle" type="AnimatedSprite2D" parent="POR"]
+top_level = true
+position = Vector2(600, 100)
+scale = Vector2(0.434, 0.434)
 sprite_frames = SubResource("SpriteFrames_mtpr1")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.934658, -0.235653, -0.266236, -1.54024e-09, -0.748805, 0.66279, -0.355547, -0.619482, -0.699877, 0.614161, 8.31196, -8.11746)
-shadow_enabled = true
 
 [node name="PauseMenu" type="Panel" parent="."]
 process_mode = 3
@@ -592,7 +607,6 @@ visible = false
 follow_viewport_enabled = true
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
-visible = false
 material = SubResource("ShaderMaterial_1hbw6")
 anchors_preset = 15
 anchor_right = 1.0

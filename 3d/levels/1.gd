@@ -5,19 +5,60 @@ extends Node3D
 @export var lon_segments: int = 16
 @export var box_thickness: float = 0.3
 @export var padding: float = 0.1
+@export var overlap_factor: float = 1.05
+@export var pole_thickness_mult: float = 3.0
+@export var upper_thickness_mult: float = 1.5
+@export var inner_scale: float = 0.8
+@export var debug_material_outer: StandardMaterial3D
+@export var debug_material_inner: StandardMaterial3D
+
+# Columns
+@export var num_columns: int = 20
+@export var column_min_height: float = 3.0
+@export var column_max_height: float = 7.0
+@export var column_width: float = 1.0
+@export var column_material: StandardMaterial3D
 
 func _ready():
-	if mesh_instance and mesh_instance.mesh:
-		generate_sphere_tiles(mesh_instance.mesh)
+	if not mesh_instance:
+		push_error("mesh_instance is not assigned!")
+		return
 
+	mesh_instance.visible = false
 
-func generate_sphere_tiles(mesh: Mesh):
-	var aabb: AABB = mesh.get_aabb()
-	var radius = aabb.size.x / 2.0
+	var aabb = mesh_instance.mesh.get_aabb()
+	if aabb.size == Vector3.ZERO:
+		push_error("Mesh AABB is zero!")
+		return
+
+	var radius_outer = aabb.size.x / 2.0
+	var radius_inner = radius_outer * inner_scale
+
 	var center_local = aabb.position + aabb.size * 0.5
+	var mesh_xform = mesh_instance.global_transform
+	var base_box_mesh = BoxMesh.new()
 
-	var mesh_transform = mesh_instance.global_transform
+	# Outer sphere — watertight
+	_generate_tiled_sphere(radius_outer, center_local, mesh_xform, base_box_mesh, debug_material_outer, false, true)
 
+	# Inner sphere — collisions flush, meshes extended to overlap visually
+	_generate_tiled_sphere(radius_inner, center_local, mesh_xform, base_box_mesh, debug_material_inner, true, false)
+
+	# Columns
+	_generate_outer_columns(radius_outer, center_local, mesh_xform)
+	_generate_inner_columns(radius_inner, center_local, mesh_xform)
+
+
+# ----- Sphere Collision -----
+func _generate_tiled_sphere(
+	radius: float,
+	center_local: Vector3,
+	mesh_xform: Transform3D,
+	box_mesh: BoxMesh,
+	mat: StandardMaterial3D,
+	invert: bool,
+	watertight: bool
+):
 	for lat in range(lat_segments):
 		var lat0 = deg_to_rad(-90.0 + lat * (180.0 / lat_segments))
 		var lat1 = deg_to_rad(-90.0 + (lat + 1.0) * (180.0 / lat_segments))
@@ -29,33 +70,173 @@ func generate_sphere_tiles(mesh: Mesh):
 			var lat_mid = (lat0 + lat1) * 0.5
 			var lon_mid = (lon0 + lon1) * 0.5
 
-			var local_tile_center = Vector3(
+			var local_center = Vector3(
 				radius * cos(lat_mid) * cos(lon_mid),
 				radius * sin(lat_mid),
 				radius * cos(lat_mid) * sin(lon_mid)
 			) + center_local
 
-			var tile_center = mesh_transform * local_tile_center
+			var tile_center = mesh_xform * local_center
 
-			var up = (tile_center - (mesh_transform * center_local)).normalized()
+			var up = (tile_center - (mesh_xform * center_local)).normalized()
+			if invert:
+				up = -up
+
 			var right = Vector3.UP.cross(up).normalized()
 			if right.length() < 0.001:
 				right = Vector3.FORWARD
 			var forward = up.cross(right).normalized()
-
 			var basis = Basis(right, up, forward)
 
 			var lat_arc = radius * abs(lat1 - lat0)
 			var lon_arc = radius * cos(lat_mid) * abs(lon1 - lon0)
-			var size = Vector3(lon_arc + padding, box_thickness, lat_arc + padding)
 
+			var thickness = box_thickness
+			if lat == 0 or lat == lat_segments - 1:
+				thickness *= pole_thickness_mult
+			if watertight and lat == lat_segments - 1:
+				thickness *= upper_thickness_mult
+
+			var lat_size = (lat_arc + padding) * (overlap_factor if watertight else 1.05)
+			var lon_size = (lon_arc + padding) * (overlap_factor if watertight else 1.05)
+
+
+			var size = Vector3(
+				lon_size,
+				thickness,
+				lat_size
+			)
+
+			# Collision
 			var shape = BoxShape3D.new()
 			shape.size = size * 2.0
-
 			var body = StaticBody3D.new()
 			var col_shape = CollisionShape3D.new()
 			col_shape.shape = shape
 			col_shape.transform = Transform3D(basis, tile_center)
-
 			body.add_child(col_shape)
 			add_child(body)
+
+# Debug mesh — inner sphere gets extra stretch for no gaps
+			var vis = MeshInstance3D.new()
+			vis.mesh = box_mesh
+			vis.material_override = mat
+			vis.transform = col_shape.transform
+			if watertight:
+				vis.scale = size
+			else:
+				vis.scale = size
+				vis.scale.x *= 1.2 # stretch sideways
+				vis.scale.z *= 1.2 # stretch sideways
+			add_child(vis)
+
+
+
+
+# ----- Outer Columns -----
+func _generate_outer_columns(radius: float, center_local: Vector3, mesh_xform: Transform3D):
+	for i in range(num_columns):
+		var lat = randf_range(-80.0, 80.0)
+		var lon = randf_range(0.0, 360.0)
+		var lat_r = deg_to_rad(lat)
+		var lon_r = deg_to_rad(lon)
+		_place_outer_column(radius, center_local, mesh_xform, lat_r, lon_r, false)
+		_place_outer_column(radius, center_local, mesh_xform, lat_r, lon_r, true)
+
+
+func _place_outer_column(radius: float, center_local: Vector3, mesh_xform: Transform3D, lat_r: float, lon_r: float, ceiling: bool):
+	var height = randf_range(column_min_height, column_max_height)
+
+	var local_pos = Vector3(
+		radius * cos(lat_r) * cos(lon_r),
+		radius * sin(lat_r),
+		radius * cos(lat_r) * sin(lon_r)
+	) + center_local
+
+	var world_pos = mesh_xform * local_pos
+	var up = (world_pos - (mesh_xform * center_local)).normalized()
+	if ceiling:
+		up = -up
+
+	var right = Vector3.UP.cross(up).normalized()
+	if right.length() < 0.001:
+		right = Vector3.FORWARD
+	var forward = up.cross(right).normalized()
+	var basis = Basis(right, up, forward)
+
+	var col_transform = Transform3D(basis, world_pos - up * (height / 2.0))
+
+	# Collision
+	var shape = BoxShape3D.new()
+	shape.size = Vector3(column_width, height, column_width)
+	var body = StaticBody3D.new()
+	var col_shape = CollisionShape3D.new()
+	col_shape.shape = shape
+	col_shape.transform = col_transform
+	body.add_child(col_shape)
+	add_child(body)
+
+	# Mesh
+	var box_mesh = BoxMesh.new()
+	box_mesh.size = Vector3(column_width, height, column_width)
+	var vis = MeshInstance3D.new()
+	vis.mesh = box_mesh
+	vis.material_override = column_material
+	vis.transform = col_transform
+	add_child(vis)
+
+
+# ----- Inner Columns -----
+func _generate_inner_columns(radius_inner: float, center_local: Vector3, mesh_xform: Transform3D):
+	for i in range(num_columns):
+		var lat = randf_range(-80.0, 80.0)
+		var lon = randf_range(0.0, 360.0)
+		var lat_r = deg_to_rad(lat)
+		var lon_r = deg_to_rad(lon)
+		_place_inner_column(radius_inner, center_local, mesh_xform, lat_r, lon_r, false)
+		_place_inner_column(radius_inner, center_local, mesh_xform, lat_r, lon_r, true)
+
+
+func _place_inner_column(radius_inner: float, center_local: Vector3, mesh_xform: Transform3D, lat_r: float, lon_r: float, ceiling: bool):
+	var height = randf_range(column_min_height, column_max_height)
+
+	var local_pos = Vector3(
+		radius_inner * cos(lat_r) * cos(lon_r),
+		radius_inner * sin(lat_r),
+		radius_inner * cos(lat_r) * sin(lon_r)
+	) + center_local
+
+	var world_pos = mesh_xform * local_pos
+	var up = (world_pos - (mesh_xform * center_local)).normalized()
+	if ceiling:
+		up = -up
+
+	# Push toward outer wall (tunnel space)
+	world_pos += -up * (column_width * 0.5 + 0.05)
+
+	var right = Vector3.UP.cross(up).normalized()
+	if right.length() < 0.001:
+		right = Vector3.FORWARD
+	var forward = up.cross(right).normalized()
+	var basis = Basis(right, up, forward)
+
+	var col_transform = Transform3D(basis, world_pos - up * (height / 2.0))
+
+	# Collision
+	var shape = BoxShape3D.new()
+	shape.size = Vector3(column_width, height, column_width)
+	var body = StaticBody3D.new()
+	var col_shape = CollisionShape3D.new()
+	col_shape.shape = shape
+	col_shape.transform = col_transform
+	body.add_child(col_shape)
+	add_child(body)
+
+	# Mesh
+	var box_mesh = BoxMesh.new()
+	box_mesh.size = Vector3(column_width, height, column_width)
+	var vis = MeshInstance3D.new()
+	vis.mesh = box_mesh
+	vis.material_override = column_material
+	vis.transform = col_transform
+	add_child(vis)

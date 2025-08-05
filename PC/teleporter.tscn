@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://blqm7danve5b4"]
 
 [ext_resource type="Script" path="res://pc/teleporter.gd" id="1_kkj7i"]
-[ext_resource type="AudioStream" uid="uid://cpp22qx0wki7y" path="res://pc/sounds/tp.mp3" id="2_0l7bd"]
+[ext_resource type="AudioStream" uid="uid://d1odm0ci4paov" path="res://tp.mp3" id="2_qbxx6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kcaxw"]
 
@@ -49,4 +49,4 @@ offset_bottom = 90.0
 text = "enter coordinates:"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_0l7bd")
+stream = ExtResource("2_qbxx6")

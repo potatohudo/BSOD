@@ -19,10 +19,8 @@ uniform float refraction_split_power : hint_range(0.01, 10.0) = 1.0;
 uniform float refraction_affect = 0.6;
 uniform vec3 gradient_basis = vec3(3.0, 3.0, 3.0);
 
-uniform float min_visibility : hint_range(0.0, 1.0) = 0.2;
-uniform float unlit_reflection_boost : hint_range(0.0, 2.0) = 1.0;
-
-// Fake light direction for shading (world space)
+uniform float min_energy_multiplier : hint_range(0.0, 5.0) = 1.0;
+uniform float max_energy_multiplier : hint_range(0.0, 10.0) = 5.0;
 uniform vec3 fake_light_dir = vec3(0.3, 1.0, 0.2);
 
 varying vec2 matcap_uv;
@@ -37,22 +35,22 @@ void vertex() {
     float t = TIME;
     vec3 pos = VERTEX;
 
-    // Liquid-like displacement
+    // Liquid distortion
     pos.y += sin((VERTEX.x + VERTEX.z) * wave_scale + t * wave_speed) * distortion_strength;
     pos.x += cos((VERTEX.z - VERTEX.y) * wave_scale + t * wave_speed) * distortion_strength;
     pos.z += sin((VERTEX.y + VERTEX.x) * wave_scale * 0.5 + t * wave_speed * 1.2) * distortion_strength * 0.5;
 
     VERTEX = pos;
 
-    // Matcap UV calculation
+    // Matcap UVs
     vec4 view_pos = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
     vec3 view_dir = normalize(-view_pos.xyz);
     vec3 view_normal = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 
     vec3 up_vector = vec3(0.0, 1.0, 0.0);
     vec3 right_vector = vec3(1.0, 0.0, 0.0);
-
     vec3 ref_vector = (abs(view_dir.y) > 0.9) ? right_vector : up_vector;
+
     vec3 tangent = normalize(cross(ref_vector, view_dir));
     vec3 bitangent = cross(view_dir, tangent);
 
@@ -62,56 +60,47 @@ void vertex() {
 
     matcap_uv = (coords * 0.496 + 0.5) * uv_scale + uv_offset;
 
-    // Store world-space info
+    // Store for fragment
     world_normal = normalize((MODEL_NORMAL_MATRIX * NORMAL));
     world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
 
 void fragment() {
     float t = TIME;
-
     METALLIC = 1.0;
     ROUGHNESS = 0.02;
 
-    // Base matcap reflection (always visible)
-    vec3 matcap_color = texture(matcap, matcap_uv).rgb * unlit_reflection_boost;
-    if (matcap_color == vec3(0.0)) {
-        matcap_color = vec3(0.8) * unlit_reflection_boost;
-    }
+    vec3 fixed_world_normal = normalize(world_normal);
+    vec3 view_dir = normalize(-VIEW);
+    vec3 look_dir = normalize(world_pos); // used for refraction
 
-    // PBR-ish lit color
-    vec3 lit_color = base_color;
-    lit_color = mix(lit_color, matcap_color, 0.8);
+    // Calculate energy boost based on light direction
+    float light_strength = max(dot(normalize(fake_light_dir), fixed_world_normal), 0.0);
+    float energy_multiplier = mix(min_energy_multiplier, max_energy_multiplier, light_strength);
+
+    // Matcap reflection
+    vec3 matcap_color = texture(matcap, matcap_uv).rgb;
+    if (matcap_color == vec3(0.0)) matcap_color = vec3(0.8);
+    vec3 color = mix(base_color, matcap_color, 0.8);
 
     // Shimmer
     float shimmer = sin((UV.x + UV.y) * 30.0 + t * shimmer_speed);
     shimmer = shimmer * 0.5 + 0.5;
-    lit_color += vec3(1.0, 0.9, 0.95) * shimmer_strength * shimmer;
+    color += vec3(1.0, 0.9, 0.95) * shimmer_strength * shimmer;
 
     // Fresnel
-    vec3 view_dir = normalize(-VIEW);
-    lit_color += fresnel(view_dir, NORMAL, 4.0) * 0.3;
+    color += fresnel(view_dir, NORMAL, 4.0) * 0.3;
 
     // Refraction
-    vec3 fixed_world_normal = normalize(world_normal);
-    vec3 look_dir = normalize(world_pos);
     float look_dot = pow(abs(dot(look_dir, fixed_world_normal)), refraction_split_power);
     vec3 reflection_dir = reflect(look_dir, fixed_world_normal);
     vec3 gradient_direction = gradient_basis * reflection_dir;
     float gradient = gradient_direction.x + gradient_direction.y + gradient_direction.z + t;
     vec3 refraction = 0.5 + 0.5 * sin(vec3(-1.0, 0.0, 1.0) * (1.0 - look_dot) * refraction_split + gradient);
-    lit_color = mix(lit_color, lit_color * (1.0 - refraction * refraction_affect), 0.5);
+    color = mix(color, color * (1.0 - refraction * refraction_affect), 0.5);
 
-    // Fake light intensity (based on normal dot light dir)
-    float light_level = max(dot(normalize(fake_light_dir), fixed_world_normal), 0.0);
-
-    // Blend always-on with lit
-    vec3 final_color = mix(matcap_color, lit_color, light_level);
-
-    // Enforce min visibility
-    final_color = mix(vec3(min_visibility), final_color, max(light_level, min_visibility));
-
-    ALBEDO = final_color;
+    // Apply energy multiplier based on fake light amount
+    ALBEDO = color * energy_multiplier;
 
     // Normal distortion
     vec3 normal_offset = vec3(

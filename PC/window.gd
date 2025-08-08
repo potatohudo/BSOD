@@ -24,6 +24,7 @@ var corner_margin := 16
 
 func _ready():
 	await get_tree().process_frame
+	
 	close_button.pressed.connect(queue_free)
 	hide_button.pressed.connect(func(): visible = false)
 	title_bar.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -47,12 +48,18 @@ func _ready():
 	resize_handle.gui_input.connect(func(event):
 		if not resizable:
 			return  
-		
+
 		var local_pos = event.position
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				resize_dir = _get_resize_direction(local_pos)
 				if resize_dir != Vector2.ZERO:
+					# If resizing from the left, swap horizontal anchors
+					if resize_dir.x == -1:
+						var old_left = anchor_left
+						anchor_left = anchor_right
+						anchor_right = old_left
+
 					resizing = true
 					resize_start = get_global_mouse_position()
 					original_size = size
@@ -63,24 +70,30 @@ func _ready():
 
 		elif event is InputEventMouseMotion and resizing:
 			var delta = get_global_mouse_position() - resize_start
+
 			var new_size = original_size
 			var new_pos = original_position
 
-			if resize_dir.x != 0:
-				new_size.x += delta.x * resize_dir.x
-				if resize_dir.x == -1:
-					new_pos.x -= delta.x
-			if resize_dir.y != 0:
-				new_size.y += delta.y * resize_dir.y
-				if resize_dir.y == -1:
-					new_pos.y -= delta.y
+			# Lock right side
+			if resize_dir.x == -1:  # Left edge
+				var right_edge = original_position.x + original_size.x
+				new_size.x = max(original_size.x - delta.x, 200)
+				new_pos.x = right_edge - new_size.x
+			elif resize_dir.x == 1:  # Right edge
+				new_size.x = max(original_size.x + delta.x, 200)
 
-			new_size.x = max(new_size.x, 200)
-			new_size.y = max(new_size.y, 150)
+			# Lock top side
+			if resize_dir.y == -1:  # Top edge
+				var bottom_edge = original_position.y + original_size.y
+				new_size.y = max(original_size.y - delta.y, 150)
+				new_pos.y = bottom_edge - new_size.y
+			elif resize_dir.y == 1:  # Bottom edge
+				new_size.y = max(original_size.y + delta.y, 150)
 
 			size = new_size
 			global_position = new_pos
-	)
+
+		)
 
 func _process(delta):
 	if not resizable:

@@ -16,11 +16,11 @@ resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_84dkk")
 shader_parameter/base_color = Color(0.6, 0.6, 0.6, 1)
-shader_parameter/distortion_strength = 1.0
-shader_parameter/wave_speed = 0.4
+shader_parameter/distortion_strength = 0.3
+shader_parameter/wave_speed = 0.05
 shader_parameter/wave_scale = 10.0
 shader_parameter/shimmer_speed = 1.5
-shader_parameter/shimmer_strength = 9.985
+shader_parameter/shimmer_strength = 0.08
 shader_parameter/flip_horizontal = false
 shader_parameter/uv_offset = Vector2(0, 0)
 shader_parameter/uv_scale = Vector2(1, 1)
@@ -28,8 +28,8 @@ shader_parameter/refraction_split = 2.0
 shader_parameter/refraction_split_power = 1.0
 shader_parameter/refraction_affect = 0.6
 shader_parameter/gradient_basis = Vector3(3, 3, 3)
-shader_parameter/min_visibility = 0.2
-shader_parameter/unlit_reflection_boost = 1.0
+shader_parameter/min_energy_multiplier = 5.0
+shader_parameter/max_energy_multiplier = 10.0
 shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
 shader_parameter/matcap = SubResource("ViewportTexture_ig8gc")
 
@@ -122,8 +122,8 @@ shader_parameter/refraction_split = 2.0
 shader_parameter/refraction_split_power = 1.0
 shader_parameter/refraction_affect = 0.6
 shader_parameter/gradient_basis = Vector3(3, 3, 3)
-shader_parameter/min_visibility = 0.2
-shader_parameter/unlit_reflection_boost = 1.0
+shader_parameter/min_energy_multiplier = 1.0
+shader_parameter/max_energy_multiplier = 5.0
 shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
 
 [sub_resource type="SphereMesh" id="SphereMesh_awfo5"]
@@ -144,8 +144,8 @@ shader_parameter/refraction_split = 2.0
 shader_parameter/refraction_split_power = 1.0
 shader_parameter/refraction_affect = 0.6
 shader_parameter/gradient_basis = Vector3(3, 3, 3)
-shader_parameter/min_visibility = 0.2
-shader_parameter/unlit_reflection_boost = 1.0
+shader_parameter/min_energy_multiplier = 1.0
+shader_parameter/max_energy_multiplier = 5.0
 shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_n00qw"]
@@ -234,14 +234,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 300.772, 0)
 mesh = ExtResource("1_f1s6p")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(0.666667, 0, 0, 0, 0.666667, 0, 0, 0, 0.666667, -2.73472, 185.116, 0.249213)
+transform = Transform3D(0.666667, 0, 0, 0, 0.666667, 0, 0, 0, 0.666667, -2.73472, 171.638, 0.249213)
 light_color = Color(1, 0.129412, 0, 1)
 light_energy = 4.732
 light_indirect_energy = 6.529
 light_bake_mode = 1
 distance_fade_enabled = true
 distance_fade_begin = 414.99
-omni_range = 176.4
+omni_range = 143.567
 
 [node name="Node3D" type="Node3D" parent="."]
 script = ExtResource("5_eccr1")

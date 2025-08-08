@@ -35,8 +35,7 @@ func _ready() -> void:
 	settings_manager.set_main_reference(self)
 	DisplayServer.window_set_size(Vector2i(1280, 800))
 	
-	
-	
+
 
 func get_subviewport_container():
 	return subviewport_container

@@ -51,7 +51,7 @@ func _ready():
 
 	var center_local = aabb.position + aabb.size * 0.5
 	var mesh_xform = mesh_instance.global_transform
-	var base_box_mesh = BoxMesh.new()
+	var base_box_mesh = SphereMesh.new()
 
 	# Outer sphere — watertight
 	_generate_tiled_sphere(radius_outer, center_local, mesh_xform, base_box_mesh, debug_material_outer, false, true)
@@ -128,7 +128,7 @@ func _generate_tiled_sphere(
 	radius: float,
 	center_local: Vector3,
 	mesh_xform: Transform3D,
-	box_mesh: BoxMesh,
+	box_mesh: SphereMesh,
 	mat: ShaderMaterial,
 	invert: bool,
 	watertight: bool

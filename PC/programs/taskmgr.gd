@@ -23,7 +23,7 @@ func _ready():
 	randomize()
 
 	
-	explorer = get_tree().get_root().get_node("/root/Main/SubViewportContainer/SubViewport/Explorer")  # e.g. "/root/Main/Explorer"
+	explorer = get_tree().get_root().get_node("/root/Main")  # e.g. "/root/Main/Explorer"
 	if not explorer:
 		push_error("Explorer node not found!")
 	

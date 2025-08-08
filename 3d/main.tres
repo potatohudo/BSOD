@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dg1dkawqqqtwb"]
+
+[ext_resource type="Shader" path="res://3d/main.gdshader" id="1_odoe4"]
+
+[resource]
+shader = ExtResource("1_odoe4")
+shader_parameter/glitch_count = 4365
+shader_parameter/glitch_y = PackedFloat32Array()
+shader_parameter/glitch_x = PackedFloat32Array()
+shader_parameter/glitch_w = PackedFloat32Array()
+shader_parameter/glitch_strength = 8.57

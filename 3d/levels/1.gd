@@ -9,17 +9,32 @@ extends Node3D
 @export var pole_thickness_mult: float = 3.0
 @export var upper_thickness_mult: float = 1.5
 @export var inner_scale: float = 0.8
-@export var debug_material_outer: StandardMaterial3D
-@export var debug_material_inner: StandardMaterial3D
+@export var debug_material_outer: ShaderMaterial
+@export var debug_material_inner: ShaderMaterial
 
 # Columns
 @export var num_columns: int = 20
 @export var column_min_height: float = 3.0
 @export var column_max_height: float = 7.0
 @export var column_width: float = 1.0
-@export var column_material: StandardMaterial3D
+@export var column_material: ShaderMaterial
 
 func _ready():
+	# Locate viewport (tries get_viewport() first, then searches scene)
+	var vp := _find_viewport()
+	var vp_tex = null
+	if vp:
+		vp_tex = vp.get_texture()
+		if vp_tex == null:
+			push_warning("Viewport found but has no texture. Ensure the Viewport is rendering to a texture (render_target).")
+	else:
+		push_error("No viewport found in scene tree.")
+
+	# Assign to exported ShaderMaterial resources first (so generated meshes using them already have the texture)
+	if vp_tex:
+		_assign_texture_to_material_resources(vp_tex)
+
+	# --- now generate geometry (unchanged) ---
 	if not mesh_instance:
 		push_error("mesh_instance is not assigned!")
 		return
@@ -48,14 +63,73 @@ func _ready():
 	_generate_outer_columns(radius_outer, center_local, mesh_xform)
 	_generate_inner_columns(radius_inner, center_local, mesh_xform)
 
+	# After generation, scan the subtree and assign the viewport texture to all ShaderMaterials found.
+	# This covers materials attached to generated MeshInstance3D nodes or mesh surface materials.
+	if vp_tex:
+		_assign_texture_to_scene_materials(vp_tex, "matcap")
 
-# ----- Sphere Collision -----
+
+# ---------------- helpers for viewport / assignment ----------------
+
+func _find_viewport() -> Viewport:
+	# Prefer the viewport this node is in
+	var vp := get_viewport()
+	if vp:
+		return vp
+	# Fallback: BFS search from the scene root for a Viewport node
+	var root = get_tree().get_root()
+	var queue := [root]
+	while queue.size() > 0:
+		var n = queue.pop_front()
+		if n is Viewport:
+			return n
+		for c in n.get_children():
+			if c is Node:
+				queue.append(c)
+	return null
+
+
+func _assign_texture_to_material_resources(vp_tex: Texture2D):
+	# assign to common exported ShaderMaterial resources (so new mesh instances using them already show it)
+	var mats := [debug_material_outer, debug_material_inner, column_material]
+	for mat in mats:
+		if mat and mat is ShaderMaterial:
+			mat.set_shader_parameter("matcap", vp_tex)
+
+
+func _assign_texture_to_scene_materials(vp_tex: Texture2D, uniform_name := "matcap"):
+	_assign_texture_to_node_and_children(self, vp_tex, uniform_name)
+
+
+func _assign_texture_to_node_and_children(node: Node, vp_tex: Texture2D, uniform_name: String):
+	# If it's a MeshInstance3D, handle material_override and surface materials
+	if node is MeshInstance3D:
+		var mi := node as MeshInstance3D
+		# material_override
+		if mi.material_override and mi.material_override is ShaderMaterial:
+			(mi.material_override as ShaderMaterial).set_shader_parameter(uniform_name, vp_tex)
+		# surface materials
+		if mi.mesh:
+			var scount := mi.mesh.get_surface_count()
+			for i in range(scount):
+				var surf_mat = mi.mesh.surface_get_material(i)
+				if surf_mat and surf_mat is ShaderMaterial:
+					(surf_mat as ShaderMaterial).set_shader_parameter(uniform_name, vp_tex)
+
+	# Recurse children
+	for child in node.get_children():
+		if child is Node:
+			_assign_texture_to_node_and_children(child, vp_tex, uniform_name)
+
+
+# ---------------- sphere / column generation (same as before) ----------------
+
 func _generate_tiled_sphere(
 	radius: float,
 	center_local: Vector3,
 	mesh_xform: Transform3D,
 	box_mesh: BoxMesh,
-	mat: StandardMaterial3D,
+	mat: ShaderMaterial,
 	invert: bool,
 	watertight: bool
 ):
@@ -100,7 +174,6 @@ func _generate_tiled_sphere(
 			var lat_size = (lat_arc + padding) * (overlap_factor if watertight else 1.05)
 			var lon_size = (lon_arc + padding) * (overlap_factor if watertight else 1.05)
 
-
 			var size = Vector3(
 				lon_size,
 				thickness,
@@ -117,7 +190,7 @@ func _generate_tiled_sphere(
 			body.add_child(col_shape)
 			add_child(body)
 
-# Debug mesh — inner sphere gets extra stretch for no gaps
+			# Debug mesh — inner sphere gets extra stretch for no gaps
 			var vis = MeshInstance3D.new()
 			vis.mesh = box_mesh
 			vis.material_override = mat
@@ -129,8 +202,6 @@ func _generate_tiled_sphere(
 				vis.scale.x *= 1.2 # stretch sideways
 				vis.scale.z *= 1.2 # stretch sideways
 			add_child(vis)
-
-
 
 
 # ----- Outer Columns -----

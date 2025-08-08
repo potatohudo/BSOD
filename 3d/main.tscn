@@ -1,10 +1,10 @@
-[gd_scene load_steps=71 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=79 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
 [ext_resource type="Script" path="res://3d/camera_3d.gd" id="2_e55b0"]
 [ext_resource type="Shader" path="res://3d/glitch.gdshader" id="3_ktawk"]
-[ext_resource type="PackedScene" uid="uid://b1xqiy3ueimpa" path="res://3d/models/LES/les.tscn" id="4_dw5ax"]
+[ext_resource type="Shader" path="res://3d/levels/merc.gdshader" id="4_36mum"]
 [ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
 [ext_resource type="Script" path="res://3d/settings.gd" id="7_4qtkp"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="7_6cqs6"]
@@ -18,11 +18,51 @@
 [ext_resource type="AudioStream" uid="uid://c0wn62dke1gql" path="res://3d/sounds/Track2_VoiceAudio.wav" id="13_ou8n6"]
 [ext_resource type="AudioStream" uid="uid://dp116jp7otldi" path="res://3d/sounds/Track3_VoiceAudio.wav" id="14_em0p2"]
 [ext_resource type="Script" path="res://3d/texture_rect.gd" id="17_ocwrj"]
+[ext_resource type="Material" uid="uid://dg1dkawqqqtwb" path="res://3d/main.tres" id="19_vs7pb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rmvd8"]
 size = Vector3(10, 1, 10)
 
 [sub_resource type="BoxMesh" id="BoxMesh_xu3bg"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_26mjl"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cfp0m"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("4_36mum")
+shader_parameter/base_color = Color(0.6, 0.6, 0.6, 1)
+shader_parameter/distortion_strength = 0.3
+shader_parameter/wave_speed = 2.0
+shader_parameter/wave_scale = 10.0
+shader_parameter/shimmer_speed = 1.5
+shader_parameter/shimmer_strength = 0.08
+shader_parameter/flip_horizontal = false
+shader_parameter/uv_offset = Vector2(0, 0)
+shader_parameter/uv_scale = Vector2(1, 1)
+shader_parameter/refraction_split = 2.0
+shader_parameter/refraction_split_power = 1.0
+shader_parameter/refraction_affect = 0.6
+shader_parameter/gradient_basis = Vector3(3, 3, 3)
+shader_parameter/min_visibility = 0.2
+shader_parameter/unlit_reflection_boost = 1.0
+shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
+shader_parameter/matcap = SubResource("ViewportTexture_26mjl")
+
+[sub_resource type="SphereMesh" id="SphereMesh_entm2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_oxn7q"]
+
+[sub_resource type="Sky" id="Sky_e7re3"]
+resource_local_to_scene = true
+sky_material = SubResource("ProceduralSkyMaterial_oxn7q")
+
+[sub_resource type="Environment" id="Environment_s05st"]
+background_mode = 2
+sky = SubResource("Sky_e7re3")
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 5.48
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_mk1hg"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
@@ -352,6 +392,9 @@ shader_parameter/datamosh_amount = 0.5
 shader_parameter/noise_strength = 0.5
 shader_parameter/glitch_button = 0
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_g3vk2"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
 [node name="Main" type="Node"]
 process_mode = 1
 script = ExtResource("1_h31h8")
@@ -379,8 +422,7 @@ render_target_update_mode = 4
 [node name="Node3D" type="Node3D" parent="SubViewportContainer/SubViewport"]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.76837e-07, 2.91825, -0.303359)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.76837e-07, 5.91055, 1.78135)
 
 [node name="CharacterBody3D" parent="SubViewportContainer/SubViewport/Node3D" instance=ExtResource("1_arn5h")]
 process_mode = 1
@@ -429,8 +471,15 @@ offset_right = 289.4
 offset_bottom = -33.22
 scale = Vector2(0.425, 0.425)
 
-[node name="LES" parent="SubViewportContainer/SubViewport/Node3D/LevelHolder" instance=ExtResource("4_dw5ax")]
-patrol_radius = 50.0
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D"]
+transform = Transform3D(1.9, 0, 0, 0, 1.9, 0, 0, 0, 1.9, 0, 1.90665, 3.97217)
+material_override = SubResource("ShaderMaterial_cfp0m")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_entm2")
+skeleton = NodePath("../LevelHolder")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport/Node3D"]
+environment = SubResource("Environment_s05st")
 
 [node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
 visible = false
@@ -617,3 +666,13 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("17_ocwrj")
+
+[node name="TextureRect" type="TextureRect" parent="Node"]
+visible = false
+material = ExtResource("19_vs7pb")
+offset_right = 1200.0
+offset_bottom = 799.0
+texture = SubResource("ViewportTexture_g3vk2")

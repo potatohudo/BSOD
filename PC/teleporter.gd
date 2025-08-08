@@ -7,8 +7,10 @@ var level_lookup: Dictionary = {
 	"12.42.0": "track",
 	"00.00.1": "level_test",
 	"11.11.1": "1",
-	"00.00.2": "level_test_2"
+	"00.00.2": "level_test_2",
+	"64.27.1": "merc"
 	#"00.00.5": "corridor_w5" 
+	
 }
 var usage: Vector2 = Vector2(0, -2)
 func get_usage() -> Vector2:

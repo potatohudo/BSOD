@@ -1,43 +1,29 @@
 shader_type canvas_item;
 
-uniform sampler2D source_texture;
-uniform float pixel_size : hint_range(1.0, 8.0) = 3.0;
-uniform float color_band_levels : hint_range(1.0, 256.0) = 8.0;
-uniform float noise_intensity : hint_range(0.0, 1.0) = 0.3;
-uniform float distortion_strength : hint_range(0.0, 0.5) = 0.1;
-uniform float ghost_intensity : hint_range(0.0, 0.5) = 0.2;
-uniform float fog_intensity : hint_range(0.0, 1.0) = 0.3;
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+
+// Number of glitch strips
+uniform int glitch_count = 0;
+uniform float glitch_y[64];    // Y positions (0.0–1.0)
+uniform float glitch_x[64];    // Start X positions
+uniform float glitch_w[64];    // Widths
+
+uniform float glitch_strength = 0.05;
+
+vec2 apply_glitch_from_data(vec2 uv) {
+    for (int i = 0; i < glitch_count; i++) {
+        if (abs(uv.y - glitch_y[i]) < 0.001) { // match row
+            if (uv.x >= glitch_x[i] && uv.x <= glitch_x[i] + glitch_w[i]) {
+                float shift = glitch_strength;
+                return uv + vec2(shift, 0.0);
+            }
+        }
+    }
+    return uv;
+}
 
 void fragment() {
-    vec2 uv = UV;
-
-    // Simulate pixelation
-    uv = floor(uv * vec2(TEXTURE_PIXEL_SIZE) / pixel_size) * pixel_size / vec2(TEXTURE_PIXEL_SIZE);
-
-    // Fetch from external texture to avoid framebuffer conflicts
-    vec4 color = texture(source_texture, uv);
-
-    // Color banding
-    color.rgb = floor(color.rgb * color_band_levels) / color_band_levels;
-
-    // Flickering noise
-    float noise = fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453);
-    color.rgb += noise * noise_intensity;
-
-    // Fake distortion by shifting UVs slightly
-    float offset = sin(uv.y * 10.0) * distortion_strength;
-    vec4 distorted_color = texture(source_texture, uv + vec2(offset, 0.0));
-
-    // Blend original and distorted color
-    color = mix(color, distorted_color, 0.5);
-
-    // Ghosting effect
-    vec4 ghost = texture(source_texture, uv + vec2(-ghost_intensity, ghost_intensity));
-    color = mix(color, ghost, ghost_intensity);
-
-    // Fog effect
-    float dist = length(uv - 0.5);
-    color.rgb = mix(color.rgb, vec3(0.5), fog_intensity * dist);
-
-    COLOR = color;
+    vec2 uv = SCREEN_UV;
+    uv = apply_glitch_from_data(uv);
+    COLOR = texture(SCREEN_TEXTURE, uv);
 }

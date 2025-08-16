@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ck23c7m80mhs0"
-path="res://.godot/imported/taskmgr.png-eed52b897e654ab58421ba558a2baedf.ctex"
+path="res://.godot/imported/taskmgr.png-b199f6e315f43f4e200cb531ff39eb5d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://pc/programs/icons/taskmgr.png"
-dest_files=["res://.godot/imported/taskmgr.png-eed52b897e654ab58421ba558a2baedf.ctex"]
+source_file="res://PC/programs/icons/taskmgr.png"
+dest_files=["res://.godot/imported/taskmgr.png-b199f6e315f43f4e200cb531ff39eb5d.ctex"]
 
 [params]
 

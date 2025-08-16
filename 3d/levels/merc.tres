@@ -1,0 +1,22 @@
+[gd_resource type="Environment" load_steps=3 format=3 uid="uid://cspjqdo4lt0xq"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3ywpx"]
+
+[sub_resource type="Sky" id="Sky_yaebk"]
+sky_material = SubResource("ProceduralSkyMaterial_3ywpx")
+
+[resource]
+background_mode = 2
+background_energy_multiplier = 0.03
+sky = SubResource("Sky_yaebk")
+ambient_light_source = 2
+ambient_light_energy = 11.57
+tonemap_mode = 1
+ssr_fade_in = 2.48464
+ssr_depth_tolerance = 42.91
+glow_enabled = true
+glow_intensity = 3.22
+glow_bloom = 0.59
+fog_light_color = Color(0, 0, 0, 1)
+volumetric_fog_detail_spread = 5.79562
+volumetric_fog_ambient_inject = 1.21

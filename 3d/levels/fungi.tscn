@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://b4nnwkcihkug"]
+
+[ext_resource type="Script" path="res://3d/levels/fungi.gd" id="1_36p2r"]
+[ext_resource type="Shader" path="res://3d/levels/fungi.gdshader" id="2_hu5g3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wgfnh"]
+render_priority = 0
+shader = ExtResource("2_hu5g3")
+shader_parameter/sway_amplitude = 15.0
+shader_parameter/sway_speed = 5.0
+shader_parameter/amplitude_variation = 10.0
+shader_parameter/amplitude_speed = 5.0
+shader_parameter/sway_axis = Vector3(0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bhlic"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_8wjwo"]
+
+[node name="Node3D" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.37685, 0, 0)
+script = ExtResource("1_36p2r")
+min_vines = 2000
+max_vines = 3000
+min_thickness = 0.3
+max_thickness = 0.5
+surface_epsilon = -1.0
+vine_material = SubResource("ShaderMaterial_wgfnh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." groups=["fungi"]]
+transform = Transform3D(2.35261, 0, 0, 0, 0.160353, 0, 0, 0, 1.74108, 0, 3.14438, 0)
+mesh = SubResource("BoxMesh_bhlic")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." groups=["fungi"]]
+transform = Transform3D(1.78106, 0.0637122, 0, -0.940558, 0.120647, 0, 0, 0, 1.6388, 2.07604, 2.76201, 0)
+mesh = SubResource("BoxMesh_8wjwo")

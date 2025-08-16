@@ -3,12 +3,12 @@
 importer="mp3"
 type="AudioStreamMP3"
 uid="uid://nsyrhb4df0hn"
-path="res://.godot/imported/noise.mp3-63d87388651554be36e095e84107a674.mp3str"
+path="res://.godot/imported/noise.mp3-6ffef32a663a6e0f1a7b481560078aca.mp3str"
 
 [deps]
 
-source_file="res://pc/sounds/noise.mp3"
-dest_files=["res://.godot/imported/noise.mp3-63d87388651554be36e095e84107a674.mp3str"]
+source_file="res://PC/sounds/noise.mp3"
+dest_files=["res://.godot/imported/noise.mp3-6ffef32a663a6e0f1a7b481560078aca.mp3str"]
 
 [params]
 

@@ -430,7 +430,7 @@ process_mode = 1
 [node name="Marker3D" type="Marker3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D"]
 
 [node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.42205, 0.284705)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0.285)
 script = ExtResource("2_e55b0")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
@@ -473,6 +473,7 @@ scale = Vector2(0.425, 0.425)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D"]
 transform = Transform3D(1.9, 0, 0, 0, 1.9, 0, 0, 0, 1.9, 0, 1.90665, 3.97217)
+visible = false
 material_override = SubResource("ShaderMaterial_cfp0m")
 cast_shadow = 0
 mesh = SubResource("SphereMesh_entm2")

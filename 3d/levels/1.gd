@@ -19,54 +19,127 @@ extends Node3D
 @export var column_width: float = 1.0
 @export var column_material: ShaderMaterial
 
-func _ready():
-	# Locate viewport (tries get_viewport() first, then searches scene)
-	var vp := _find_viewport()
-	var vp_tex = null
-	if vp:
-		vp_tex = vp.get_texture()
-		if vp_tex == null:
-			push_warning("Viewport found but has no texture. Ensure the Viewport is rendering to a texture (render_target).")
-	else:
-		push_error("No viewport found in scene tree.")
+# Rotation stuff (no gravity anywhere)
+var player: CharacterBody3D
+var sphere_center: Vector3
+var last_player_pos: Vector3
+var _have_last := false
 
-	# Assign to exported ShaderMaterial resources first (so generated meshes using them already have the texture)
+func _ready():
+	# Find the player by path
+	player = get_node_or_null("../../CharacterBody3D")
+	if not player:
+		push_error("Could not find player at SubViewportContainer/SubViewport/Node3D/CharacterBody3D")
+
+	# Sphere center: true geometric center from the mesh AABB (world space)
+	if mesh_instance and mesh_instance.mesh:
+		var aabb := mesh_instance.mesh.get_aabb()
+		sphere_center = mesh_instance.to_global(aabb.get_center())
+	else:
+		sphere_center = global_transform.origin
+
+	# Viewport / materials hookup (unchanged)
+	var vp := _find_viewport()
+	var vp_tex := (vp.get_texture() if vp else null)
+	if not vp:
+		push_error("No viewport found in scene tree.")
+	elif vp_tex == null:
+		push_warning("Viewport found but has no texture. Ensure the Viewport is rendering to a texture.")
+
 	if vp_tex:
 		_assign_texture_to_material_resources(vp_tex)
 
-	# --- now generate geometry (unchanged) ---
+	# --- generate geometry (unchanged) ---
 	if not mesh_instance:
 		push_error("mesh_instance is not assigned!")
 		return
-
 	mesh_instance.visible = false
 
-	var aabb = mesh_instance.mesh.get_aabb()
+	var aabb := mesh_instance.mesh.get_aabb()
 	if aabb.size == Vector3.ZERO:
 		push_error("Mesh AABB is zero!")
 		return
 
-	var radius_outer = aabb.size.x / 2.0
-	var radius_inner = radius_outer * inner_scale
+	var radius_outer := aabb.size.x / 2.0
+	var radius_inner := radius_outer * inner_scale
 
-	var center_local = aabb.position + aabb.size * 0.5
-	var mesh_xform = mesh_instance.global_transform
-	var base_box_mesh = SphereMesh.new()
+	var center_local := aabb.position + aabb.size * 0.5
+	var mesh_xform := mesh_instance.global_transform
+	var base_box_mesh := SphereMesh.new()
 
-	# Outer sphere — watertight
 	_generate_tiled_sphere(radius_outer, center_local, mesh_xform, base_box_mesh, debug_material_outer, false, true)
-
-	# Inner sphere — collisions flush, meshes extended to overlap visually
 	_generate_tiled_sphere(radius_inner, center_local, mesh_xform, base_box_mesh, debug_material_inner, true, false)
 
-	# Columns
 	_generate_outer_columns(radius_outer, center_local, mesh_xform)
 	_generate_inner_columns(radius_inner, center_local, mesh_xform)
 
-	# After generation, scan the subtree and assign the viewport texture to all ShaderMaterials found.
-	# This covers materials attached to generated MeshInstance3D nodes or mesh surface materials.
 	if vp_tex:
 		_assign_texture_to_scene_materials(vp_tex, "matcap")
+
+	# init last position AFTER everything is placed
+	if player:
+		last_player_pos = player.global_transform.origin
+		_have_last = true
+
+
+func _physics_process(_delta):
+	if not player or not _have_last:
+		return
+
+	# Directions from sphere center to player (last vs current)
+	var from := (last_player_pos - sphere_center)
+	var to := (player.global_transform.origin - sphere_center)
+	if from.length() < 0.0001 or to.length() < 0.0001:
+		last_player_pos = player.global_transform.origin
+		return
+
+	from = from.normalized()
+	to = to.normalized()
+
+	# Skip tiny changes to avoid jitter
+	var dot := clamp(from.dot(to), -1.0, 1.0)
+	if dot > 0.99999:
+		last_player_pos = player.global_transform.origin
+		return
+
+	# Rotation that would move "from" -> "to"
+	var rot_quat := _quat_from_to(from, to)
+	# Apply the OPPOSITE rotation to the planet (treadmill effect)
+	var inv_quat := rot_quat.inverse()
+	var rot_basis := Basis(inv_quat)
+
+	# Rotate AROUND the sphere center (keep center fixed)
+	var origin_before := global_transform.origin
+	var basis_before := global_transform.basis
+
+	var new_origin := rot_basis.xform(origin_before - sphere_center) + sphere_center
+	var new_basis := (rot_basis * basis_before).orthonormalized()
+
+	global_transform = Transform3D(new_basis, new_origin)
+
+	# Update for next frame
+	last_player_pos = player.global_transform.origin
+
+
+func _quat_from_to(a: Vector3, b: Vector3) -> Quaternion:
+	var v0 := a.normalized()
+	var v1 := b.normalized()
+	var d := clamp(v0.dot(v1), -1.0, 1.0)
+
+	# Same direction → no rotation
+	if d > 0.999999:
+		return Quaternion()
+
+	# Opposite direction → 180° around an axis orthogonal to v0
+	if d < -0.999999:
+		var axis_base := Vector3(1, 0, 0) if abs(v0.x) < 0.9 else Vector3(0, 1, 0)
+		var axis := axis_base.cross(v0).normalized()
+		return Quaternion(axis, PI)
+
+	# General case
+	var axis := v0.cross(v1).normalized()
+	var angle := acos(d)
+	return Quaternion(axis, angle)
 
 
 # ---------------- helpers for viewport / assignment ----------------
@@ -102,24 +175,42 @@ func _assign_texture_to_scene_materials(vp_tex: Texture2D, uniform_name := "matc
 
 
 func _assign_texture_to_node_and_children(node: Node, vp_tex: Texture2D, uniform_name: String):
-	# If it's a MeshInstance3D, handle material_override and surface materials
 	if node is MeshInstance3D:
 		var mi := node as MeshInstance3D
+
 		# material_override
 		if mi.material_override and mi.material_override is ShaderMaterial:
-			(mi.material_override as ShaderMaterial).set_shader_parameter(uniform_name, vp_tex)
+			var mat := mi.material_override as ShaderMaterial
+			if mat.shader:
+				for u in mat.shader.get_shader_uniform_list():
+					if u.name == uniform_name:
+						mat.set_shader_parameter(uniform_name, vp_tex)
+						break
+
 		# surface materials
 		if mi.mesh:
 			var scount := mi.mesh.get_surface_count()
 			for i in range(scount):
 				var surf_mat = mi.mesh.surface_get_material(i)
 				if surf_mat and surf_mat is ShaderMaterial:
-					(surf_mat as ShaderMaterial).set_shader_parameter(uniform_name, vp_tex)
+					var smat := surf_mat as ShaderMaterial
+					if smat.shader:
+						for u in smat.shader.get_shader_uniform_list():
+							if u.name == uniform_name:
+								smat.set_shader_parameter(uniform_name, vp_tex)
+								break
+
+	# recurse
+	for child in node.get_children():
+		if child is Node:
+			_assign_texture_to_node_and_children(child, vp_tex, uniform_name)
+
 
 	# Recurse children
 	for child in node.get_children():
 		if child is Node:
 			_assign_texture_to_node_and_children(child, vp_tex, uniform_name)
+
 
 
 # ---------------- sphere / column generation (same as before) ----------------
@@ -311,3 +402,22 @@ func _place_inner_column(radius_inner: float, center_local: Vector3, mesh_xform:
 	vis.material_override = column_material
 	vis.transform = col_transform
 	add_child(vis)
+
+
+## Case 1: Player has an Area3D detector (we receive AREA signals)
+#func _on_player_detector_area_shape_entered(_area_rid: RID, area: Area3D, _area_shape_idx: int, _local_shape_idx: int) -> void:
+	#if area and area.is_in_group("0g"):
+		#_enter_0g()
+#
+#func _on_player_detector_area_shape_exited(_area_rid: RID, area: Area3D, _area_shape_idx: int, _local_shape_idx: int) -> void:
+	#if area and area.is_in_group("0g"):
+		#_exit_0g()
+#
+## Case 2: No detector; each "0g" Area watches for BODY signals and tells us when the player enters/exits
+#func _on_0g_body_shape_entered(_body_rid: RID, body: Node, _body_shape_idx: int, _local_shape_idx: int, area: Area3D) -> void:
+	#if body == player:
+		#_enter_0g()
+#
+#func _on_0g_body_shape_exited(_body_rid: RID, body: Node, _body_shape_idx: int, _local_shape_idx: int, area: Area3D) -> void:
+	#if body == player:
+		#_exit_0g()

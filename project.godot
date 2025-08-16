@@ -33,6 +33,8 @@ window/vsync/vsync_mode=0
 
 hidden="hidden objects in the 4d space"
 POI="point of interest"
+0g=""
+playerspawn=""
 
 [input]
 

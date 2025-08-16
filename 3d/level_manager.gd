@@ -5,6 +5,7 @@ extends Node
 @onready var indicator: AnimatedSprite2D = get_node_or_null("/root/Main/POR/POR_Full")
 @onready var indicator1: AnimatedSprite2D = get_node_or_null("/root/Main/POR/POR_Idle")
 @onready var player_camera: Camera3D = get_node("/root/Main/SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D")
+@onready var player = get_node("/root/Main/SubViewportContainer/SubViewport/Node3D/CharacterBody3D")
 
 var map1
 var map2
@@ -68,7 +69,12 @@ func _load_level(level_path: String):
 		init_morph()
 		collider.global_transform = map1.global_transform
 		update_collision()
-
+	var spawn_points = new_level.get_tree().get_nodes_in_group("playerspawn")
+	if not spawn_points.is_empty():
+		var spawn = spawn_points[0] # use the first spawn point in the group
+		player.global_transform.origin = spawn.global_transform.origin
+	else:
+		print("[WARN] No playerspawn marker found in this level.")
 	subviewport_container.queue_redraw()
 
 func init_morph():

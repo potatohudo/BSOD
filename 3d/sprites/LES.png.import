@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bn2o3apnhogrh"
 path.s3tc="res://.godot/imported/LES.png-b00591afc50ff90c51df03e038e03675.s3tc.ctex"
-path.etc2="res://.godot/imported/LES.png-b00591afc50ff90c51df03e038e03675.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://3d/sprites/LES.png"
-dest_files=["res://.godot/imported/LES.png-b00591afc50ff90c51df03e038e03675.s3tc.ctex", "res://.godot/imported/LES.png-b00591afc50ff90c51df03e038e03675.etc2.ctex"]
+dest_files=["res://.godot/imported/LES.png-b00591afc50ff90c51df03e038e03675.s3tc.ctex"]
 
 [params]
 

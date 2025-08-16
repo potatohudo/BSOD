@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://pc/explorer.gd" id="1_48fic"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_peh6a"]
-bg_color = Color(5.48691e-06, 0.681106, 0.72403, 1)
+bg_color = Color(0, 0, 0, 1)
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -58,7 +58,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 151.0
+offset_left = 251.0
 offset_top = 42.0
 offset_right = -3.0
 offset_bottom = -18.0

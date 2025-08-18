@@ -436,7 +436,7 @@ script = ExtResource("2_e55b0")
 [node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.231125, -0.776971)
 visible = false
-light_energy = 10.447
+light_energy = 4.114
 light_indirect_energy = 8.162
 light_volumetric_fog_energy = 5.724
 shadow_enabled = true
@@ -543,8 +543,8 @@ sprite_frames = SubResource("SpriteFrames_vmomf")
 
 [node name="POR_Idle" type="AnimatedSprite2D" parent="POR"]
 top_level = true
-position = Vector2(600, 100)
-scale = Vector2(0.434, 0.434)
+position = Vector2(600, 75)
+scale = Vector2(0.249, 0.224968)
 sprite_frames = SubResource("SpriteFrames_mtpr1")
 
 [node name="PauseMenu" type="Panel" parent="."]

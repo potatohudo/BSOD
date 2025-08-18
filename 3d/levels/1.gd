@@ -82,64 +82,43 @@ func _ready():
 		_have_last = true
 
 
-func _physics_process(_delta):
+func _physics_process(delta: float) -> void:
 	if not player or not _have_last:
+		last_player_pos = player.global_transform.origin
+		_have_last = true
 		return
 
-	# Directions from sphere center to player (last vs current)
-	var from := (last_player_pos - sphere_center)
-	var to := (player.global_transform.origin - sphere_center)
-	if from.length() < 0.0001 or to.length() < 0.0001:
+	# Previous vs current player positions relative to sphere center
+	var prev_rel: Vector3 = (last_player_pos - sphere_center).normalized()
+	var curr_rel: Vector3 = (player.global_transform.origin - sphere_center).normalized()
+
+	# Axis of rotation = perpendicular to both vectors
+	var axis: Vector3 = prev_rel.cross(curr_rel)
+	var axis_len: float = axis.length()
+
+	# If player hasn't moved enough, skip
+	if axis_len < 0.0001:
 		last_player_pos = player.global_transform.origin
 		return
 
-	from = from.normalized()
-	to = to.normalized()
+	axis = axis / axis_len
+	var angle: float = acos(clamp(prev_rel.dot(curr_rel), -1.0, 1.0))
 
-	# Skip tiny changes to avoid jitter
-	var dot := clamp(from.dot(to), -1.0, 1.0)
-	if dot > 0.99999:
-		last_player_pos = player.global_transform.origin
-		return
+	# Apply the *opposite* rotation to the sphere (treadmill effect)
+	var rot: Basis = Basis(Quaternion(axis, -angle))
 
-	# Rotation that would move "from" -> "to"
-	var rot_quat := _quat_from_to(from, to)
-	# Apply the OPPOSITE rotation to the planet (treadmill effect)
-	var inv_quat := rot_quat.inverse()
-	var rot_basis := Basis(inv_quat)
+	# Keep rotation centered on sphere_center
+	var origin_before: Vector3 = global_transform.origin
+	var basis_before: Basis = global_transform.basis
 
-	# Rotate AROUND the sphere center (keep center fixed)
-	var origin_before := global_transform.origin
-	var basis_before := global_transform.basis
-
-	var new_origin := rot_basis.xform(origin_before - sphere_center) + sphere_center
-	var new_basis := (rot_basis * basis_before).orthonormalized()
+	var new_origin: Vector3 = rot * (origin_before - sphere_center) + sphere_center
+	var new_basis: Basis = (rot * basis_before).orthonormalized()
 
 	global_transform = Transform3D(new_basis, new_origin)
 
-	# Update for next frame
 	last_player_pos = player.global_transform.origin
 
 
-func _quat_from_to(a: Vector3, b: Vector3) -> Quaternion:
-	var v0 := a.normalized()
-	var v1 := b.normalized()
-	var d := clamp(v0.dot(v1), -1.0, 1.0)
-
-	# Same direction → no rotation
-	if d > 0.999999:
-		return Quaternion()
-
-	# Opposite direction → 180° around an axis orthogonal to v0
-	if d < -0.999999:
-		var axis_base := Vector3(1, 0, 0) if abs(v0.x) < 0.9 else Vector3(0, 1, 0)
-		var axis := axis_base.cross(v0).normalized()
-		return Quaternion(axis, PI)
-
-	# General case
-	var axis := v0.cross(v1).normalized()
-	var angle := acos(d)
-	return Quaternion(axis, angle)
 
 
 # ---------------- helpers for viewport / assignment ----------------

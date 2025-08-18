@@ -205,24 +205,16 @@ shader_parameter/uv1_offset = Vector3(0, 0, 0)
 process_priority = 1
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, -217.803, 0)
 script = ExtResource("1_y56ar")
-lat_segments = null
-lon_segments = null
-box_thickness = null
-padding = null
+mesh_instance = NodePath("Map1")
 overlap_factor = 3.0
-pole_thickness_mult = null
-upper_thickness_mult = null
-inner_scale = null
 debug_material_outer = SubResource("ShaderMaterial_78xl2")
 num_columns = 300
 column_min_height = 8.0
 column_max_height = 40.0
 column_width = 20.0
-mesh_instance = NodePath("Map1")
 
 [node name="Map1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 300.772, 0)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -411.677, 0)
 mesh = ExtResource("1_f1s6p")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
@@ -345,7 +337,7 @@ mesh = SubResource("BoxMesh_n00qw")
 shape = SubResource("ConcavePolygonShape3D_65dav")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(5.295, 0, 0, 0, 5.295, 0, 0, 0, 5.295, 0, 511.583, 0)
+transform = Transform3D(5.295, 0, 0, 0, 5.295, 0, 0, 0, 5.295, 0, -181.159, 0)
 mesh = SubResource("SphereMesh_5vn37")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
@@ -373,8 +365,7 @@ transform = Transform3D(123.285, 0, 0, 0, 123.285, 0, 0, 0, 123.285, 0, -697.425
 shape = SubResource("SphereShape3D_0khan")
 
 [node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0918681, -568.712, 0.727824)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0918681, -367.6, 0.727824)
 
 [connection signal="area_shape_entered" from="Area3D" to="." method="_on_area_3d_area_shape_entered"]
 [connection signal="area_shape_exited" from="Area3D" to="." method="_on_area_3d_area_shape_exited"]

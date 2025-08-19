@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://b4nnwkcihkug"]
+[gd_scene load_steps=45 format=3 uid="uid://b4nnwkcihkug"]
 
 [ext_resource type="Script" path="res://3d/levels/fungi.gd" id="1_36p2r"]
 [ext_resource type="Shader" path="res://3d/levels/fungi.gdshader" id="2_hu5g3"]
@@ -7,10 +7,19 @@
 [ext_resource type="AudioStream" uid="uid://csi7in2cchg34" path="res://3d/sounds/wind_chime.wav" id="5_i1w1e"]
 [ext_resource type="AudioStream" uid="uid://byxqegms73cqp" path="res://3d/sounds/outfile_2025-08-18_22-11-23.wav" id="6_vsruh"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wgfnh"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_86wc7"]
 render_priority = 0
 shader = ExtResource("2_hu5g3")
 shader_parameter/sway_amplitude = 5.0
+shader_parameter/sway_speed = 1.0
+shader_parameter/amplitude_variation = 2.0
+shader_parameter/amplitude_speed = 0.5
+shader_parameter/sway_axis = Vector3(0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_icqse"]
+render_priority = 0
+shader = ExtResource("2_hu5g3")
+shader_parameter/sway_amplitude = 15.0
 shader_parameter/sway_speed = 1.0
 shader_parameter/amplitude_variation = 2.0
 shader_parameter/amplitude_speed = 0.5
@@ -141,18 +150,18 @@ scale_max = 10.15
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.37685, -19.3225, 0)
 script = ExtResource("1_36p2r")
 inner_spawn_distance = 50.0
-outer_spawn_distance = 100.0
-inner_min_vines = 1800
-inner_max_vines = 2100
-outer_min_vines = 500
-outer_max_vines = 800
-min_length = 4.0
+outer_spawn_distance = 70.0
+inner_count = 1000
+outer_count = 300
+impostor_count = 800
+min_length = 8.0
 max_length = 15.0
-min_thickness = 6.0
+min_thickness = 7.0
 max_thickness = 10.0
-surface_epsilon = -3.0
-vine_material = SubResource("ShaderMaterial_wgfnh")
-vine_texture = ExtResource("3_mibpr")
+surface_epsilon = -2.3
+use_lowpoly_cylinder = false
+vine_material = SubResource("ShaderMaterial_86wc7")
+impostor_material = SubResource("ShaderMaterial_icqse")
 
 [node name="Fungi" type="MeshInstance3D" parent="." groups=["fungi"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.08226, 9.33129, -1.62824)

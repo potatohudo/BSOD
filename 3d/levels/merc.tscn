@@ -214,11 +214,11 @@ column_max_height = 40.0
 column_width = 20.0
 
 [node name="Map1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -411.677, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -389.704, 0)
 mesh = ExtResource("1_f1s6p")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(0.666667, 0, 0, 0, 0.666667, 0, 0, 0, 0.666667, -2.73472, -525.787, 0.249213)
+transform = Transform3D(0.666667, 0, 0, 0, 0.666667, 0, 0, 0, 0.666667, -2.73472, -862.087, 0.249213)
 light_color = Color(1, 0.129412, 0, 1)
 light_energy = 4.732
 light_indirect_energy = 6.529
@@ -228,6 +228,7 @@ distance_fade_begin = 414.99
 omni_range = 143.567
 
 [node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -336.3, 0)
 script = ExtResource("5_eccr1")
 min_spawn_radius = 3.0
 spawn_radius = 100.0
@@ -365,7 +366,7 @@ transform = Transform3D(123.285, 0, 0, 0, 123.285, 0, 0, 0, 123.285, 0, -697.425
 shape = SubResource("SphereShape3D_0khan")
 
 [node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0918681, -367.6, 0.727824)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0918681, -384.501, 0.727824)
 
 [connection signal="area_shape_entered" from="Area3D" to="." method="_on_area_3d_area_shape_entered"]
 [connection signal="area_shape_exited" from="Area3D" to="." method="_on_area_3d_area_shape_exited"]

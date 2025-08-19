@@ -88,15 +88,11 @@ func _physics_process(delta: float) -> void:
 		_have_last = true
 		return
 
-	# Previous vs current player positions relative to sphere center
 	var prev_rel: Vector3 = (last_player_pos - sphere_center).normalized()
 	var curr_rel: Vector3 = (player.global_transform.origin - sphere_center).normalized()
-
-	# Axis of rotation = perpendicular to both vectors
 	var axis: Vector3 = prev_rel.cross(curr_rel)
 	var axis_len: float = axis.length()
 
-	# If player hasn't moved enough, skip
 	if axis_len < 0.0001:
 		last_player_pos = player.global_transform.origin
 		return
@@ -104,19 +100,24 @@ func _physics_process(delta: float) -> void:
 	axis = axis / axis_len
 	var angle: float = acos(clamp(prev_rel.dot(curr_rel), -1.0, 1.0))
 
-	# Apply the *opposite* rotation to the sphere (treadmill effect)
+	# 🔥 correction factor based on sphere radius vs player movement
+	var move_dist := (player.global_transform.origin - last_player_pos).length()
+	var radius := (last_player_pos - sphere_center).length()
+	if radius > 0.0:
+		# scale angle to match actual arc length
+		angle = move_dist / radius  
+
 	var rot: Basis = Basis(Quaternion(axis, -angle))
 
-	# Keep rotation centered on sphere_center
 	var origin_before: Vector3 = global_transform.origin
 	var basis_before: Basis = global_transform.basis
-
 	var new_origin: Vector3 = rot * (origin_before - sphere_center) + sphere_center
 	var new_basis: Basis = (rot * basis_before).orthonormalized()
 
 	global_transform = Transform3D(new_basis, new_origin)
 
 	last_player_pos = player.global_transform.origin
+
 
 
 

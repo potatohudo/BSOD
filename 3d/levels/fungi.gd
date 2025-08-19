@@ -1,148 +1,257 @@
 extends Node3D
 
-# -------- Customizable distances and counts --------
-@export var inner_spawn_distance: float = 25.0
-@export var outer_spawn_distance: float = 50.0
+# -------- Distances (meters) --------
+@export var inner_spawn_distance: float = 25.0	# high detail
+@export var outer_spawn_distance: float = 50.0	# low detail
+@export var far_lod_distance: float   = 75.0	# impostor only; beyond = culled
 
-@export var inner_min_vines: int = 20
-@export var inner_max_vines: int = 40
-@export var outer_min_vines: int = 5
-@export var outer_max_vines: int = 15
+# -------- Counts (deterministic; no RNG) --------
+@export var inner_count: int = 120				# max instances allocated once
+@export var outer_count: int = 32				# shown in outer tier
+@export var impostor_count: int = 8				# super cheap far impostors
 
 # -------- Vine look --------
-@export var min_length: float = 0.5
-@export var max_length: float = 2.0
+@export var min_length: float = 0.6
+@export var max_length: float = 1.9
 @export var min_thickness: float = 0.05
-@export var max_thickness: float = 0.2
+@export var max_thickness: float = 0.16
 @export var surface_epsilon: float = 0.01
 
-# Material + texture
-@export var vine_material: Material
-@export var vine_texture: Texture2D
+# -------- Performance knobs --------
+@export var check_interval: float = 0.3			# seconds between distance checks
+@export var use_lowpoly_cylinder: bool = true
+@export var cylinder_radial_segments: int = 6	# very low-poly
+
+# -------- Shared materials (keep shared to avoid dups) --------
+@export var vine_material: Material				# sway in vertex shader
+@export var impostor_material: Material			# lighter shader (can be same)
 
 var player: CharacterBody3D
-var fungi_nodes: Array = []
 
-enum SpawnTier { NONE, OUTER, INNER }
-var spawn_state: Dictionary = {}	# fungi -> SpawnTier
-var spawn_node: Dictionary = {}		# fungi -> MultiMeshInstance3D
+enum SpawnTier { NONE, FAR, OUTER, INNER }
+var fungi_nodes: Array = []					# holds MeshInstance3D
+var spawn_state: Dictionary = {}			# MeshInstance3D -> SpawnTier (int)
+var mm_vines: Dictionary = {}				# MeshInstance3D -> MultiMeshInstance3D
+var mm_impostor: Dictionary = {}			# MeshInstance3D -> MultiMeshInstance3D
 
-func _ready():
-	randomize()
-	player = get_node_or_null("../../CharacterBody3D")
-	if not player:
+
+const GOLDEN_ANGLE: float = 2.39996323
+var _accum: float = 0.0
+
+func _ready() -> void:
+	player = get_node_or_null("../../CharacterBody3D") as CharacterBody3D
+	if player == null:
 		push_error("Could not find player at ../../CharacterBody3D")
 
-	# Ensure inner <= outer to avoid dead zones
-	if inner_spawn_distance > outer_spawn_distance:
-		push_warning("inner_spawn_distance > outer_spawn_distance; swapping.")
-		var t = inner_spawn_distance
-		inner_spawn_distance = outer_spawn_distance
-		outer_spawn_distance = t
-	
-	# Collect fungi nodes
-	for fungi in get_tree().get_nodes_in_group("fungi"):
-		if fungi is MeshInstance3D:
+	# Clamp & order distances
+	inner_count = max(inner_count, 0)
+	outer_count = clamp(outer_count, 0, inner_count)
+	impostor_count = max(impostor_count, 0)
+
+	if !(inner_spawn_distance <= outer_spawn_distance && outer_spawn_distance <= far_lod_distance):
+		push_warning("Distances not monotonic; fixing ordering.")
+		inner_spawn_distance = min(inner_spawn_distance, outer_spawn_distance)
+		outer_spawn_distance = max(inner_spawn_distance, outer_spawn_distance)
+		far_lod_distance = max(outer_spawn_distance, far_lod_distance)
+
+	# Collect fungi and build once
+	for n in get_tree().get_nodes_in_group("fungi"):
+		var fungi: MeshInstance3D = n as MeshInstance3D
+		if fungi != null:
 			fungi_nodes.append(fungi)
 			spawn_state[fungi] = SpawnTier.NONE
+			_build_once_for_fungus(fungi)
 
-func _process(_delta):
-	if not player:
+func _process(delta: float) -> void:
+	if player == null:
 		return
-	
+
+	_accum += delta
+	if _accum < check_interval:
+		return
+	_accum = 0.0
+
+	var player_pos: Vector3 = player.global_transform.origin
 	for fungi in fungi_nodes:
-		var dist = fungi.global_transform.origin.distance_to(player.global_transform.origin)
+		var dist: float = fungi.global_transform.origin.distance_to(player_pos)
+		var wanted: int = _tier_for_distance(dist)
+		if wanted != spawn_state[fungi]:
+			_apply_tier(fungi, wanted)
 
-		if dist <= inner_spawn_distance:
-			if spawn_state.get(fungi, SpawnTier.NONE) != SpawnTier.INNER:
-				_respawn_for_tier(fungi, true)	# inner
-		elif dist <= outer_spawn_distance:
-			if spawn_state.get(fungi, SpawnTier.NONE) != SpawnTier.OUTER:
-				_respawn_for_tier(fungi, false)	# outer
-		else:
-			if spawn_state.get(fungi, SpawnTier.NONE) != SpawnTier.NONE:
-				_clear_vines(fungi)
+func _tier_for_distance(d: float) -> int:
+	if d <= inner_spawn_distance:
+		return SpawnTier.INNER
+	elif d <= outer_spawn_distance:
+		return SpawnTier.OUTER
+	elif d <= far_lod_distance:
+		return SpawnTier.FAR
+	else:
+		return SpawnTier.NONE
 
-func _respawn_for_tier(fungi: MeshInstance3D, is_inner: bool) -> void:
-	_clear_vines(fungi)
+func _apply_tier(fungi: MeshInstance3D, tier: int) -> void:
+	var mm_main: MultiMeshInstance3D = mm_vines[fungi]
+	var mm_far: MultiMeshInstance3D = mm_impostor[fungi]
 
-	var count = randi_range(inner_min_vines, inner_max_vines) if is_inner else randi_range(outer_min_vines, outer_max_vines)
-	var label = "VinesInner" if is_inner else "VinesOuter"
+	match tier:
+		SpawnTier.INNER:
+			if is_instance_valid(mm_main):
+				mm_main.visible = true
+				mm_main.multimesh.visible_instance_count = inner_count
+			if is_instance_valid(mm_far):
+				mm_far.visible = false
 
-	var node = _spawn_vines(fungi, count, label)
-	spawn_node[fungi] = node
-	spawn_state[fungi] = SpawnTier.INNER if is_inner else SpawnTier.OUTER
+		SpawnTier.OUTER:
+			if is_instance_valid(mm_main):
+				mm_main.visible = true
+				mm_main.multimesh.visible_instance_count = outer_count
+			if is_instance_valid(mm_far):
+				mm_far.visible = false
 
+		SpawnTier.FAR:
+			if is_instance_valid(mm_main):
+				mm_main.visible = false
+			if is_instance_valid(mm_far):
+				mm_far.visible = true
 
-func _clear_vines(fungi: MeshInstance3D) -> void:
-	if spawn_node.has(fungi):
-		var mm: MultiMeshInstance3D = spawn_node[fungi]
-		if is_instance_valid(mm):
-			mm.queue_free()
-	spawn_node.erase(fungi)
-	spawn_state[fungi] = SpawnTier.NONE
+		SpawnTier.NONE:
+			if is_instance_valid(mm_main):
+				mm_main.visible = false
+			if is_instance_valid(mm_far):
+				mm_far.visible = false
 
-func _spawn_vines(fungi: MeshInstance3D, count: int, label: String) -> MultiMeshInstance3D:
-	var aabb := fungi.get_aabb()
+	spawn_state[fungi] = tier
 
-	var mm_instance := MultiMeshInstance3D.new()
-	mm_instance.name = label
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
+# ---------- One-time build per fungus ----------
+func _build_once_for_fungus(fungi: MeshInstance3D) -> void:
+	# MAIN vines
+	var mm_main: MultiMeshInstance3D = MultiMeshInstance3D.new()
+	mm_main.name = "Vines_MAIN"
+	mm_main.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
-	# Vine mesh primitive (capsule-as-segment)
-	var capsule := CapsuleMesh.new()
-	capsule.radius = 0.05
-	capsule.height = 0.5
-	mm.mesh = capsule
-	mm.instance_count = count
-	mm_instance.multimesh = mm
+	var mm1: MultiMesh = MultiMesh.new()
+	mm1.transform_format = MultiMesh.TRANSFORM_3D
+	mm1.instance_count = inner_count		# allocate max once
+	mm_main.multimesh = mm1
 
-	# Material + texture
-	if vine_material:
-		var mat_to_use := vine_material
-		if vine_texture and vine_material is ShaderMaterial:
-			mat_to_use = vine_material.duplicate()
-			mat_to_use.set_shader_parameter("albedo_texture", vine_texture)
-		mm_instance.material_override = mat_to_use
+	var vine_mesh: PrimitiveMesh = _make_vine_mesh()
+	mm1.mesh = vine_mesh
 
-	fungi.add_child(mm_instance)
+	if vine_material != null:
+		mm_main.material_override = vine_material
 
-	for i in range(count):
-		var thickness := randf_range(min_thickness, max_thickness)
-		var length := randf_range(min_length, max_length)
+	fungi.add_child(mm_main)
+	mm_vines[fungi] = mm_main
 
-		var total_len = (capsule.height + capsule.radius * 2.0) * length
-		var half_len = total_len * 0.5
+	_place_vines_for_fungus(fungi, mm_main)
 
-		var lx := 0.0
-		var lz := 0.0
-		var bottom_y := 0.0
+	# FAR impostor
+	var mm_far: MultiMeshInstance3D = MultiMeshInstance3D.new()
+	mm_far.name = "Vines_FAR"
+	mm_far.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
-		if fungi.mesh is CylinderMesh:
-			var cyl: CylinderMesh = fungi.mesh
-			# Use bottom_radius since we place at the base (y = -height/2)
-			var radius = cyl.bottom_radius
-			var height = cyl.height
-			var angle = randf() * TAU
-			var r = sqrt(randf()) * radius	# uniform in disk
-			lx = cos(angle) * r
-			lz = sin(angle) * r
-			bottom_y = -height * 0.5
-		else:
-			# Fallback: spawn within the AABB footprint
-			lx = randf_range(aabb.position.x, aabb.position.x + aabb.size.x)
-			lz = randf_range(aabb.position.z, aabb.position.z + aabb.size.z)
-			bottom_y = aabb.position.y
+	var mm2: MultiMesh = MultiMesh.new()
+	mm2.transform_format = MultiMesh.TRANSFORM_3D
+	mm2.instance_count = impostor_count
+	mm_far.multimesh = mm2
+	mm2.mesh = _make_impostor_mesh()
 
-		var local_pos = Vector3(lx, bottom_y - surface_epsilon, lz)
-		var world_pos = fungi.global_transform * local_pos
+	if impostor_material != null:
+		mm_far.material_override = impostor_material
 
-		var vine_xform = Transform3D()
-		vine_xform.origin = world_pos - Vector3(0, half_len, 0)
-		vine_xform.basis = Basis().scaled(Vector3(thickness, length, thickness))
-		vine_xform = fungi.global_transform.affine_inverse() * vine_xform
+	mm_far.visible = false
+	fungi.add_child(mm_far)
+	mm_impostor[fungi] = mm_far
 
-		mm.set_instance_transform(i, vine_xform)
+	_place_impostors_for_fungus(fungi, mm_far)
+	
+func _make_vine_mesh() -> PrimitiveMesh:
+	var cap: CapsuleMesh = CapsuleMesh.new()
+	cap.radius = 0.045
+	cap.height = 0.5
+	return cap
 
-	return mm_instance
+func _make_impostor_mesh() -> PrimitiveMesh:
+	# Single quad (you can swap to crossed quads for thicker look)
+	var plane: QuadMesh = QuadMesh.new()
+	plane.size = Vector2(0.25, 1.4)
+	return plane
+
+# Returns (x=radius, y=height, z=bottom_y) in local space
+func _get_cylinder_params(fungi: MeshInstance3D) -> Vector3:
+	var aabb: AABB = fungi.get_aabb()
+	var height: float = aabb.size.y
+	var radius: float = min(aabb.size.x, aabb.size.z) * 0.5
+	if fungi.mesh is CylinderMesh:
+		var cm: CylinderMesh = fungi.mesh
+		height = cm.height
+		radius = cm.bottom_radius
+	var bottom_y: float = -height * 0.5
+	return Vector3(radius, height, bottom_y)
+
+func _place_vines_for_fungus(fungi: MeshInstance3D, mm_inst: MultiMeshInstance3D) -> void:
+	var p: Vector3 = _get_cylinder_params(fungi)
+	var radius: float = p.x
+	var height: float = p.y
+	var bottom_y: float = p.z
+
+	var n: int = inner_count
+	if n <= 0:
+		return
+
+	var src_h: float = 0.5		# capsule height from _make_vine_mesh()
+	for i in range(n):
+		# 🔹 randomized per vine
+		var len: float = randf_range(min_length, max_length)
+		var thk: float = randf_range(min_thickness, max_thickness)
+
+		var r: float = radius * sqrt(randf())			# uniform disk
+		var ang: float = randf() * TAU
+		var lx: float = cos(ang) * r
+		var lz: float = sin(ang) * r
+
+		var total_len: float = src_h * len
+		var half_len: float = total_len * 0.5
+
+		var local_pos: Vector3 = Vector3(lx, bottom_y - surface_epsilon, lz)
+		var world_pos: Vector3 = fungi.global_transform * local_pos
+
+		var xform: Transform3D = Transform3D()
+		xform.origin = world_pos - Vector3(0.0, half_len, 0.0)
+		xform.basis = Basis().scaled(Vector3(thk, len, thk))
+		xform = fungi.global_transform.affine_inverse() * xform
+
+		mm_inst.multimesh.set_instance_transform(i, xform)
+
+	# start hidden; shown via _apply_tier
+	mm_inst.visible = false
+	mm_inst.multimesh.visible_instance_count = 0
+
+func _place_impostors_for_fungus(fungi: MeshInstance3D, mm_far: MultiMeshInstance3D) -> void:
+	var p: Vector3 = _get_cylinder_params(fungi)
+	var radius: float = p.x
+	var bottom_y: float = p.z
+
+	var n: int = impostor_count
+	if n <= 0:
+		return
+
+	for i in range(n):
+		var ang: float = float(i) * GOLDEN_ANGLE
+		var r: float = radius * 0.85
+		var lx: float = cos(ang) * r
+		var lz: float = sin(ang) * r
+
+		var height_f: float = lerp(min_length, max_length, 0.5) * 1.2
+		var thk: float = 0.02
+
+		var local_pos: Vector3 = Vector3(lx, bottom_y - surface_epsilon, lz)
+		var world_pos: Vector3 = fungi.global_transform * local_pos
+
+		var xf: Transform3D = Transform3D()
+		xf.origin = world_pos - Vector3(0.0, height_f * 0.5, 0.0)
+		xf.basis = Basis().rotated(Vector3.UP, ang * 0.5).scaled(Vector3(thk, height_f, thk))
+		xf = fungi.global_transform.affine_inverse() * xf
+
+		mm_far.multimesh.set_instance_transform(i, xf)
+
+	mm_far.visible = false

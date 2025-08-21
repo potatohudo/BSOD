@@ -1,0 +1,199 @@
+[gd_scene load_steps=14 format=3 uid="uid://dnr4epg68q5uj"]
+
+[ext_resource type="Script" path="res://day_night.gd" id="1_r5jr8"]
+[ext_resource type="Shader" path="res://low_health.gdshader" id="2_wktja"]
+[ext_resource type="AudioStream" uid="uid://byukdv1if67mn" path="res://sounds/ambient-w6.mp3" id="3_h58mc"]
+[ext_resource type="AudioStream" uid="uid://b7rslx60p4jwr" path="res://sounds/pulsar.mp3" id="4_tfj7g"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_31kwd"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yuci2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_g2h3o"]
+ground_bottom_color = Color(0.139865, 0.0406192, 0.490736, 1)
+energy_multiplier = 3.85
+
+[sub_resource type="Sky" id="Sky_fkjfr"]
+sky_material = SubResource("ProceduralSkyMaterial_g2h3o")
+
+[sub_resource type="Environment" id="Environment_xuh6a"]
+background_mode = 2
+sky = SubResource("Sky_fkjfr")
+ambient_light_source = 3
+ambient_light_color = Color(0.366181, 0.682224, 1, 1)
+ambient_light_energy = 2.07
+ssr_fade_in = 0.974702
+ssr_fade_out = 0.517632
+sdfgi_bounce_feedback = 0.52
+fog_enabled = true
+fog_mode = 1
+fog_light_energy = 1.97
+fog_density = 1.0
+fog_sky_affect = 0.137
+fog_depth_curve = 2.14354
+fog_depth_begin = 0.0
+volumetric_fog_density = 0.0399
+volumetric_fog_length = 206.87
+volumetric_fog_detail_spread = 0.5
+adjustment_enabled = true
+adjustment_contrast = 0.39
+adjustment_saturation = 8.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7l8xp"]
+shader = ExtResource("2_wktja")
+shader_parameter/strength = 1.0
+shader_parameter/triggered = false
+shader_parameter/noise_intensity = 0.5
+shader_parameter/heartbeat_speed = 5.0
+shader_parameter/warp_intensity = 1.0
+shader_parameter/dissolve_intensity = 0.5
+shader_parameter/dissolve_threshold = 0.6
+
+[sub_resource type="SphereMesh" id="SphereMesh_1w5hb"]
+lightmap_size_hint = Vector2i(17, 0)
+material = SubResource("ShaderMaterial_7l8xp")
+
+[sub_resource type="Sky" id="Sky_may0e"]
+
+[sub_resource type="Environment" id="Environment_eow0a"]
+background_mode = 2
+sky = SubResource("Sky_may0e")
+ambient_light_source = 3
+ambient_light_color = Color(0, 0.321569, 1, 1)
+ambient_light_energy = 2.07
+fog_enabled = true
+fog_mode = 1
+fog_light_energy = 3.0
+fog_sun_scatter = 139.7
+fog_density = 1.0
+fog_sky_affect = 0.23
+fog_depth_curve = 1.68179
+fog_depth_begin = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0399
+volumetric_fog_length = 206.87
+volumetric_fog_detail_spread = 0.5
+
+[node name="Node3D" type="Node3D"]
+
+[node name="floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1.31, 0, 0, 0, 1.31, 0, 0, 0, 1.31, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
+shape = SubResource("BoxShape3D_31kwd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor"]
+transform = Transform3D(14.3873, 0, 0, 0, 1, 0, 0, 0, 20.0074, -1.07565, 0, -0.344624)
+mesh = SubResource("BoxMesh_yuci2")
+
+[node name="PlayerSpawn" type="Marker3D" parent="floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
+
+[node name="floor2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.6021, 1.22039, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
+shape = SubResource("BoxShape3D_31kwd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor2"]
+transform = Transform3D(14.0669, -0.209857, 0, 3.01928, 0.977732, 0, 0, 0, 20.0074, 0, 0, 0)
+mesh = SubResource("BoxMesh_yuci2")
+
+[node name="PlayerSpawn" type="Marker3D" parent="floor2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
+
+[node name="floor3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.7029, 2.6051, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor3"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
+shape = SubResource("BoxShape3D_31kwd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor3"]
+transform = Transform3D(14.3873, 0, 0, 0, 1, 0, 0, 0, 20.0074, 0, 0, 0)
+mesh = SubResource("BoxMesh_yuci2")
+
+[node name="PlayerSpawn" type="Marker3D" parent="floor3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
+
+[node name="floor4" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.166373, -0.986063, 0, 0.986063, -0.166373, 0, 0, 0, 1, 51.3237, 8.72617, 2.95217)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor4"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
+shape = SubResource("BoxShape3D_31kwd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor4"]
+transform = Transform3D(14.3873, 0, 0, 0, 1, 0, 0, 0, 20.0074, 0, 0, 0)
+mesh = SubResource("BoxMesh_yuci2")
+
+[node name="PlayerSpawn" type="Marker3D" parent="floor4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
+
+[node name="floor5" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.0269369, -0.485491, -0.873827, 0.175164, 0.858327, -0.482279, 0.984171, -0.166054, 0.0619196, 33.3794, 2.72082, 8.43281)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor5"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
+shape = SubResource("BoxShape3D_31kwd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor5"]
+transform = Transform3D(14.3873, 0, 0, 0, 1, 0, 0, 0, 20.0074, 0, 0, 0)
+mesh = SubResource("BoxMesh_yuci2")
+
+[node name="PlayerSpawn" type="Marker3D" parent="floor5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.76374, 2.33454, 10.6824)
+light_energy = 7.552
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.31647, 3.08928, 9.89294)
+light_energy = 7.552
+light_negative = true
+omni_range = 5.00164
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.6098, 0, -11.2585)
+
+[node name="DayNight" type="Node" parent="." node_paths=PackedStringArray("environment")]
+script = ExtResource("1_r5jr8")
+environment = NodePath("WorldEnvironment")
+day_duration = 10.0
+night_duration = 10.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="DayNight"]
+environment = SubResource("Environment_xuh6a")
+
+[node name="SUN" type="DirectionalLight3D" parent="DayNight"]
+transform = Transform3D(0.977129, -0.212585, -0.00507961, 0.0199434, 0.0678338, 0.997497, -0.211708, -0.974785, 0.070522, 53.8286, 64.3425, -39.3509)
+light_color = Color(0.834584, 0.820794, 1, 1)
+light_energy = 8.185
+light_indirect_energy = 4.535
+light_volumetric_fog_energy = 5.255
+light_angular_distance = 90.0
+shadow_enabled = true
+
+[node name="Spark" type="MeshInstance3D" parent="DayNight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 53.517, 64.2184, -39.3096)
+mesh = SubResource("SphereMesh_1w5hb")
+
+[node name="Ambient" type="AudioStreamPlayer" parent="DayNight"]
+stream = ExtResource("3_h58mc")
+volume_db = -80.0
+pitch_scale = 2.1
+parameters/looping = true
+
+[node name="Pulsar" type="AudioStreamPlayer" parent="DayNight"]
+stream = ExtResource("4_tfj7g")
+parameters/looping = true
+
+[node name="fog thing" type="Node3D" parent="."]
+visible = false
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="fog thing"]
+environment = SubResource("Environment_eow0a")

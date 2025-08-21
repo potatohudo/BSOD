@@ -1,0 +1,673 @@
+[gd_scene load_steps=78 format=3 uid="uid://fk0ie8pjbpln"]
+
+[ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
+[ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
+[ext_resource type="Script" path="res://3d/camera_3d.gd" id="2_e55b0"]
+[ext_resource type="Shader" path="res://3d/glitch.gdshader" id="3_ktawk"]
+[ext_resource type="Shader" path="res://3d/levels/merc.gdshader" id="4_36mum"]
+[ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
+[ext_resource type="Script" path="res://3d/settings.gd" id="7_4qtkp"]
+[ext_resource type="Shader" path="res://3d/freaky.gdshader" id="7_6cqs6"]
+[ext_resource type="Texture2D" uid="uid://dk30ciya5qldy" path="res://3d/sprites/catexp/Untitled-3.png" id="7_jkdwh"]
+[ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="7_y4vo8"]
+[ext_resource type="Texture2D" uid="uid://gc66jmxju5g5" path="res://3d/sprites/por/star_sprite.png" id="8_54vq2"]
+[ext_resource type="Script" path="res://3d/level_manager.gd" id="9_rlvy5"]
+[ext_resource type="Shader" path="res://3d/low_health.gdshader" id="9_vf5oh"]
+[ext_resource type="AudioStream" uid="uid://cfyc0gmsnnx4r" path="res://3d/sounds/hurt_test.mp3" id="13_drwl6"]
+[ext_resource type="Texture2D" uid="uid://cb8d6ayiynkjv" path="res://3d/sprites/attack_hands.png" id="13_j0ygm"]
+[ext_resource type="AudioStream" uid="uid://c0wn62dke1gql" path="res://3d/sounds/Track2_VoiceAudio.wav" id="13_ou8n6"]
+[ext_resource type="AudioStream" uid="uid://dp116jp7otldi" path="res://3d/sounds/Track3_VoiceAudio.wav" id="14_em0p2"]
+[ext_resource type="Script" path="res://3d/texture_rect.gd" id="17_ocwrj"]
+[ext_resource type="Material" uid="uid://dg1dkawqqqtwb" path="res://3d/main.tres" id="19_vs7pb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rmvd8"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xu3bg"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_26mjl"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cfp0m"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("4_36mum")
+shader_parameter/base_color = Color(0.6, 0.6, 0.6, 1)
+shader_parameter/distortion_strength = 0.3
+shader_parameter/wave_speed = 2.0
+shader_parameter/wave_scale = 10.0
+shader_parameter/shimmer_speed = 1.5
+shader_parameter/shimmer_strength = 0.08
+shader_parameter/flip_horizontal = false
+shader_parameter/uv_offset = Vector2(0, 0)
+shader_parameter/uv_scale = Vector2(1, 1)
+shader_parameter/refraction_split = 2.0
+shader_parameter/refraction_split_power = 1.0
+shader_parameter/refraction_affect = 0.6
+shader_parameter/gradient_basis = Vector3(3, 3, 3)
+shader_parameter/min_energy_multiplier = 1.0
+shader_parameter/max_energy_multiplier = 5.0
+shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
+shader_parameter/matcap = SubResource("ViewportTexture_26mjl")
+
+[sub_resource type="SphereMesh" id="SphereMesh_entm2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_oxn7q"]
+
+[sub_resource type="Sky" id="Sky_e7re3"]
+resource_local_to_scene = true
+sky_material = SubResource("ProceduralSkyMaterial_oxn7q")
+
+[sub_resource type="Environment" id="Environment_s05st"]
+background_mode = 2
+sky = SubResource("Sky_e7re3")
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 5.48
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_mk1hg"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_15u6t"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sv75o"]
+resource_local_to_scene = true
+shader = ExtResource("7_6cqs6")
+shader_parameter/strength = 0.0
+shader_parameter/triggered = true
+shader_parameter/screen_texture = SubResource("ViewportTexture_15u6t")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_mk1hg")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ih1cd"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_84lxs"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k5hur"]
+resource_local_to_scene = true
+shader = ExtResource("7_y4vo8")
+shader_parameter/datamosh_strength = 0.0
+shader_parameter/strength = 0.0
+shader_parameter/block_size = 1.0
+shader_parameter/motion_vectors = SubResource("ViewportTexture_84lxs")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_nijhe"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xtxmy"]
+resource_local_to_scene = true
+shader = ExtResource("9_vf5oh")
+shader_parameter/strength = 1.0
+shader_parameter/triggered = false
+shader_parameter/noise_intensity = 0.129
+shader_parameter/heartbeat_speed = 3.8
+shader_parameter/warp_intensity = 0.005
+shader_parameter/dissolve_intensity = 0.5
+shader_parameter/dissolve_threshold = 0.6
+shader_parameter/motion_vectors = SubResource("ViewportTexture_nijhe")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uyuk1"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(0, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n07kn"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(250, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gscqp"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(500, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ngx6y"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(750, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dtjhc"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(0, 251, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1j77p"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(250, 251, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ru0fu"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(500, 251, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4nkmn"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(750, 251, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sm18c"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(0, 502, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lwpf7"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(250, 502, 250, 251)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vmomf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uyuk1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n07kn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gscqp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ngx6y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dtjhc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1j77p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ru0fu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4nkmn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sm18c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lwpf7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 15.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x87uw"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(0, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_egxub"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(250, 0, 250, 251)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hn0uk"]
+atlas = ExtResource("8_54vq2")
+region = Rect2(500, 0, 250, 251)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mtpr1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x87uw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_egxub")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hn0uk")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Theme" id="Theme_jpke2"]
+resource_local_to_scene = true
+HBoxContainer/colors/body_color = Color(0, 0, 0, 1)
+MarginContainer/colors/body_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ctc50"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_xda12"]
+default_font_size = 13
+
+[sub_resource type="FontVariation" id="FontVariation_futfl"]
+variation_transform = Transform2D(1.095, 0, 0.02, 1.035, 0.085, 0)
+spacing_glyph = 1
+spacing_top = 6
+baseline_offset = 0.435
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7tut"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(0, 0, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5yo4e"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(480, 0, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yxhu4"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(960, 0, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d7ga1"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(1440, 0, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7p0kb"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(1920, 0, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1u7hm"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(2400, 0, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7csue"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(2880, 0, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gm0wn"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(3360, 0, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vknuu"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(0, 442, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4khqd"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(480, 442, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a0awv"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(960, 442, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ha0vx"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(1440, 442, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ra8s8"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(1920, 442, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w76qw"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(2400, 442, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dotvi"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(2880, 442, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_485td"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(3360, 442, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jvh4r"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(0, 884, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vxe87"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(480, 884, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ffqs2"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(960, 884, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fkujo"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(1440, 884, 480, 442)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_caov4"]
+atlas = ExtResource("7_jkdwh")
+region = Rect2(1920, 884, 480, 442)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6s88e"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v7tut")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5yo4e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yxhu4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d7ga1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7p0kb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1u7hm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7csue")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gm0wn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vknuu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4khqd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a0awv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ha0vx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ra8s8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w76qw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dotvi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_485td")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jvh4r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vxe87")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ffqs2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fkujo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_caov4")
+}],
+"loop": false,
+"name": &"default",
+"speed": 15.0
+}]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1hbw6"]
+shader = ExtResource("3_ktawk")
+
+[node name="Main" type="Node"]
+process_mode = 1
+script = ExtResource("1_h31h8")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+process_mode = 3
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 3
+stretch = true
+stretch_shrink = 3
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+process_mode = 3
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(400, 266)
+render_target_update_mode = 4
+
+[node name="Node3D" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.76837e-07, 5.91055, 1.78135)
+
+[node name="CharacterBody3D" parent="SubViewportContainer/SubViewport/Node3D" instance=ExtResource("1_arn5h")]
+process_mode = 1
+
+[node name="Marker3D" type="Marker3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D"]
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0.285)
+script = ExtResource("2_e55b0")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.231125, -0.776971)
+visible = false
+light_energy = 4.114
+light_indirect_energy = 8.162
+light_volumetric_fog_energy = 5.724
+shadow_enabled = true
+spot_range = 56.486
+spot_angle = 31.4611
+spot_angle_attenuation = 0.15932
+
+[node name="floor" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
+shape = SubResource("BoxShape3D_rmvd8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
+mesh = SubResource("BoxMesh_xu3bg")
+
+[node name="PlayerSpawn" type="Marker3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
+
+[node name="LevelHolder" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D"]
+process_mode = 1
+
+[node name="HScrollBar" type="HScrollBar" parent="SubViewportContainer/SubViewport/Node3D/LevelHolder"]
+visible = false
+anchors_preset = -1
+anchor_right = 0.489
+anchor_bottom = 0.17
+offset_left = 126.0
+offset_top = 4.0
+offset_right = 289.4
+offset_bottom = -33.22
+scale = Vector2(0.425, 0.425)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D"]
+transform = Transform3D(1.9, 0, 0, 0, 1.9, 0, 0, 0, 1.9, 0, 1.90665, 3.97217)
+visible = false
+material_override = SubResource("ShaderMaterial_cfp0m")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_entm2")
+skeleton = NodePath("../LevelHolder")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport/Node3D"]
+environment = SubResource("Environment_s05st")
+
+[node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_sv75o")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource("ViewportTexture_ih1cd")
+
+[node name="Datamoshing" type="ColorRect" parent="SubViewportContainer/SubViewport/Freaky"]
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_k5hur")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Freaky2" type="TextureRect" parent="SubViewportContainer/SubViewport/Freaky"]
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_sv75o")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource("ViewportTexture_ih1cd")
+
+[node name="LowHealth" type="ColorRect" parent="SubViewportContainer/SubViewport"]
+visible = false
+material = SubResource("ShaderMaterial_xtxmy")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="POR" type="Node2D" parent="."]
+
+[node name="POR_Full" type="AnimatedSprite2D" parent="POR"]
+visible = false
+position = Vector2(600, 100)
+scale = Vector2(0.434, 0.434)
+sprite_frames = SubResource("SpriteFrames_vmomf")
+
+[node name="POR_Idle" type="AnimatedSprite2D" parent="POR"]
+top_level = true
+position = Vector2(600, 100)
+scale = Vector2(0.434, 0.434)
+sprite_frames = SubResource("SpriteFrames_mtpr1")
+
+[node name="PauseMenu" type="Panel" parent="."]
+process_mode = 3
+visible = false
+anchors_preset = -1
+anchor_left = 0.08
+anchor_top = 0.08
+anchor_right = 0.08
+anchor_bottom = 0.091
+offset_right = 700.0
+offset_bottom = 600.0
+theme = SubResource("Theme_jpke2")
+script = ExtResource("5_uhvg7")
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ctc50")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PauseMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.021
+anchor_top = 0.79
+anchor_right = 0.021
+anchor_bottom = 0.79
+offset_left = -4.11267
+offset_top = -375.59
+offset_right = 746.887
+offset_bottom = 3.41037
+bbcode_enabled = true
+scroll_active = false
+scroll_following = true
+
+[node name="TextEdit" type="TextEdit" parent="PauseMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_top = 0.878
+anchor_right = 0.066
+anchor_bottom = 0.878
+offset_left = -0.0639954
+offset_top = -11.242
+offset_right = 688.936
+offset_bottom = 31.758
+theme = SubResource("Theme_xda12")
+theme_override_colors/background_color = Color(0, 0, 0, 1)
+theme_override_colors/selection_color = Color(2.5028e-06, 0, 0.695364, 1)
+theme_override_constants/caret_width = 6
+theme_override_fonts/font = SubResource("FontVariation_futfl")
+caret_blink = true
+caret_draw_when_editable_disabled = true
+
+[node name="SettingsManager" type="Node" parent="."]
+process_mode = 3
+process_priority = 1
+script = ExtResource("7_4qtkp")
+
+[node name="SettingsMenu" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 91.0
+offset_top = 55.0
+offset_right = 705.0
+offset_bottom = 410.0
+
+[node name="cat" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(948, 448.5)
+scale = Vector2(3.96667, 2.12018)
+sprite_frames = SubResource("SpriteFrames_6s88e")
+
+[node name="LevelManager" type="Node" parent="."]
+script = ExtResource("9_rlvy5")
+
+[node name="DashSprite" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(630.86, 724.398)
+scale = Vector2(2.9707, 1.64799)
+texture = ExtResource("13_j0ygm")
+
+[node name="health" type="HSlider" parent="."]
+offset_left = 422.0
+offset_top = 762.0
+offset_right = 895.0
+offset_bottom = 778.0
+editable = false
+
+[node name="Hurt0" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_drwl6")
+
+[node name="Hurt1" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_ou8n6")
+
+[node name="Hurt2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_em0p2")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+follow_viewport_enabled = true
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_1hbw6")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Node" type="Node" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="Node"]
+visible = false
+material = ExtResource("19_vs7pb")
+offset_right = 1200.0
+offset_bottom = 799.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("17_ocwrj")

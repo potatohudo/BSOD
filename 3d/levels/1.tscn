@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3 uid="uid://bwtlur2b0570"]
+
+[ext_resource type="ArrayMesh" uid="uid://c16bkg7pn88ll" path="res://3d/levels/untitled.obj" id="1_dqcxw"]
+[ext_resource type="ArrayMesh" uid="uid://cqbk5br00yu1p" path="res://3d/levels/untitled1.obj" id="3_1rbcf"]
+
+[sub_resource type="Sky" id="Sky_rh0pj"]
+
+[sub_resource type="Environment" id="Environment_mth5x"]
+background_mode = 2
+background_color = Color(0.552941, 0.670588, 0.768627, 1)
+background_energy_multiplier = 12.12
+sky = SubResource("Sky_rh0pj")
+ambient_light_energy = 2.68
+sdfgi_enabled = true
+sdfgi_bounce_feedback = 0.37
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0, 0, 1, 1)
+fog_light_energy = 0.62
+fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
+volumetric_fog_detail_spread = 1.7411
+
+[sub_resource type="BoxMesh" id="BoxMesh_2bb1d"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Map1" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_dqcxw")
+
+[node name="Map2" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("3_1rbcf")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="Collision" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.71207, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_mth5x")
+
+[node name="HiddenArea" type="Area3D" parent="." groups=["hidden"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.86359, 3.54745, -41.788)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HiddenArea" groups=["hidden"]]
+mesh = SubResource("BoxMesh_2bb1d")

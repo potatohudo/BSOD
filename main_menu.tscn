@@ -1,0 +1,237 @@
+[gd_scene load_steps=17 format=3 uid="uid://bnclps4msda17"]
+
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_mfimt"]
+[ext_resource type="Shader" path="res://3d/freaky.gdshader" id="2_3tlvh"]
+[ext_resource type="Script" path="res://main_menu.gd" id="2_hwvh2"]
+[ext_resource type="Script" path="res://3d/texture_rect.gd" id="3_yti4h"]
+[ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="4_lxcef"]
+[ext_resource type="AudioStream" uid="uid://xxeud11r6ijm" path="res://main_menu.mp3" id="6_kpkwb"]
+[ext_resource type="AudioStream" uid="uid://drhpnwnmambj5" path="res://startup.mp3" id="7_b4gni"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_getqq"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pv7yt"]
+font_size = 51
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8rs12"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_5kxqv"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_t308c"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y50rn"]
+resource_local_to_scene = true
+shader = ExtResource("2_3tlvh")
+shader_parameter/strength = 1.0
+shader_parameter/triggered = true
+shader_parameter/screen_texture = SubResource("ViewportTexture_t308c")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_5kxqv")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_igneh"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_i001q"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_77b86"]
+resource_local_to_scene = true
+shader = ExtResource("4_lxcef")
+shader_parameter/datamosh_strength = 0.021
+shader_parameter/strength = 0.064
+shader_parameter/block_size = 1.0
+shader_parameter/motion_vectors = SubResource("ViewportTexture_i001q")
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_hwvh2")
+
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_getqq")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(1200, 800)
+size_2d_override = Vector2i(800, 600)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_mfimt")
+
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_getqq")
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Control"]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 44.195
+offset_right = 347.0
+offset_bottom = 114.195
+text = "[BSOD]"
+label_settings = SubResource("LabelSettings_pv7yt")
+
+[node name="Info" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Control"]
+layout_mode = 0
+offset_left = 47.71
+offset_top = 140.445
+offset_right = 361.71
+offset_bottom = 379.445
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Control/Info"]
+layout_mode = 2
+text = " Award Modular BIOS v4.50PG, An Energy Star Ally
+ Copyright (C) 6b42-12c66, □□□□ Software, Inc.
+□□□□□ P5a ACPI BIOS Revision 1011 Beta 005
+80486DX2 CPU at 66MHz
+
+cpu . . . . . . . . . . . . . OK
+gpu . . . . . . . . . . . . . OK
+memory . . . . . . . . . NONE
+
+
+choose an option to continue
+
+
+"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Control"]
+layout_mode = 0
+offset_left = 65.69
+offset_top = 445.41
+offset_right = 165.69
+offset_bottom = 531.24
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "boot"
+flat = true
+alignment = 0
+
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "settings"
+flat = true
+alignment = 0
+
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "credits"
+flat = true
+alignment = 0
+
+[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Control2"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "LOADING"
+
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Control2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8rs12")
+
+[node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
+texture_filter = 1
+material = SubResource("ShaderMaterial_y50rn")
+use_parent_material = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.715
+offset_right = 264.715
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.75, 0.75)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+texture = SubResource("ViewportTexture_igneh")
+expand_mode = 1
+script = ExtResource("3_yti4h")
+
+[node name="Datamoshing" type="ColorRect" parent="SubViewportContainer/SubViewport/Freaky"]
+texture_filter = 1
+material = SubResource("ShaderMaterial_77b86")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.3
+autostart = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_kpkwb")
+autoplay = true
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_b4gni")
+
+[connection signal="pressed" from="SubViewportContainer/SubViewport/Control/VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="SubViewportContainer/SubViewport/Control/VBoxContainer/Button2" to="." method="_on_button_2_pressed"]

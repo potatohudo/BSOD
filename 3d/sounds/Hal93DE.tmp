@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dgsao6vpwncqw"
+path="res://.godot/imported/Halflife2 stalker scream sound effect.mp3-6ccbcc7ecaf010d72da38b9cbde32873.mp3str"
+
+[deps]
+
+source_file="res://sounds/Halflife2 stalker scream sound effect.mp3"
+dest_files=["res://.godot/imported/Halflife2 stalker scream sound effect.mp3-6ccbcc7ecaf010d72da38b9cbde32873.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

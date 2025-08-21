@@ -1,0 +1,9 @@
+AudioStreamPlayer
+GPUParticles3D
+OmniLight3D
+Marker3D
+WorldEnvironment
+MeshInstance3D
+CollisionShape3D
+MultiMeshInstance3D
+Area3D

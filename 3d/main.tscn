@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=78 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
@@ -388,12 +388,6 @@ animations = [{
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1hbw6"]
 shader = ExtResource("3_ktawk")
-shader_parameter/datamosh_amount = 0.5
-shader_parameter/noise_strength = 0.5
-shader_parameter/glitch_button = 0
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_g3vk2"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [node name="Main" type="Node"]
 process_mode = 1
@@ -543,8 +537,8 @@ sprite_frames = SubResource("SpriteFrames_vmomf")
 
 [node name="POR_Idle" type="AnimatedSprite2D" parent="POR"]
 top_level = true
-position = Vector2(600, 75)
-scale = Vector2(0.249, 0.224968)
+position = Vector2(600, 100)
+scale = Vector2(0.434, 0.434)
 sprite_frames = SubResource("SpriteFrames_mtpr1")
 
 [node name="PauseMenu" type="Panel" parent="."]
@@ -676,5 +670,4 @@ offset_right = 1200.0
 offset_bottom = 799.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-texture = SubResource("ViewportTexture_g3vk2")
 script = ExtResource("17_ocwrj")

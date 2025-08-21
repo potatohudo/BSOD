@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://b4nnwkcihkug"]
+[gd_scene load_steps=44 format=3 uid="uid://b4nnwkcihkug"]
 
 [ext_resource type="Script" path="res://3d/levels/fungi.gd" id="1_36p2r"]
 [ext_resource type="Shader" path="res://3d/levels/fungi.gdshader" id="2_hu5g3"]
@@ -15,15 +15,7 @@ shader_parameter/sway_speed = 1.0
 shader_parameter/amplitude_variation = 2.0
 shader_parameter/amplitude_speed = 0.5
 shader_parameter/sway_axis = Vector3(0, 0, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_icqse"]
-render_priority = 0
-shader = ExtResource("2_hu5g3")
-shader_parameter/sway_amplitude = 15.0
-shader_parameter/sway_speed = 1.0
-shader_parameter/amplitude_variation = 2.0
-shader_parameter/amplitude_speed = 0.5
-shader_parameter/sway_axis = Vector3(0, 0, 1)
+shader_parameter/fake_round_normals = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m2wdp"]
 albedo_texture = ExtResource("3_mibpr")
@@ -151,17 +143,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.37685, -19.3225, 0)
 script = ExtResource("1_36p2r")
 inner_spawn_distance = 50.0
 outer_spawn_distance = 70.0
-inner_count = 1000
-outer_count = 300
-impostor_count = 800
+inner_count = 1150
+outer_count = 0
+impostor_count = 0
 min_length = 8.0
 max_length = 15.0
-min_thickness = 7.0
-max_thickness = 10.0
+min_thickness = 8.0
+max_thickness = 11.0
 surface_epsilon = -2.3
-use_lowpoly_cylinder = false
 vine_material = SubResource("ShaderMaterial_86wc7")
-impostor_material = SubResource("ShaderMaterial_icqse")
 
 [node name="Fungi" type="MeshInstance3D" parent="." groups=["fungi"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.08226, 9.33129, -1.62824)

@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://nmgc52iyao8f"
-path="res://.godot/imported/micross.ttf-72e464b71d40794829ad93f753e0127c.fontdata"
+path="res://.godot/imported/micross.ttf-9e2e791ba25f825f67374539424b00e8.fontdata"
 
 [deps]
 
-source_file="res://PC/micross.ttf"
-dest_files=["res://.godot/imported/micross.ttf-72e464b71d40794829ad93f753e0127c.fontdata"]
+source_file="res://pc/micross.ttf"
+dest_files=["res://.godot/imported/micross.ttf-9e2e791ba25f825f67374539424b00e8.fontdata"]
 
 [params]
 

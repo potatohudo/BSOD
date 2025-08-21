@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=20 format=3 uid="uid://cavhfpcrouqti"]
 
-[ext_resource type="FontFile" uid="uid://nmgc52iyao8f" path="res://PC/micross.ttf" id="1_pm4tx"]
+[ext_resource type="FontFile" uid="uid://nmgc52iyao8f" path="res://pc/micross.ttf" id="1_pm4tx"]
 [ext_resource type="FontFile" uid="uid://dsbil0bx7b7yg" path="res://w95fa.woff" id="2_ro2pu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vt6xh"]

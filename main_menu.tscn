@@ -1,6 +1,6 @@
 [gd_scene load_steps=17 format=3 uid="uid://bnclps4msda17"]
 
-[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://PC/PC.tres" id="1_mfimt"]
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_mfimt"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="2_3tlvh"]
 [ext_resource type="Script" path="res://main_menu.gd" id="2_hwvh2"]
 [ext_resource type="Script" path="res://3d/texture_rect.gd" id="3_yti4h"]
@@ -190,6 +190,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8rs12")
 
 [node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
+visible = false
 texture_filter = 1
 material = SubResource("ShaderMaterial_y50rn")
 use_parent_material = true

@@ -1,12 +1,12 @@
 [gd_scene load_steps=16 format=3 uid="uid://b5yvv32x8oiti"]
 
 [ext_resource type="Script" path="res://pc/pc.gd" id="1_s2x3t"]
-[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://PC/PC.tres" id="1_x2ivq"]
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_x2ivq"]
 [ext_resource type="Script" path="res://pc/panel.gd" id="2_ewdi2"]
-[ext_resource type="Texture2D" uid="uid://dbtnd6mcdirw0" path="res://PC/programs/icons/tp.png" id="4_054ed"]
+[ext_resource type="Texture2D" uid="uid://dbtnd6mcdirw0" path="res://pc/programs/icons/tp.png" id="4_054ed"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="6_f8npp"]
 [ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="8_tavt4"]
-[ext_resource type="AudioStream" uid="uid://nsyrhb4df0hn" path="res://PC/sounds/noise.mp3" id="9_hluph"]
+[ext_resource type="AudioStream" uid="uid://nsyrhb4df0hn" path="res://pc/sounds/noise.mp3" id="9_hluph"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cdfbd"]
 bg_color = Color(0, 0, 0, 1)

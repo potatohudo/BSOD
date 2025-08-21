@@ -8,7 +8,8 @@ var level_lookup: Dictionary = {
 	"00.00.1": "level_test",
 	"11.11.1": "1",
 	"00.00.2": "level_test_2",
-	"64.27.1": "merc"
+	"64.27.1": "merc",
+	"14.80.0": "fungi"
 	#"00.00.5": "corridor_w5" 
 	
 }

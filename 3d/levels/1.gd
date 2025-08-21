@@ -19,13 +19,11 @@ extends Node3D
 @export var column_width: float = 1.0
 @export var column_material: ShaderMaterial
 
+# Rotation stuff (no gravity anywhere)
 var player: CharacterBody3D
 var sphere_center: Vector3
 var last_player_pos: Vector3
 var _have_last := false
-@export var rotation_speed: float = 1.0  # Customize how fast the map rotates
-
-var sphere_radius: float = 1.0  # stored during generation
 
 func _ready():
 	# Find the player by path
@@ -83,13 +81,6 @@ func _ready():
 		last_player_pos = player.global_transform.origin
 		_have_last = true
 
-	if mesh_instance and mesh_instance.mesh:
-		sphere_center = mesh_instance.to_global(aabb.get_center())
-		sphere_radius = aabb.size.x * 0.5   # <-- store sphere radius
-	else:
-		sphere_center = global_transform.origin
-		sphere_radius = 1.0
-
 
 func _physics_process(delta: float) -> void:
 	if not player or not _have_last:
@@ -97,14 +88,15 @@ func _physics_process(delta: float) -> void:
 		_have_last = true
 		return
 
-	# Player direction relative to sphere center
+	# Previous vs current player positions relative to sphere center
 	var prev_rel: Vector3 = (last_player_pos - sphere_center).normalized()
 	var curr_rel: Vector3 = (player.global_transform.origin - sphere_center).normalized()
 
-	# Axis of rotation = perpendicular
+	# Axis of rotation = perpendicular to both vectors
 	var axis: Vector3 = prev_rel.cross(curr_rel)
 	var axis_len: float = axis.length()
 
+	# If player hasn't moved enough, skip
 	if axis_len < 0.0001:
 		last_player_pos = player.global_transform.origin
 		return
@@ -112,12 +104,10 @@ func _physics_process(delta: float) -> void:
 	axis = axis / axis_len
 	var angle: float = acos(clamp(prev_rel.dot(curr_rel), -1.0, 1.0))
 
-	# Scale rotation by speed * sphere radius
-	angle *= rotation_speed / sphere_radius
-
+	# Apply the *opposite* rotation to the sphere (treadmill effect)
 	var rot: Basis = Basis(Quaternion(axis, -angle))
 
-	# Apply around sphere_center
+	# Keep rotation centered on sphere_center
 	var origin_before: Vector3 = global_transform.origin
 	var basis_before: Basis = global_transform.basis
 
@@ -127,6 +117,7 @@ func _physics_process(delta: float) -> void:
 	global_transform = Transform3D(new_basis, new_origin)
 
 	last_player_pos = player.global_transform.origin
+
 
 
 

@@ -40,4 +40,5 @@ res://3d/levels/test.tscn
 res://3d/levels/track.tscn
 res://3d/levels/merc.tscn
 res://3d/levels/fungi.tscn
-res://3d/levels/1.gd
+res://3d/models/LES/les.tscn
+res://pc/teleporter.gd

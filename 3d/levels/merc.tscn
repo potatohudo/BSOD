@@ -214,11 +214,11 @@ column_max_height = 40.0
 column_width = 20.0
 
 [node name="Map1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -411.677, 0)
+cast_shadow = 0
 mesh = ExtResource("1_f1s6p")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(0.666667, 0, 0, 0, 0.666667, 0, 0, 0, 0.666667, -2.73472, -525.787, 0.249213)
+transform = Transform3D(0.666667, 0, 0, 0, 0.666667, 0, 0, 0, 0.666667, -2.73472, -294.18, 0.249213)
 light_color = Color(1, 0.129412, 0, 1)
 light_energy = 4.732
 light_indirect_energy = 6.529
@@ -235,7 +235,7 @@ spawn_height = -20.0
 jellyfish_count_per_fountain = 20
 
 [node name="Fountain" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0.142568, -550.613, 0.661092)
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0.142568, -319.006, 0.661092)
 mesh = ExtResource("4_2s70x")
 skeleton = NodePath("../..")
 
@@ -257,24 +257,24 @@ mesh = SubResource("CapsuleMesh_idl8k")
 surface_material_override/0 = SubResource("ShaderMaterial_im0at")
 
 [node name="Marker3D" type="Marker3D" parent="Node3D" groups=["Fountain"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -525.206, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -286.42, 0)
 gizmo_extents = 10.85
 
 [node name="LES" parent="Node3D" instance=ExtResource("5_mr57n")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -520.592, 33.595)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -288.985, 33.595)
 
 [node name="MeshInstance3D8" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(40, 0, 0, 0, 1.555, 0, 0, 0, 40, 0, -551.248, 0)
+transform = Transform3D(40, 0, 0, 0, 1.555, 0, 0, 0, 40, 0, -319.641, 0)
 material_override = SubResource("ShaderMaterial_ynnyd")
 mesh = SubResource("SphereMesh_awfo5")
 
 [node name="MeshInstance3D9" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(14, 0, 0, 0, 1.5, 0, 0, 0, 14, 0, -547.893, 0)
+transform = Transform3D(14, 0, 0, 0, 1.5, 0, 0, 0, 14, 0, -316.286, 0)
 material_override = SubResource("ShaderMaterial_bs25a")
 mesh = SubResource("SphereMesh_awfo5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -33.0827, -532.158, 23.9254)
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -33.0827, -300.551, 23.9254)
 mesh = SubResource("BoxMesh_n00qw")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D"]
@@ -283,7 +283,7 @@ mesh = SubResource("BoxMesh_n00qw")
 shape = SubResource("ConcavePolygonShape3D_p5fdt")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -33.0827, -461.905, 43.0862)
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -33.0827, -230.298, 43.0862)
 mesh = SubResource("BoxMesh_n00qw")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D3"]
@@ -292,7 +292,7 @@ mesh = SubResource("BoxMesh_n00qw")
 shape = SubResource("ConcavePolygonShape3D_7dn63")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 36.2537, -549.043, -27.8382)
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 36.2537, -317.436, -27.8382)
 mesh = SubResource("BoxMesh_n00qw")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D4"]
@@ -301,7 +301,7 @@ mesh = SubResource("BoxMesh_n00qw")
 shape = SubResource("ConcavePolygonShape3D_yy6de")
 
 [node name="MeshInstance3D6" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 28.2021, -554.103, 39.2195)
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 28.2021, -322.496, 39.2195)
 mesh = SubResource("BoxMesh_n00qw")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D6"]
@@ -310,7 +310,7 @@ mesh = SubResource("BoxMesh_n00qw")
 shape = SubResource("ConcavePolygonShape3D_86dne")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 14.5686, -461.325, -27.8382)
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 14.5686, -229.718, -27.8382)
 mesh = SubResource("BoxMesh_n00qw")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D5"]
@@ -319,7 +319,7 @@ mesh = SubResource("BoxMesh_n00qw")
 shape = SubResource("ConcavePolygonShape3D_hkb34")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -48.4989, -539.443, -16.9281)
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -48.4989, -307.836, -16.9281)
 mesh = SubResource("BoxMesh_n00qw")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D2"]
@@ -328,7 +328,7 @@ mesh = SubResource("BoxMesh_n00qw")
 shape = SubResource("ConcavePolygonShape3D_m26h7")
 
 [node name="MeshInstance3D7" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -18.403, -552.098, -77.0753)
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -18.403, -320.491, -77.0753)
 mesh = SubResource("BoxMesh_n00qw")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D7"]
@@ -338,6 +338,7 @@ shape = SubResource("ConcavePolygonShape3D_65dav")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(5.295, 0, 0, 0, 5.295, 0, 0, 0, 5.295, 0, -181.159, 0)
+visible = false
 mesh = SubResource("SphereMesh_5vn37")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
@@ -361,11 +362,11 @@ directional_shadow_max_distance = 8192.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 181.4, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(123.285, 0, 0, 0, 123.285, 0, 0, 0, 123.285, 0, -697.425, 0)
+transform = Transform3D(123.285, 0, 0, 0, 123.285, 0, 0, 0, 123.285, 0, -465.818, 0)
 shape = SubResource("SphereShape3D_0khan")
 
 [node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0918681, -300.765, 0.727824)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -173.754, 0)
 
 [connection signal="area_shape_entered" from="Area3D" to="." method="_on_area_3d_area_shape_entered"]
 [connection signal="area_shape_exited" from="Area3D" to="." method="_on_area_3d_area_shape_exited"]

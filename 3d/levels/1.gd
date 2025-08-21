@@ -19,19 +19,15 @@ extends Node3D
 @export var column_width: float = 1.0
 @export var column_material: ShaderMaterial
 
-# Treadmill controls
-@export var treadmill_gain: float = 1.25	# scale the spin speed (>1 = faster)
-@export var use_custom_radius: bool = false	# if true, use custom_radius instead of generated
-@export var custom_radius: float = 10.0		# only used when use_custom_radius == true
-
-# Rotation stuff (no gravity)
 var player: CharacterBody3D
 var sphere_center: Vector3
 var last_player_pos: Vector3
-var _have_last: bool = false
-var planet_radius: float = 0.0				# radius from generated sphere
+var _have_last := false
+@export var rotation_speed: float = 1.0  # Customize how fast the map rotates
 
-func _ready() -> void:
+var sphere_radius: float = 1.0  # stored during generation
+
+func _ready():
 	# Find the player by path
 	player = get_node_or_null("../../CharacterBody3D")
 	if not player:
@@ -44,17 +40,18 @@ func _ready() -> void:
 	else:
 		sphere_center = global_transform.origin
 
-	# Viewport / materials hookup
+	# Viewport / materials hookup (unchanged)
 	var vp := _find_viewport()
 	var vp_tex := (vp.get_texture() if vp else null)
 	if not vp:
 		push_error("No viewport found in scene tree.")
 	elif vp_tex == null:
 		push_warning("Viewport found but has no texture. Ensure the Viewport is rendering to a texture.")
+
 	if vp_tex:
 		_assign_texture_to_material_resources(vp_tex)
 
-	# --- generate geometry ---
+	# --- generate geometry (unchanged) ---
 	if not mesh_instance:
 		push_error("mesh_instance is not assigned!")
 		return
@@ -65,9 +62,8 @@ func _ready() -> void:
 		push_error("Mesh AABB is zero!")
 		return
 
-	var radius_outer := aabb.size.x * 0.5
+	var radius_outer := aabb.size.x / 2.0
 	var radius_inner := radius_outer * inner_scale
-	planet_radius = radius_outer	# <-- save generated sphere radius
 
 	var center_local := aabb.position + aabb.size * 0.5
 	var mesh_xform := mesh_instance.global_transform
@@ -87,44 +83,51 @@ func _ready() -> void:
 		last_player_pos = player.global_transform.origin
 		_have_last = true
 
+	if mesh_instance and mesh_instance.mesh:
+		sphere_center = mesh_instance.to_global(aabb.get_center())
+		sphere_radius = aabb.size.x * 0.5   # <-- store sphere radius
+	else:
+		sphere_center = global_transform.origin
+		sphere_radius = 1.0
+
 
 func _physics_process(delta: float) -> void:
 	if not player or not _have_last:
-		if player:
-			last_player_pos = player.global_transform.origin
-			_have_last = true
+		last_player_pos = player.global_transform.origin
+		_have_last = true
 		return
 
-	# Choose treadmill radius: generated sphere or custom override
-	var tread_radius: float = (custom_radius if use_custom_radius else planet_radius)
-	if tread_radius <= 0.0:
-		# fallback to geometric distance if something went wrong
-		tread_radius = (last_player_pos - sphere_center).length()
-		if tread_radius <= 0.0:
-			last_player_pos = player.global_transform.origin
-			return
-
-	# Previous vs current player directions from center
+	# Player direction relative to sphere center
 	var prev_rel: Vector3 = (last_player_pos - sphere_center).normalized()
 	var curr_rel: Vector3 = (player.global_transform.origin - sphere_center).normalized()
 
-	# Rotation axis (perpendicular to motion along the sphere)
+	# Axis of rotation = perpendicular
 	var axis: Vector3 = prev_rel.cross(curr_rel)
 	var axis_len: float = axis.length()
+
 	if axis_len < 0.0001:
 		last_player_pos = player.global_transform.origin
 		return
-	axis /= axis_len
 
-	# Angle to rotate = arc length / radius, scaled by gain
-	var move_dist: float = (player.global_transform.origin - last_player_pos).length()
-	var angle: float = (move_dist / tread_radius) * treadmill_gain
+	axis = axis / axis_len
+	var angle: float = acos(clamp(prev_rel.dot(curr_rel), -1.0, 1.0))
 
-	# Apply opposite rotation so the ground stays horizontal for the player
+	# Scale rotation by speed * sphere radius
+	angle *= rotation_speed / sphere_radius
+
 	var rot: Basis = Basis(Quaternion(axis, -angle))
 
-	# Rotate around sphere_center
-	var origin_befor_
+	# Apply around sphere_center
+	var origin_before: Vector3 = global_transform.origin
+	var basis_before: Basis = global_transform.basis
+
+	var new_origin: Vector3 = rot * (origin_before - sphere_center) + sphere_center
+	var new_basis: Basis = (rot * basis_before).orthonormalized()
+
+	global_transform = Transform3D(new_basis, new_origin)
+
+	last_player_pos = player.global_transform.origin
+
 
 
 # ---------------- helpers for viewport / assignment ----------------

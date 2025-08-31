@@ -20,14 +20,20 @@ extends Node3D
 @export var column_material: ShaderMaterial
 
 # Rotation stuff (no gravity anywhere)
-var player: CharacterBody3D
-var sphere_center: Vector3
+@onready var player = get_node_or_null("../../CharacterBody3D")
+var sphere_center: Vector3 = Vector3.ZERO
 var last_player_pos: Vector3
 var _have_last := false
+@export var rotation_speed_mult: float = 1.0
+@onready var player_spawn = $Marker3D 
+@onready var pivot = $Pivot
+
+
+
 
 func _ready():
 	# Find the player by path
-	player = get_node_or_null("../../CharacterBody3D")
+	#player = get_node_or_null("../../CharacterBody3D")
 	if not player:
 		push_error("Could not find player at SubViewportContainer/SubViewport/Node3D/CharacterBody3D")
 
@@ -37,7 +43,7 @@ func _ready():
 		sphere_center = mesh_instance.to_global(aabb.get_center())
 	else:
 		sphere_center = global_transform.origin
-
+	
 	# Viewport / materials hookup (unchanged)
 	var vp := _find_viewport()
 	var vp_tex := (vp.get_texture() if vp else null)
@@ -83,42 +89,37 @@ func _ready():
 
 
 func _physics_process(delta: float) -> void:
-	if not player or not _have_last:
-		last_player_pos = player.global_transform.origin
-		_have_last = true
+	if not player:
 		return
 
-	# Previous vs current player positions relative to sphere center
-	var prev_rel: Vector3 = (last_player_pos - sphere_center).normalized()
-	var curr_rel: Vector3 = (player.global_transform.origin - sphere_center).normalized()
-
-	# Axis of rotation = perpendicular to both vectors
-	var axis: Vector3 = prev_rel.cross(curr_rel)
-	var axis_len: float = axis.length()
-
-	# If player hasn't moved enough, skip
-	if axis_len < 0.0001:
-		last_player_pos = player.global_transform.origin
+	var move_dir: Vector3 = player.get_movement_direction()
+	var move_speed: float = player.speed
+	if move_dir == Vector3.ZERO or move_speed <= 0.01:
+		# Keep only XZ fixed, let Y float
+		var player_pos = player.global_transform.origin
+		var spawn_pos = player_spawn.global_transform.origin
+		player.global_transform.origin = Vector3(spawn_pos.x, player_pos.y, spawn_pos.z)
 		return
 
-	axis = axis / axis_len
-	var angle: float = acos(clamp(prev_rel.dot(curr_rel), -1.0, 1.0))
+	# FIX: flip axis direction
+	var axis := Vector3.UP.cross(move_dir).normalized()
+	if axis.length() < 0.001:
+		return
 
-	# Apply the *opposite* rotation to the sphere (treadmill effect)
-	var rot: Basis = Basis(Quaternion(axis, -angle))
+	# Optionally scale down here
+	var angle := move_speed * rotation_speed_mult * delta
+	var rot := Basis(Quaternion(axis, angle))
 
-	# Keep rotation centered on sphere_center
-	var origin_before: Vector3 = global_transform.origin
-	var basis_before: Basis = global_transform.basis
+	# Rotate sphere content
+	pivot.global_transform = Transform3D(
+		(rot * pivot.global_transform.basis).orthonormalized(),
+		rot * (pivot.global_transform.origin - sphere_center) + sphere_center
+	)
 
-	var new_origin: Vector3 = rot * (origin_before - sphere_center) + sphere_center
-	var new_basis: Basis = (rot * basis_before).orthonormalized()
-
-	global_transform = Transform3D(new_basis, new_origin)
-
-	last_player_pos = player.global_transform.origin
-
-
+	# Keep player anchored in XZ, free in Y
+	var player_pos = player.global_transform.origin
+	var spawn_pos = player_spawn.global_transform.origin
+	player.global_transform.origin = Vector3(spawn_pos.x, player_pos.y, spawn_pos.z)
 
 
 # ---------------- helpers for viewport / assignment ----------------
@@ -203,6 +204,32 @@ func _generate_tiled_sphere(
 	invert: bool,
 	watertight: bool
 ):
+	# One StaticBody for all collisions
+	var static_body := StaticBody3D.new()
+	pivot.add_child(static_body)
+
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D   
+	mm.mesh = box_mesh
+
+	var mm_inst := MultiMeshInstance3D.new()
+	mm_inst.multimesh = mm
+	mm_inst.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	pivot.add_child(mm_inst)
+
+	# Duplicate the material so each MultiMesh can have its own shader params
+	if mat:
+		var mat_copy := mat.duplicate() as ShaderMaterial
+		mm_inst.material_override = mat_copy
+
+		# Assign the viewport texture immediately if available
+		var vp := _find_viewport()
+		if vp and vp.get_texture():
+			mat_copy.set_shader_parameter("matcap", vp.get_texture())
+
+
+	var transforms: Array[Transform3D] = []
+
 	for lat in range(lat_segments):
 		var lat0 = deg_to_rad(-90.0 + lat * (180.0 / lat_segments))
 		var lat1 = deg_to_rad(-90.0 + (lat + 1.0) * (180.0 / lat_segments))
@@ -244,34 +271,29 @@ func _generate_tiled_sphere(
 			var lat_size = (lat_arc + padding) * (overlap_factor if watertight else 1.05)
 			var lon_size = (lon_arc + padding) * (overlap_factor if watertight else 1.05)
 
-			var size = Vector3(
-				lon_size,
-				thickness,
-				lat_size
-			)
+			var size = Vector3(lon_size, thickness, lat_size)
 
-			# Collision
+			# --- CollisionShape ---
 			var shape = BoxShape3D.new()
 			shape.size = size * 2.0
-			var body = StaticBody3D.new()
 			var col_shape = CollisionShape3D.new()
 			col_shape.shape = shape
 			col_shape.transform = Transform3D(basis, tile_center)
-			body.add_child(col_shape)
-			add_child(body)
+			static_body.add_child(col_shape)
 
-			# Debug mesh — inner sphere gets extra stretch for no gaps
-			var vis = MeshInstance3D.new()
-			vis.mesh = box_mesh
-			vis.material_override = mat
-			vis.transform = col_shape.transform
-			if watertight:
-				vis.scale = size
-			else:
-				vis.scale = size
-				vis.scale.x *= 1.2 # stretch sideways
-				vis.scale.z *= 1.2 # stretch sideways
-			add_child(vis)
+			# --- MultiMesh transform ---
+			var xf = Transform3D(basis, tile_center)
+			var sc = size
+			if not watertight:
+				sc.x *= 1.2
+				sc.z *= 1.2
+			xf.basis *= Basis().scaled(sc)
+			transforms.append(xf)
+
+	# Push all transforms into MultiMesh
+	mm.instance_count = transforms.size()
+	for i in transforms.size():
+		mm.set_instance_transform(i, transforms[i])
 
 
 # ----- Outer Columns -----
@@ -315,7 +337,7 @@ func _place_outer_column(radius: float, center_local: Vector3, mesh_xform: Trans
 	col_shape.shape = shape
 	col_shape.transform = col_transform
 	body.add_child(col_shape)
-	add_child(body)
+	pivot.add_child(body)
 
 	# Mesh
 	var box_mesh = BoxMesh.new()
@@ -324,7 +346,7 @@ func _place_outer_column(radius: float, center_local: Vector3, mesh_xform: Trans
 	vis.mesh = box_mesh
 	vis.material_override = column_material
 	vis.transform = col_transform
-	add_child(vis)
+	pivot.add_child(vis)
 
 
 # ----- Inner Columns -----
@@ -371,7 +393,7 @@ func _place_inner_column(radius_inner: float, center_local: Vector3, mesh_xform:
 	col_shape.shape = shape
 	col_shape.transform = col_transform
 	body.add_child(col_shape)
-	add_child(body)
+	pivot.add_child(body)
 
 	# Mesh
 	var box_mesh = BoxMesh.new()
@@ -380,7 +402,7 @@ func _place_inner_column(radius_inner: float, center_local: Vector3, mesh_xform:
 	vis.mesh = box_mesh
 	vis.material_override = column_material
 	vis.transform = col_transform
-	add_child(vis)
+	pivot.add_child(vis)
 
 
 ## Case 1: Player has an Area3D detector (we receive AREA signals)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=80 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
@@ -19,6 +19,8 @@
 [ext_resource type="AudioStream" uid="uid://dp116jp7otldi" path="res://3d/sounds/Track3_VoiceAudio.wav" id="14_em0p2"]
 [ext_resource type="Script" path="res://3d/texture_rect.gd" id="17_ocwrj"]
 [ext_resource type="Material" uid="uid://dg1dkawqqqtwb" path="res://3d/main.tres" id="19_vs7pb"]
+[ext_resource type="Script" path="res://3d/label.gd" id="20_iqmpm"]
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="20_xlvs1"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rmvd8"]
 size = Vector3(10, 1, 10)
@@ -410,6 +412,7 @@ stretch_shrink = 3
 process_mode = 3
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
+audio_listener_enable_3d = true
 size = Vector2i(400, 266)
 render_target_update_mode = 4
 
@@ -671,3 +674,54 @@ offset_bottom = 799.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("17_ocwrj")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("20_xlvs1")
+script = ExtResource("20_iqmpm")
+
+[node name="FPS" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 14.0
+offset_right = 165.0
+offset_bottom = 37.0
+text = "fps"
+
+[node name="CPU" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.4
+offset_left = 15.0
+offset_top = 37.0
+offset_right = 15.0
+offset_bottom = 37.0
+text = "cpu"
+
+[node name="GPU" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 61.0
+offset_right = 56.0
+offset_bottom = 77.0
+text = "gpu"
+
+[node name="Hardware" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 106.0
+offset_right = 73.0
+offset_bottom = 122.0
+text = "hardware"
+
+[node name="Memory" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 86.0
+offset_right = 63.0
+offset_bottom = 102.0
+text = "Memory"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://bk0lfgelpyem5"]
+[gd_scene load_steps=35 format=3 uid="uid://bk0lfgelpyem5"]
 
 [ext_resource type="ArrayMesh" uid="uid://x220c17lw2np" path="res://3d/models/mercury.obj" id="1_f1s6p"]
 [ext_resource type="Script" path="res://3d/levels/1.gd" id="1_y56ar"]
@@ -8,6 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://b1xqiy3ueimpa" path="res://3d/models/LES/les.tscn" id="5_mr57n"]
 [ext_resource type="Shader" path="res://3d/sphere.gdshader" id="5_wtsxy"]
 [ext_resource type="Shader" path="res://3d/levels/merc1.gdshader" id="6_ehhad"]
+[ext_resource type="AudioStream" uid="uid://dttm33p0j5vn4" path="res://3d/sounds/fountain.wav" id="7_2uva8"]
+[ext_resource type="AudioStream" uid="uid://byirhoddja5vr" path="res://3d/sounds/merc1.wav" id="9_hqqoi"]
+[ext_resource type="AudioStream" uid="uid://b47cj1xhk3ilt" path="res://3d/sounds/merc.wav" id="9_q0gmu"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ig8gc"]
 
@@ -203,22 +206,27 @@ shader_parameter/uv1_offset = Vector3(0, 0, 0)
 
 [node name="Node3D" type="Node3D" node_paths=PackedStringArray("mesh_instance")]
 process_priority = 1
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, -217.803, 0)
 script = ExtResource("1_y56ar")
-mesh_instance = NodePath("Map1")
+mesh_instance = NodePath("Pivot/Map1")
 overlap_factor = 3.0
 debug_material_outer = SubResource("ShaderMaterial_78xl2")
 num_columns = 300
 column_min_height = 8.0
 column_max_height = 40.0
 column_width = 20.0
+rotation_speed_mult = 0.005
 
-[node name="Map1" type="MeshInstance3D" parent="."]
-cast_shadow = 0
+[node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -347.005, 0)
+
+[node name="Pivot" type="Node3D" parent="."]
+
+[node name="Map1" type="MeshInstance3D" parent="Pivot"]
 mesh = ExtResource("1_f1s6p")
+skeleton = NodePath("../..")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(0.666667, 0, 0, 0, 0.666667, 0, 0, 0, 0.666667, -2.73472, -294.18, 0.249213)
+[node name="OmniLight3D" type="OmniLight3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.73472, -373.489, 0.249213)
 light_color = Color(1, 0.129412, 0, 1)
 light_energy = 4.732
 light_indirect_energy = 6.529
@@ -227,146 +235,171 @@ distance_fade_enabled = true
 distance_fade_begin = 414.99
 omni_range = 143.567
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="Node3D" type="Node3D" parent="Pivot"]
 script = ExtResource("5_eccr1")
 min_spawn_radius = 3.0
 spawn_radius = 100.0
 spawn_height = -20.0
 jellyfish_count_per_fountain = 20
 
-[node name="Fountain" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0.142568, -319.006, 0.661092)
+[node name="Fountain" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0.142568, -398.315, 0.661092)
 mesh = ExtResource("4_2s70x")
-skeleton = NodePath("../..")
+skeleton = NodePath("../../..")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Fountain"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot/Node3D/Fountain"]
 transform = Transform3D(1.8804, 0, 0, 0, 14.9336, 0, 0, 0, 1.50777, 0, 19.5014, -4.49058)
 mesh = SubResource("CapsuleMesh_0isyb")
 surface_material_override/0 = SubResource("ShaderMaterial_im0at")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Node3D/Fountain"]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Pivot/Node3D/Fountain"]
 transform = Transform3D(0.611164, 0, 0, 0, 7.62275, 0, 0, 0, 3.20929, 2.90629, 10.0751, -2.32918)
 material_override = SubResource("ShaderMaterial_5tk8r")
 mesh = SubResource("CapsuleMesh_idl8k")
 surface_material_override/0 = SubResource("ShaderMaterial_im0at")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Node3D/Fountain"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Pivot/Node3D/Fountain"]
 transform = Transform3D(1.8804, 0, 0, 0, 31.2614, 0, 0, 0, 1.50777, 0, 35.7267, 1.25516)
 material_override = SubResource("ShaderMaterial_vg5eh")
 mesh = SubResource("CapsuleMesh_idl8k")
 surface_material_override/0 = SubResource("ShaderMaterial_im0at")
 
-[node name="Marker3D" type="Marker3D" parent="Node3D" groups=["Fountain"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -286.42, 0)
+[node name="Marker3D" type="Marker3D" parent="Pivot/Node3D" groups=["Fountain"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -372.908, 0)
 gizmo_extents = 10.85
 
-[node name="LES" parent="Node3D" instance=ExtResource("5_mr57n")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -288.985, 33.595)
+[node name="LES" parent="Pivot/Node3D" instance=ExtResource("5_mr57n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -368.294, 33.595)
 
-[node name="MeshInstance3D8" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(40, 0, 0, 0, 1.555, 0, 0, 0, 40, 0, -319.641, 0)
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(40, 0, 0, 0, 1.555, 0, 0, 0, 40, 0, -398.95, 0)
 material_override = SubResource("ShaderMaterial_ynnyd")
 mesh = SubResource("SphereMesh_awfo5")
 
-[node name="MeshInstance3D9" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(14, 0, 0, 0, 1.5, 0, 0, 0, 14, 0, -316.286, 0)
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(14, 0, 0, 0, 1.5, 0, 0, 0, 14, 0, -395.595, 0)
 material_override = SubResource("ShaderMaterial_bs25a")
 mesh = SubResource("SphereMesh_awfo5")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -33.0827, -300.551, 23.9254)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -33.0827, -379.86, 23.9254)
 mesh = SubResource("BoxMesh_n00qw")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Pivot/Node3D/MeshInstance3D"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/MeshInstance3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/Node3D/MeshInstance3D/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_p5fdt")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -33.0827, -230.298, 43.0862)
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -33.0827, -309.607, 43.0862)
 mesh = SubResource("BoxMesh_n00qw")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D3"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Pivot/Node3D/MeshInstance3D3"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/MeshInstance3D3/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/Node3D/MeshInstance3D3/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_7dn63")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 36.2537, -317.436, -27.8382)
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 36.2537, -396.745, -27.8382)
 mesh = SubResource("BoxMesh_n00qw")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D4"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Pivot/Node3D/MeshInstance3D4"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/MeshInstance3D4/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/Node3D/MeshInstance3D4/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_yy6de")
 
-[node name="MeshInstance3D6" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 28.2021, -322.496, 39.2195)
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 28.2021, -401.805, 39.2195)
 mesh = SubResource("BoxMesh_n00qw")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D6"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Pivot/Node3D/MeshInstance3D6"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/MeshInstance3D6/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/Node3D/MeshInstance3D6/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_86dne")
 
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 14.5686, -229.718, -27.8382)
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, 14.5686, -309.027, -27.8382)
 mesh = SubResource("BoxMesh_n00qw")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D5"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Pivot/Node3D/MeshInstance3D5"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/MeshInstance3D5/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/Node3D/MeshInstance3D5/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_hkb34")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -48.4989, -307.836, -16.9281)
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -48.4989, -387.145, -16.9281)
 mesh = SubResource("BoxMesh_n00qw")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D2"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Pivot/Node3D/MeshInstance3D2"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/MeshInstance3D2/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/Node3D/MeshInstance3D2/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_m26h7")
 
-[node name="MeshInstance3D7" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -18.403, -320.491, -77.0753)
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="Pivot/Node3D"]
+transform = Transform3D(20.1058, 0, 0, 0, 44.6944, 0, 0, 0, 22.1207, -18.403, -399.8, -77.0753)
 mesh = SubResource("BoxMesh_n00qw")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Node3D/MeshInstance3D7"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Pivot/Node3D/MeshInstance3D7"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/MeshInstance3D7/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/Node3D/MeshInstance3D7/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_65dav")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot"]
 transform = Transform3D(5.295, 0, 0, 0, 5.295, 0, 0, 0, 5.295, 0, -181.159, 0)
 visible = false
 mesh = SubResource("SphereMesh_5vn37")
+skeleton = NodePath("../..")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Pivot"]
 transform = Transform3D(30, 0, 0, 0, 30, 0, 0, 0, 30, 0, 171.774, -33.1436)
 visible = false
 material_override = SubResource("ShaderMaterial_uucln")
 material_overlay = SubResource("ShaderMaterial_mcptq")
 mesh = SubResource("SphereMesh_um7g4")
+skeleton = NodePath("../..")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.666667, 0, 0, 0, -0.226011, 0.627187, 0, -0.627187, -0.226011, 0, 830.926, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, -0.339016, 0.940781, 0, -0.940781, -0.339016, 0, 830.926, 0)
 visible = false
 light_negative = true
 shadow_enabled = true
 shadow_blur = 0.0
 directional_shadow_max_distance = 8192.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Pivot"]
 
-[node name="Area3D" type="Area3D" parent="." groups=["0g"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 181.4, 0)
+[node name="Area3D" type="Area3D" parent="Pivot" groups=["0g"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -296.974, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(123.285, 0, 0, 0, 123.285, 0, 0, 0, 123.285, 0, -465.818, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/Area3D"]
+transform = Transform3D(123.285, 0, 0, 0, 123.285, 0, 0, 0, 123.285, 0, -9.28043, 0)
 shape = SubResource("SphereShape3D_0khan")
 
-[node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -173.754, 0)
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, -4.32373, 131.585)
+stream = ExtResource("9_hqqoi")
+volume_db = -11.532
+unit_size = 17.2
 
-[connection signal="area_shape_entered" from="Area3D" to="." method="_on_area_3d_area_shape_entered"]
-[connection signal="area_shape_exited" from="Area3D" to="." method="_on_area_3d_area_shape_exited"]
+[node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, -2.98023e-08, 0, 2.98023e-08, 1, 0, -47.3241, -282.858)
+stream = ExtResource("9_hqqoi")
+unit_size = 17.2
+
+[node name="AudioStreamPlayer3D3" type="AudioStreamPlayer3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.142568, -383.3, 0.661092)
+stream = ExtResource("7_2uva8")
+volume_db = -7.619
+autoplay = true
+max_distance = 73.8
+
+[node name="Geometry" type="Node3D" parent="Pivot"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_q0gmu")
+volume_db = -2.811
+pitch_scale = 0.24
+autoplay = true
+
+[connection signal="area_shape_entered" from="Pivot/Area3D" to="." method="_on_area_3d_area_shape_entered"]
+[connection signal="area_shape_exited" from="Pivot/Area3D" to="." method="_on_area_3d_area_shape_exited"]

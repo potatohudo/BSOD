@@ -21,14 +21,14 @@ extends Node3D
 
 # Rotation stuff (no gravity anywhere)
 @onready var player = get_node_or_null("../../CharacterBody3D")
-var sphere_center: Vector3 = Vector3.ZERO
+var sphere_center = Vector3.ZERO
 var last_player_pos: Vector3
 var _have_last := false
 @export var rotation_speed_mult: float = 1.0
 @onready var player_spawn = $Marker3D 
 @onready var pivot = $Pivot
-
-
+@export var invert_orientation: bool = false
+const ORIENT_EPS: float = 1e-6
 
 
 func _ready():
@@ -92,35 +92,46 @@ func _physics_process(delta: float) -> void:
 	if not player:
 		return
 
-	var move_dir: Vector3 = player.get_movement_direction()
-	var move_speed: float = player.speed
-	if move_dir == Vector3.ZERO or move_speed <= 0.01:
-		# Keep only XZ fixed, let Y float
-		var player_pos = player.global_transform.origin
-		var spawn_pos = player_spawn.global_transform.origin
-		player.global_transform.origin = Vector3(spawn_pos.x, player_pos.y, spawn_pos.z)
+	# World position and vector to sphere center
+	var player_pos: Vector3 = player.global_transform.origin
+	var to_center: Vector3 = sphere_center - player_pos
+	if to_center.length_squared() < ORIENT_EPS: # too close to center: nothing sensible to do
 		return
 
-	# FIX: flip axis direction
-	var axis := Vector3.UP.cross(move_dir).normalized()
-	if axis.length() < 0.001:
-		return
+	# Choose which way is UP for the player:
+	# false -> UP points toward the center (player's head faces center)
+	# true  -> UP points away from center (player stands on outside)
+	var tc_norm: Vector3 = to_center.normalized()
+	var up_dir: Vector3 = tc_norm if not invert_orientation else -tc_norm
 
-	# Optionally scale down here
-	var angle := move_speed * rotation_speed_mult * delta
-	var rot := Basis(Quaternion(axis, angle))
+	# Current forward in world space (in Godot +Z is basis.z, forward is usually -Z)
+	var current_forward: Vector3 = player.global_transform.basis.z
 
-	# Rotate sphere content
-	pivot.global_transform = Transform3D(
-		(rot * pivot.global_transform.basis).orthonormalized(),
-		rot * (pivot.global_transform.origin - sphere_center) + sphere_center
-	)
+	# Project the current forward onto the tangent plane (perpendicular to up_dir)
+	var f_proj: Vector3 = current_forward - up_dir * current_forward.dot(up_dir)
 
-	# Keep player anchored in XZ, free in Y
-	var player_pos = player.global_transform.origin
-	var spawn_pos = player_spawn.global_transform.origin
-	player.global_transform.origin = Vector3(spawn_pos.x, player_pos.y, spawn_pos.z)
+	# If projection is too small (player forward nearly parallel to up_dir), use fallbacks
+	if f_proj.length_squared() < ORIENT_EPS:
+		var fallback: Vector3 = Vector3.FORWARD # (0,0,-1)
+		f_proj = fallback - up_dir * fallback.dot(up_dir)
+		if f_proj.length_squared() < ORIENT_EPS:
+			fallback = Vector3.RIGHT
+			f_proj = fallback - up_dir * fallback.dot(up_dir)
+			if f_proj.length_squared() < ORIENT_EPS:
+				# give up if everything is degenerate
+				return
 
+	# Normalize the tangent forward and try to preserve facing direction to avoid 180° flips
+	var f: Vector3 = f_proj.normalized()
+	if f.dot(current_forward) < 0.0:
+		f = -f
+
+	# Build a stable orthonormal basis:
+	# right = up × forward  (so right × up = forward)
+	var right: Vector3 = up_dir.cross(f).normalized()
+	var forward_final: Vector3 = right.cross(up_dir).normalized() # re-orthogonalize
+
+	player.global_transform.basis = Basis(right, up_dir, forward_final).orthonormalized()
 
 # ---------------- helpers for viewport / assignment ----------------
 
@@ -204,32 +215,6 @@ func _generate_tiled_sphere(
 	invert: bool,
 	watertight: bool
 ):
-	# One StaticBody for all collisions
-	var static_body := StaticBody3D.new()
-	pivot.add_child(static_body)
-
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D   
-	mm.mesh = box_mesh
-
-	var mm_inst := MultiMeshInstance3D.new()
-	mm_inst.multimesh = mm
-	mm_inst.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	pivot.add_child(mm_inst)
-
-	# Duplicate the material so each MultiMesh can have its own shader params
-	if mat:
-		var mat_copy := mat.duplicate() as ShaderMaterial
-		mm_inst.material_override = mat_copy
-
-		# Assign the viewport texture immediately if available
-		var vp := _find_viewport()
-		if vp and vp.get_texture():
-			mat_copy.set_shader_parameter("matcap", vp.get_texture())
-
-
-	var transforms: Array[Transform3D] = []
-
 	for lat in range(lat_segments):
 		var lat0 = deg_to_rad(-90.0 + lat * (180.0 / lat_segments))
 		var lat1 = deg_to_rad(-90.0 + (lat + 1.0) * (180.0 / lat_segments))
@@ -271,29 +256,34 @@ func _generate_tiled_sphere(
 			var lat_size = (lat_arc + padding) * (overlap_factor if watertight else 1.05)
 			var lon_size = (lon_arc + padding) * (overlap_factor if watertight else 1.05)
 
-			var size = Vector3(lon_size, thickness, lat_size)
+			var size = Vector3(
+				lon_size,
+				thickness,
+				lat_size
+			)
 
-			# --- CollisionShape ---
+			# Collision
 			var shape = BoxShape3D.new()
 			shape.size = size * 2.0
+			var body = StaticBody3D.new()
 			var col_shape = CollisionShape3D.new()
 			col_shape.shape = shape
 			col_shape.transform = Transform3D(basis, tile_center)
-			static_body.add_child(col_shape)
+			body.add_child(col_shape)
+			pivot.add_child(body)
 
-			# --- MultiMesh transform ---
-			var xf = Transform3D(basis, tile_center)
-			var sc = size
-			if not watertight:
-				sc.x *= 1.2
-				sc.z *= 1.2
-			xf.basis *= Basis().scaled(sc)
-			transforms.append(xf)
-
-	# Push all transforms into MultiMesh
-	mm.instance_count = transforms.size()
-	for i in transforms.size():
-		mm.set_instance_transform(i, transforms[i])
+			# Debug mesh — inner sphere gets extra stretch for no gaps
+			var vis = MeshInstance3D.new()
+			vis.mesh = box_mesh
+			vis.material_override = mat
+			vis.transform = col_shape.transform
+			if watertight:
+				vis.scale = size
+			else:
+				vis.scale = size
+				vis.scale.x *= 1.2 # stretch sideways
+				vis.scale.z *= 1.2 # stretch sideways
+			pivot.add_child(vis)
 
 
 # ----- Outer Columns -----

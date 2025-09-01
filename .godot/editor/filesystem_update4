@@ -9,6 +9,7 @@ res://3d/low_health.gdshader
 res://3d/main.gdshader
 res://3d/sphere.gdshader
 res://3d/levels/merc1.gdshader
+res://3d/levels/merc.tres
 res://3d/levels/fungi.gdshader
 res://3d/levels/fungiparticle.gdshader
 res://3d/levels/mercHIGHLIGHT.gdshader
@@ -16,6 +17,7 @@ res://3d/levels/spark.gdshader
 res://3d/mv.gdshader
 res://3d/test1.gdshader
 res://3d/test.gdshader
+res://3d/levels/1.gd
 res://main_menu.tscn
 res://pc/window.tscn
 res://pc/programs/browser.tscn
@@ -41,5 +43,3 @@ res://3d/levels/track.tscn
 res://3d/levels/merc.tscn
 res://3d/levels/fungi.tscn
 res://3d/models/LES/les.tscn
-res://3d/levels/1.gd
-res://3d/label.gd

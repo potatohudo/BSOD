@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://bk0lfgelpyem5"]
+[gd_scene load_steps=36 format=3 uid="uid://bk0lfgelpyem5"]
 
 [ext_resource type="ArrayMesh" uid="uid://x220c17lw2np" path="res://3d/models/mercury.obj" id="1_f1s6p"]
 [ext_resource type="Script" path="res://3d/levels/1.gd" id="1_y56ar"]
@@ -10,6 +10,7 @@
 [ext_resource type="Shader" path="res://3d/levels/merc1.gdshader" id="6_ehhad"]
 [ext_resource type="AudioStream" uid="uid://dttm33p0j5vn4" path="res://3d/sounds/fountain.wav" id="7_2uva8"]
 [ext_resource type="AudioStream" uid="uid://byirhoddja5vr" path="res://3d/sounds/merc1.wav" id="9_hqqoi"]
+[ext_resource type="Environment" uid="uid://cspjqdo4lt0xq" path="res://3d/levels/merc.tres" id="9_l6oh8"]
 [ext_resource type="AudioStream" uid="uid://b47cj1xhk3ilt" path="res://3d/sounds/merc.wav" id="9_q0gmu"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ig8gc"]
@@ -21,8 +22,8 @@ shader = ExtResource("2_84dkk")
 shader_parameter/base_color = Color(0.6, 0.6, 0.6, 1)
 shader_parameter/distortion_strength = 0.3
 shader_parameter/wave_speed = 0.05
-shader_parameter/wave_scale = 10.0
-shader_parameter/shimmer_speed = 1.5
+shader_parameter/wave_scale = 15.0
+shader_parameter/shimmer_speed = 1.2
 shader_parameter/shimmer_strength = 0.08
 shader_parameter/flip_horizontal = false
 shader_parameter/uv_offset = Vector2(0, 0)
@@ -367,6 +368,7 @@ shadow_blur = 0.0
 directional_shadow_max_distance = 8192.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Pivot"]
+environment = ExtResource("9_l6oh8")
 
 [node name="Area3D" type="Area3D" parent="Pivot" groups=["0g"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -296.974, 0)

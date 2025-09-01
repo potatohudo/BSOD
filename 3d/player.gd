@@ -81,42 +81,50 @@ func update_dash_sprite():
 
 func _physics_process(delta: float) -> void:
 	if is_game_over:
-		return  
+		return
 
+	# Keep CharacterBody3D's up consistent with our local up so floor/wall checks work in any orientation.
+	var up := _up()
+	up_direction = up  # important for is_on_floor/is_on_wall/move_and_slide()
+
+	# Momentum decay (unchanged)
 	if momentum.length() > 0.1:
-		momentum = momentum.lerp(Vector3.ZERO, MOMENTUM_DECAY * delta) 
+		momentum = momentum.lerp(Vector3.ZERO, MOMENTUM_DECAY * delta)
 	else:
-		momentum = Vector3.ZERO  
+		momentum = Vector3.ZERO
 
-	var direction = get_movement_direction()
-	var is_sprinting = Input.is_action_pressed("sprint") and not is_sliding and direction.length() > 0
+	var direction := get_movement_direction()  # already planar to local up
+	var is_sprinting := Input.is_action_pressed("sprint") and not is_sliding and direction.length() > 0.0
 
-	# Sprinting & Acceleration
+	# Sprinting & Acceleration (unchanged logic)
 	if is_sprinting:
-		speed = min(speed + ACCELERATION, max_speed_cap)  
+		speed = min(speed + ACCELERATION, max_speed_cap)
 	else:
-		var decay_rate = ACCELERATION * 0.5
+		var decay_rate := ACCELERATION * 0.5
 		if not is_on_floor():
-			decay_rate *= 0.25  # slower decay in air
+			decay_rate *= 0.25
 		speed = move_toward(speed, BASE_SPEED, decay_rate)
 
+	# Slide lifecycle
 	if is_sliding:
 		slide_timer -= delta
-		if slide_timer <= 0:
+		if slide_timer <= 0.0:
 			speed *= SLIDE_FRICTION
 			if speed < SLIDE_CANCEL_SPEED:
 				exit_slide()
 
+	# Apply gravity along local down (note: GRAVITY is negative in your script)
 	if not is_on_floor():
-		velocity += Vector3(0, GRAVITY, 0) * delta
+		velocity += up * GRAVITY * delta  # GRAVITY is -9.8 → accelerates toward -up
 		if is_sliding:
 			exit_slide()
 
-	if not is_sprinting and direction.length() == 0 and is_on_floor():
+	# Idle-on-floor resets (unchanged logic)
+	if not is_sprinting and direction.length() == 0.0 and is_on_floor():
 		momentum = momentum.lerp(Vector3.ZERO, MOMENTUM_DECAY * delta)
 		if momentum.length() < 0.1:
-			momentum = Vector3.ZERO  
-			speed = BASE_SPEED  
+			momentum = Vector3.ZERO
+			speed = BASE_SPEED
 			movement_points = 0
 
 	max_speed_cap = DEFAULT_MAX_CHAIN_SPEED + (movement_points * TRICK_ACCEL_GAIN)
@@ -124,12 +132,18 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("attack") and can_dash:
 		perform_dash()
 
+	# Jump along local up
 	if Input.is_action_just_pressed("jump"):
-		if is_sliding and is_on_floor():  
+		if is_sliding and is_on_floor():
 			exit_slide_with_jump()
 		elif is_on_floor():
-			velocity.y = JUMP_VELOCITY  
+			# clear any downward component then add jump along up
+			var vert := up * velocity.dot(up)
+			if vert.dot(up) < 0.0:
+				velocity -= vert
+			velocity += up * JUMP_VELOCITY
 
+	# Crouch (unchanged)
 	if Input.is_action_pressed("crouch") and not is_sliding:
 		if is_on_floor():
 			_apply_crouch_collision()
@@ -138,66 +152,90 @@ func _physics_process(delta: float) -> void:
 		_reset_collision_size()
 		crouching = false
 
+	# High-speed wall impact checks (uses local up internally now)
 	if speed >= SLIDE_THRESHOLD:
 		check_wall_impact()
 
-	if direction.length() > 0:
-		velocity.x = direction.x * speed + momentum.x 
-		velocity.z = direction.z * speed + momentum.z
+	# --- Tangent vs vertical split relative to local up ---
+	var vert_comp := up * velocity.dot(up)                       # keep existing vertical motion
+	var current_tangent := velocity - vert_comp                  # current planar motion
+	var target_tangent: Vector3
+
+	if direction.length() > 0.0:
+		# move on the local ground plane; momentum is also planarized
+		target_tangent = direction * speed + _project_on_plane(momentum, up)
 	else:
-		velocity.x = move_toward(velocity.x, 0, BASE_SPEED)
-		velocity.z = move_toward(velocity.z, 0, BASE_SPEED)
+		# no input → just coast on momentum on the plane
+		target_tangent = _project_on_plane(momentum, up)
+
+	# When no input, gently move toward target_tangent; with input we snap to target for responsiveness
+	if direction.length() > 0.0:
+		current_tangent = target_tangent
+	else:
+		current_tangent = current_tangent.move_toward(target_tangent, BASE_SPEED)
+
+	velocity = vert_comp + current_tangent
 
 	move_and_slide()
 
-	if health <= 0 or global_transform.origin.y < -20000:
+	# Kill condition (kept as-is; if your world rotates a lot, consider a distance-based fail instead)
+	if health <= 0 or global_transform.origin.y < -20000.0:
 		die()
 
 	update_camera()
 	update_dash_sprite()
 	LH.visible = health < 20
-	
+
 	if Input.is_action_just_pressed("f"):
 		flashlight.visible = not flashlight.visible
 		por.visible = not flashlight.visible
 
+
+# Returns the player's current local up (normalized).
+func _up() -> Vector3:
+	return global_transform.basis.y.normalized()
+
+# Projects v onto the plane perpendicular to n (i.e., removes the component along n).
+func _project_on_plane(v: Vector3, n: Vector3) -> Vector3:
+	return v - n * v.dot(n)
+
+
 func perform_dash():
 	if not can_dash:
-		return  
+		return
 
 	can_dash = false
 	dash_efx = true
 
-	if not is_on_floor():  
-		movement_points += 1  
-
-	var dash_direction = get_movement_direction()
-	if dash_direction.length() == 0:
-		dash_direction = -camera.global_transform.basis.z
-	dash_direction.y = 0  
-	dash_direction = dash_direction.normalized()
-
-	var dash_force = DASH_FORCE
 	if not is_on_floor():
-		dash_force *= 2  
+		movement_points += 1
+
+	var up := _up()
+
+	var dash_direction := get_movement_direction()
+	if dash_direction.length() == 0.0:
+		# default to camera forward but flattened to the local ground plane
+		var cam_fwd := -camera.global_transform.basis.z
+		dash_direction = _project_on_plane(cam_fwd, up).normalized()
+
+	dash_direction = _project_on_plane(dash_direction, up).normalized()
+
+	var dash_force := DASH_FORCE
+	if not is_on_floor():
+		dash_force *= 2.0
 	else:
 		dash_force *= 1.0
 
 	momentum = dash_direction * dash_force
-	velocity += momentum    
+	velocity += momentum
 	speed = max(speed, speed + dash_force * 0.5)
 
 	await get_tree().create_timer(DASH_EFX).timeout
 	dash_efx = false
 	await get_tree().create_timer(DASH_COOLDOWN).timeout
-	can_dash = true  
-	
-
-
+	can_dash = true
 
 var input_locked = false  
-
-
 
 func apply_knockback(force: Vector3):
 	momentum += force 
@@ -206,28 +244,29 @@ func apply_knockback(force: Vector3):
 
 func check_wall_impact():
 	if speed < SLIDE_THRESHOLD or input_locked:
-		return  
+		return
 
-	var space_state = get_world_3d().direct_space_state
-	var origin = global_transform.origin
-	var camera_facing = -camera.global_transform.basis.z
-	camera_facing.y = 0
-	camera_facing = camera_facing.normalized()
+	var up := _up()
+	var space_state := get_world_3d().direct_space_state
+	var origin := global_transform.origin
 
-	var check_distance = 1.5
-	var query = PhysicsRayQueryParameters3D.create(origin, origin + camera_facing * check_distance)
+	var camera_facing := -camera.global_transform.basis.z
+	camera_facing = _project_on_plane(camera_facing, up).normalized()
+
+	var check_distance := 1.5
+	var query := PhysicsRayQueryParameters3D.create(origin, origin + camera_facing * check_distance)
 	query.exclude = [self]
 	query.collide_with_areas = false
 	query.collide_with_bodies = true
 
-	var result = space_state.intersect_ray(query)
-
+	var result := space_state.intersect_ray(query)
 	if result:
-		var normal = result.normal
-		var angle = rad_to_deg(acos(normal.dot(Vector3.UP)))
-		
-		if angle > 45:  # You can tweak this threshold. 45 degrees is a good "wall vs slope" divider.
+		var normal: Vector3 = result.normal.normalized()
+		# angle between hit normal and our local up: >45° → treat as wall
+		var angle := rad_to_deg(acos(clamp(normal.dot(up), -1.0, 1.0)))
+		if angle > 45.0:
 			handle_wall_collision(camera_facing)
+
 
 
 func handle_wall_collision(direction: Vector3):
@@ -263,22 +302,26 @@ func exit_slide():
 
 func exit_slide_with_jump():
 	is_sliding = false
-	exit_slide()  
-	velocity.y = JUMP_VELOCITY * 1.5 
-	speed = speed * 20
+	exit_slide()
+	var up := _up()
+	velocity += up * (JUMP_VELOCITY * 1.5)
+	speed = speed * 20.0
 	movement_points += 1
 
+
 func get_movement_direction() -> Vector3:
-	var forward_direction = camera.global_transform.basis.z 
-	forward_direction.y = 0
-	forward_direction = forward_direction.normalized()
+	var up := _up()
 
-	var right_direction = camera.global_transform.basis.x
-	right_direction.y = 0
-	right_direction = right_direction.normalized()
+	# Camera forward/right, then remove any component along local up
+	var cam_fwd := -camera.global_transform.basis.z
+	var cam_right := camera.global_transform.basis.x
+	cam_fwd = _project_on_plane(cam_fwd, up).normalized()
+	cam_right = _project_on_plane(cam_right, up).normalized()
 
-	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	return (forward_direction * input_dir.y + right_direction * input_dir.x).normalized()
+	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_down", "ui_up")
+	var dir := (cam_fwd * input_dir.y + cam_right * input_dir.x)
+	return dir.normalized() if dir.length() > 0.0 else Vector3.ZERO
+
 
 func _apply_crouch_collision():
 	collision_shape.shape.height = 0.8  

@@ -1,0 +1,61 @@
+[gd_scene load_steps=5 format=3 uid="uid://guqld7ufht8y"]
+
+[ext_resource type="Texture2D" uid="uid://42u8f78i0al4" path="res://pc/sites/sprites/Screenshot 2025-04-03 091911.png" id="1_gx6d3"]
+[ext_resource type="FontFile" uid="uid://b62qegn50n6pr" path="res://pc/times.ttf" id="2_gj668"]
+
+[sub_resource type="Theme" id="Theme_7evth"]
+
+[sub_resource type="Theme" id="Theme_bynpl"]
+default_font = ExtResource("2_gj668")
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = SubResource("Theme_7evth")
+texture = ExtResource("1_gx6d3")
+stretch_mode = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_direction = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 88.0
+offset_top = 75.0
+offset_right = -76.0
+offset_bottom = -57.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+theme = SubResource("Theme_bynpl")
+fit_content = true
+scroll_active = false
+selection_enabled = true
+text_direction = 1
+structured_text_bidi_override = 3

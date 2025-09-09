@@ -40,6 +40,7 @@ var movement_points = 0
 var max_speed_cap = DEFAULT_MAX_CHAIN_SPEED  
 
 var momentum = Vector3.ZERO
+var active = false
 
 @onready var marker: Node3D = $Marker3D  
 @onready var camera: Camera3D = $Marker3D/Camera3D  
@@ -60,7 +61,6 @@ var momentum = Vector3.ZERO
 var is_game_over = false  
 var crouching = false
 var camera_locked = false 
-var light = false
 
 func update_camera():
 	if is_sliding or crouching:
@@ -83,11 +83,9 @@ func _physics_process(delta: float) -> void:
 	if is_game_over:
 		return
 
-	# Keep CharacterBody3D's up consistent with our local up so floor/wall checks work in any orientation.
 	var up := _up()
-	up_direction = up  # important for is_on_floor/is_on_wall/move_and_slide()
+	up_direction = up  
 
-	# Momentum decay (unchanged)
 	if momentum.length() > 0.1:
 		momentum = momentum.lerp(Vector3.ZERO, MOMENTUM_DECAY * delta)
 	else:
@@ -96,7 +94,6 @@ func _physics_process(delta: float) -> void:
 	var direction := get_movement_direction()  # already planar to local up
 	var is_sprinting := Input.is_action_pressed("sprint") and not is_sliding and direction.length() > 0.0
 
-	# Sprinting & Acceleration (unchanged logic)
 	if is_sprinting:
 		speed = min(speed + ACCELERATION, max_speed_cap)
 	else:
@@ -105,7 +102,7 @@ func _physics_process(delta: float) -> void:
 			decay_rate *= 0.25
 		speed = move_toward(speed, BASE_SPEED, decay_rate)
 
-	# Slide lifecycle
+	# Slide
 	if is_sliding:
 		slide_timer -= delta
 		if slide_timer <= 0.0:
@@ -156,9 +153,8 @@ func _physics_process(delta: float) -> void:
 	if speed >= SLIDE_THRESHOLD:
 		check_wall_impact()
 
-	# --- Tangent vs vertical split relative to local up ---
-	var vert_comp := up * velocity.dot(up)                       # keep existing vertical motion
-	var current_tangent := velocity - vert_comp                  # current planar motion
+	var vert_comp := up * velocity.dot(up) 
+	var current_tangent := velocity - vert_comp      
 	var target_tangent: Vector3
 
 	if direction.length() > 0.0:
@@ -188,7 +184,8 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("f"):
 		flashlight.visible = not flashlight.visible
-		por.visible = not flashlight.visible
+		por.visible = not por.visible
+		active = not active
 
 
 # Returns the player's current local up (normalized).

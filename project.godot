@@ -8,6 +8,10 @@
 
 config_version=5
 
+[animation]
+
+warnings/check_invalid_track_paths=false
+
 [application]
 
 config/name="BSOD(recode)"
@@ -33,6 +37,7 @@ window/vsync/vsync_mode=0
 
 hidden="hidden objects in the 4d space"
 POI="point of interest"
+playerspawn=""
 
 [input]
 

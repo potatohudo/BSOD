@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://b4nnwkcihkug"]
+[gd_scene load_steps=45 format=3 uid="uid://b4nnwkcihkug"]
 
 [ext_resource type="Script" path="res://3d/levels/fungi.gd" id="1_36p2r"]
 [ext_resource type="Shader" path="res://3d/levels/fungi.gdshader" id="2_hu5g3"]
@@ -6,6 +6,7 @@
 [ext_resource type="ArrayMesh" uid="uid://dj0kfxiiqo2bo" path="res://3d/models/fungi.obj" id="3_q3mt4"]
 [ext_resource type="AudioStream" uid="uid://csi7in2cchg34" path="res://3d/sounds/wind_chime.wav" id="5_i1w1e"]
 [ext_resource type="AudioStream" uid="uid://byxqegms73cqp" path="res://3d/sounds/outfile_2025-08-18_22-11-23.wav" id="6_vsruh"]
+[ext_resource type="PackedScene" uid="uid://4dt17fvq83sv" path="res://3d/models/whale/whale.tscn" id="7_l78ly"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_86wc7"]
 render_priority = 0
@@ -583,6 +584,15 @@ mesh = SubResource("BoxMesh_p5kew")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D8/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_bxdhs")
 
+[node name="MeshInstance3D47" type="MeshInstance3D" parent="."]
+transform = Transform3D(97.529, 0.217394, 0, -21.7217, 0.976084, 0, 0, 0, 114.508, -96.2465, 14.9978, 0)
+mesh = SubResource("BoxMesh_p5kew")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D47"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D47/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_bxdhs")
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_51df3")
 
@@ -612,3 +622,12 @@ mix_target = 1
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_vsruh")
 autoplay = true
+
+[node name="Marker3D2" type="Marker3D" parent="." groups=["playerspawn"]]
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.66851, 31.4863, 45.4982)
+omni_range = 19.223
+
+[node name="Node3D" parent="." instance=ExtResource("7_l78ly")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -103.485, 57.7844, 0)

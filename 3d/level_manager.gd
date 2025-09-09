@@ -69,6 +69,7 @@ func _load_level(level_path: String):
 		init_morph()
 		collider.global_transform = map1.global_transform
 		update_collision()
+	await get_tree().process_frame
 	var spawn_points = new_level.get_tree().get_nodes_in_group("playerspawn")
 	if not spawn_points.is_empty():
 		var spawn = spawn_points[0] # use the first spawn point in the group
@@ -76,6 +77,7 @@ func _load_level(level_path: String):
 	else:
 		print("[WARN] No playerspawn marker found in this level.")
 	subviewport_container.queue_redraw()
+	get_window().grab_focus()
 
 func init_morph():
 	if not map1 or not map1.mesh:

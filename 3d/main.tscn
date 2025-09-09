@@ -1,10 +1,11 @@
-[gd_scene load_steps=80 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=81 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
 [ext_resource type="Script" path="res://3d/camera_3d.gd" id="2_e55b0"]
 [ext_resource type="Shader" path="res://3d/glitch.gdshader" id="3_ktawk"]
 [ext_resource type="Shader" path="res://3d/levels/merc.gdshader" id="4_36mum"]
+[ext_resource type="PackedScene" uid="uid://4dt17fvq83sv" path="res://3d/models/whale/whale.tscn" id="4_h41uw"]
 [ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
 [ext_resource type="Script" path="res://3d/settings.gd" id="7_4qtkp"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="7_6cqs6"]
@@ -432,7 +433,6 @@ script = ExtResource("2_e55b0")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.231125, -0.776971)
-visible = false
 light_energy = 4.114
 light_indirect_energy = 8.162
 light_volumetric_fog_energy = 5.724
@@ -467,6 +467,9 @@ offset_top = 4.0
 offset_right = 289.4
 offset_bottom = -33.22
 scale = Vector2(0.425, 0.425)
+
+[node name="Node3D" parent="SubViewportContainer/SubViewport/Node3D/LevelHolder" instance=ExtResource("4_h41uw")]
+transform = Transform3D(-2.33851, 0, 1.8792, 0, 3, 0, -1.8792, 0, -2.33851, 21.5226, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D"]
 transform = Transform3D(1.9, 0, 0, 0, 1.9, 0, 0, 0, 1.9, 0, 1.90665, 3.97217)

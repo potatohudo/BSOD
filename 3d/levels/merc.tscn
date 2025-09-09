@@ -22,7 +22,7 @@ shader = ExtResource("2_84dkk")
 shader_parameter/base_color = Color(0.6, 0.6, 0.6, 1)
 shader_parameter/distortion_strength = 0.3
 shader_parameter/wave_speed = 0.05
-shader_parameter/wave_scale = 15.0
+shader_parameter/wave_scale = 10.0
 shader_parameter/shimmer_speed = 1.2
 shader_parameter/shimmer_strength = 0.08
 shader_parameter/flip_horizontal = false
@@ -209,20 +209,22 @@ shader_parameter/uv1_offset = Vector3(0, 0, 0)
 process_priority = 1
 script = ExtResource("1_y56ar")
 mesh_instance = NodePath("Pivot/Map1")
-overlap_factor = 3.0
+overlap_factor = 2.0
 debug_material_outer = SubResource("ShaderMaterial_78xl2")
-num_columns = 300
+num_columns = 400
 column_min_height = 8.0
 column_max_height = 40.0
 column_width = 20.0
 rotation_speed_mult = 0.005
 
 [node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -347.005, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -273.841, -169.475)
 
 [node name="Pivot" type="Node3D" parent="."]
 
 [node name="Map1" type="MeshInstance3D" parent="Pivot"]
+visible = false
+cast_shadow = 0
 mesh = ExtResource("1_f1s6p")
 skeleton = NodePath("../..")
 
@@ -394,8 +396,6 @@ stream = ExtResource("7_2uva8")
 volume_db = -7.619
 autoplay = true
 max_distance = 73.8
-
-[node name="Geometry" type="Node3D" parent="Pivot"]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("9_q0gmu")

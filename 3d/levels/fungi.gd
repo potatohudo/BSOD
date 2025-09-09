@@ -1,14 +1,14 @@
 extends Node3D
 
 # -------- Distances (meters) --------
-@export var inner_spawn_distance: float = 25.0	# high detail (capsules)
-@export var outer_spawn_distance: float = 50.0	# mid detail (low-poly cylinders)
-@export var far_lod_distance: float   = 75.0	# impostors (crossed quads). Beyond: culled.
+@export var inner_spawn_distance: float = 25.0
+@export var outer_spawn_distance: float = 50.0
+@export var far_lod_distance: float   = 75.0
 
 # -------- Counts (keep silhouette identical across LODs) --------
 @export var inner_count: int = 120
-@export var outer_count: int = 120			# kept equal intentionally (no thinning/pop)
-@export var impostor_count: int = 120		# kept equal intentionally (no thinning/pop)
+@export var outer_count: int = 120
+@export var impostor_count: int = 120
 
 # -------- Vine look --------
 @export var min_length: float = 0.6
@@ -18,31 +18,32 @@ extends Node3D
 @export var surface_epsilon: float = 0.01
 
 # -------- Performance knobs --------
-@export var check_interval: float = 0.3		# seconds between distance checks
-@export var cylinder_radial_segments: int = 6	# outer tier poly count (5–6 is good)
+@export var check_interval: float = 0.3
+@export var cylinder_radial_segments: int = 6
 
 # -------- Shared materials (keep shared to avoid dups) --------
-@export var vine_material: Material			# close/mid tiers; swaying in vertex shader
-@export var impostor_material: Material		# far tier; light/unlit or simple swaying
+@export var vine_material: Material
+@export var impostor_material: Material
 
 var player: CharacterBody3D
 
 enum SpawnTier { NONE, FAR, OUTER, INNER }
-var fungi_nodes: Array = []					# holds MeshInstance3D
-var spawn_state: Dictionary = {}			# MeshInstance3D -> SpawnTier
-var mm_vines: Dictionary = {}				# MeshInstance3D -> MultiMeshInstance3D (close/mid)
-var mm_impostor: Dictionary = {}			# MeshInstance3D -> MultiMeshInstance3D (far)
+var fungi_nodes: Array = []
+var spawn_state: Dictionary = {}
+var mm_vines: Dictionary = {}
+var mm_impostor: Dictionary = {}
 
 # Stored per-fungus data so placement & count are identical across LODs
-var data_pos: Dictionary = {}				# MeshInstance3D -> PackedVector3Array (local foot positions)
-var data_len: Dictionary = {}				# MeshInstance3D -> PackedFloat32Array (lengths)
-var data_thk: Dictionary = {}				# MeshInstance3D -> PackedFloat32Array (thickness)
-var data_ang: Dictionary = {}				# MeshInstance3D -> PackedFloat32Array (yaw angles)
+var data_pos: Dictionary = {}
+var data_len: Dictionary = {}
+var data_thk: Dictionary = {}
+var data_ang: Dictionary = {}
 
 const GOLDEN_ANGLE: float = 2.39996323
 var _accum: float = 0.0
 
 func _ready() -> void:
+	await get_tree().process_frame
 	player = get_node_or_null("../../CharacterBody3D") as CharacterBody3D
 	if player == null:
 		push_error("Could not find player at ../../CharacterBody3D")
@@ -100,7 +101,7 @@ func _apply_tier(fungi: MeshInstance3D, tier: int) -> void:
 	match tier:
 		SpawnTier.INNER:
 			if is_instance_valid(mm_main):
-				mm_main.multimesh.mesh = _make_inner_mesh()		# capsules (round)
+				mm_main.multimesh.mesh = _make_inner_mesh()
 				mm_main.multimesh.visible_instance_count = inner_count
 				mm_main.visible = true
 			if is_instance_valid(mm_far):
@@ -108,7 +109,7 @@ func _apply_tier(fungi: MeshInstance3D, tier: int) -> void:
 
 		SpawnTier.OUTER:
 			if is_instance_valid(mm_main):
-				mm_main.multimesh.mesh = _make_outer_mesh()		# low-poly cylinders
+				mm_main.multimesh.mesh = _make_outer_mesh()
 				mm_main.multimesh.visible_instance_count = inner_count
 				mm_main.visible = true
 			if is_instance_valid(mm_far):
@@ -132,14 +133,13 @@ func _apply_tier(fungi: MeshInstance3D, tier: int) -> void:
 
 # ---------- One-time build per fungus ----------
 func _build_once_for_fungus(fungi: MeshInstance3D) -> void:
-	# MAIN vines (close/mid)
 	var mm_main: MultiMeshInstance3D = MultiMeshInstance3D.new()
 	mm_main.name = "Vines_MAIN"
 	mm_main.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 	var mm1: MultiMesh = MultiMesh.new()
 	mm1.transform_format = MultiMesh.TRANSFORM_3D
-	mm1.instance_count = inner_count			# allocate once at max
+	mm1.instance_count = inner_count
 	mm1.mesh = _make_inner_mesh()
 	mm_main.multimesh = mm1
 
@@ -149,7 +149,7 @@ func _build_once_for_fungus(fungi: MeshInstance3D) -> void:
 	fungi.add_child(mm_main)
 	mm_vines[fungi] = mm_main
 
-	_place_vines_for_fungus(fungi, mm_main)	# fills data_* and transforms
+	_place_vines_for_fungus(fungi, mm_main)
 
 	# FAR impostors (crossed quads), identical placement/count
 	var mm_far: MultiMeshInstance3D = MultiMeshInstance3D.new()
@@ -176,7 +176,7 @@ func _make_inner_mesh() -> PrimitiveMesh:
 	var cap := CapsuleMesh.new()
 	cap.radius = 0.045
 	cap.height = 0.5
-	cap.radial_segments = 8		# still round up close, cheaper than default
+	cap.radial_segments = 8
 	return cap
 
 func _make_outer_mesh() -> PrimitiveMesh:
@@ -184,20 +184,17 @@ func _make_outer_mesh() -> PrimitiveMesh:
 	cyl.top_radius = 0.045
 	cyl.bottom_radius = 0.045
 	cyl.height = 0.5
-	cyl.radial_segments = max(cylinder_radial_segments, 4)	# 5–6 recommended
+	cyl.radial_segments = max(cylinder_radial_segments, 4)
 	return cyl
 
 func _make_impostor_mesh() -> ArrayMesh:
-	# Crossed quads (two planes). Use set_uv() BEFORE add_vertex() in Godot 4.x.
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 
 	# Quad size (x by y)
-	var hw := 0.10	# half width
-	var h  := 1.40	# height
+	var hw := 0.10
+	var h  := 1.40
 
-	# Quad 1 (XZ plane facing +Z)
-	# tri 1
 	st.set_uv(Vector2(0.0, 0.0)); st.add_vertex(Vector3(-hw, 0.0, 0.0))
 	st.set_uv(Vector2(1.0, 0.0)); st.add_vertex(Vector3( hw, 0.0, 0.0))
 	st.set_uv(Vector2(1.0, 1.0)); st.add_vertex(Vector3( hw, h,   0.0))
@@ -219,7 +216,6 @@ func _make_impostor_mesh() -> ArrayMesh:
 	return st.commit()
 
 # -------- Placement helpers --------
-# Returns (x=radius, y=height, z=bottom_y) in local space
 func _get_cylinder_params(fungi: MeshInstance3D) -> Vector3:
 	var aabb: AABB = fungi.get_aabb()
 	var height: float = aabb.size.y
@@ -245,11 +241,11 @@ func _place_vines_for_fungus(fungi: MeshInstance3D, mm_inst: MultiMeshInstance3D
 	var thk_arr := PackedFloat32Array()
 	var ang_arr := PackedFloat32Array()
 
-	var src_h: float = 0.5	# capsule/cylinder source height
+	var src_h: float = 0.5
 	for i in range(n):
 		var len: float = randf_range(min_length, max_length)
 		var thk: float = randf_range(min_thickness, max_thickness)
-		var r: float = radius * sqrt(randf())	# uniform disk
+		var r: float = radius * sqrt(randf())
 		var ang: float = randf() * TAU
 
 		var lx: float = cos(ang) * r
@@ -278,7 +274,6 @@ func _place_vines_for_fungus(fungi: MeshInstance3D, mm_inst: MultiMeshInstance3D
 	data_thk[fungi] = thk_arr
 	data_ang[fungi] = ang_arr
 
-	# start hidden; enabled by _apply_tier
 	mm_inst.visible = false
 	mm_inst.multimesh.visible_instance_count = 0
 
@@ -298,8 +293,8 @@ func _place_impostors_for_fungus(fungi: MeshInstance3D, mm_far: MultiMeshInstanc
 	for i in range(n):
 		var local_pos: Vector3 = pos_arr[i]
 		var len: float = len_arr[i]
-		var thk: float = max(0.015, thk_arr[i] * 0.6)	# thin card
-		var yaw: float = ang_arr[i] * 0.5				# slight orientation variation
+		var thk: float = max(0.015, thk_arr[i] * 0.6)
+		var yaw: float = ang_arr[i] * 0.5
 
 		var height_f: float = clamp(len * src_h, 0.25, 3.0)
 		var world_pos: Vector3 = fungi.global_transform * local_pos

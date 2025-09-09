@@ -1,5 +1,13 @@
-Node3D
 AudioStreamPlayer3D
+AnimationPlayer
+StaticBody3D
+CollisionShape3D
+AnimationTree
+Node3D
+OmniLight3D
+MeshInstance3D
+Panel
+Marker3D
 AudioStreamPlayer
 Label
 Control

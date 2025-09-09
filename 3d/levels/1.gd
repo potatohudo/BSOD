@@ -126,8 +126,6 @@ func _physics_process(delta: float) -> void:
 	if f.dot(current_forward) < 0.0:
 		f = -f
 
-	# Build a stable orthonormal basis:
-	# right = up × forward  (so right × up = forward)
 	var right: Vector3 = up_dir.cross(f).normalized()
 	var forward_final: Vector3 = right.cross(up_dir).normalized() # re-orthogonalize
 
@@ -277,6 +275,7 @@ func _generate_tiled_sphere(
 			vis.mesh = box_mesh
 			vis.material_override = mat
 			vis.transform = col_shape.transform
+			vis.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			if watertight:
 				vis.scale = size
 			else:

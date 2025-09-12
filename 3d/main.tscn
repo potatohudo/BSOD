@@ -217,23 +217,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="Theme" id="Theme_jpke2"]
-resource_local_to_scene = true
-HBoxContainer/colors/body_color = Color(0, 0, 0, 1)
-MarginContainer/colors/body_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ctc50"]
-bg_color = Color(0, 0, 0, 1)
-
-[sub_resource type="Theme" id="Theme_xda12"]
-default_font_size = 13
-
-[sub_resource type="FontVariation" id="FontVariation_futfl"]
-variation_transform = Transform2D(1.095, 0, 0.02, 1.035, 0.085, 0)
-spacing_glyph = 1
-spacing_top = 6
-baseline_offset = 0.435
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_v7tut"]
 atlas = ExtResource("7_jkdwh")
 region = Rect2(0, 0, 480, 442)
@@ -389,6 +372,23 @@ animations = [{
 "speed": 15.0
 }]
 
+[sub_resource type="Theme" id="Theme_jpke2"]
+resource_local_to_scene = true
+HBoxContainer/colors/body_color = Color(0, 0, 0, 1)
+MarginContainer/colors/body_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ctc50"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_xda12"]
+default_font_size = 13
+
+[sub_resource type="FontVariation" id="FontVariation_futfl"]
+variation_transform = Transform2D(1.095, 0, 0.02, 1.035, 0.085, 0)
+spacing_glyph = 1
+spacing_top = 6
+baseline_offset = 0.435
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1hbw6"]
 shader = ExtResource("3_ktawk")
 
@@ -533,19 +533,43 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="POR" type="Node2D" parent="."]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="POR_Full" type="AnimatedSprite2D" parent="POR"]
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Control"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Sprites" type="Node2D" parent="."]
+
+[node name="POR_Full" type="AnimatedSprite2D" parent="Sprites"]
 visible = false
 position = Vector2(600, 100)
 scale = Vector2(0.434, 0.434)
 sprite_frames = SubResource("SpriteFrames_vmomf")
 
-[node name="POR_Idle" type="AnimatedSprite2D" parent="POR"]
+[node name="POR_Idle" type="AnimatedSprite2D" parent="Sprites"]
 top_level = true
 position = Vector2(600, 100)
 scale = Vector2(0.434, 0.434)
 sprite_frames = SubResource("SpriteFrames_mtpr1")
+
+[node name="cat" type="AnimatedSprite2D" parent="Sprites"]
+visible = false
+position = Vector2(948, 448.5)
+scale = Vector2(3.96667, 2.12018)
+sprite_frames = SubResource("SpriteFrames_6s88e")
+
+[node name="DashSprite" type="Sprite2D" parent="Sprites"]
+visible = false
+position = Vector2(630.86, 724.398)
+scale = Vector2(2.9707, 1.64799)
+texture = ExtResource("13_j0ygm")
 
 [node name="PauseMenu" type="Panel" parent="."]
 process_mode = 3
@@ -620,20 +644,8 @@ offset_top = 55.0
 offset_right = 705.0
 offset_bottom = 410.0
 
-[node name="cat" type="AnimatedSprite2D" parent="."]
-visible = false
-position = Vector2(948, 448.5)
-scale = Vector2(3.96667, 2.12018)
-sprite_frames = SubResource("SpriteFrames_6s88e")
-
 [node name="LevelManager" type="Node" parent="."]
 script = ExtResource("9_rlvy5")
-
-[node name="DashSprite" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(630.86, 724.398)
-scale = Vector2(2.9707, 1.64799)
-texture = ExtResource("13_j0ygm")
 
 [node name="health" type="HSlider" parent="."]
 offset_left = 422.0

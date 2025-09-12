@@ -46,7 +46,7 @@ var active = false
 @onready var camera: Camera3D = $Marker3D/Camera3D  
 @onready var main_node = get_node("/root/Main")  
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D 
-@onready var dash_sprite = get_node("/root/Main/DashSprite") 
+@onready var dash_sprite = get_node("/root/Main/Sprites/DashSprite") 
 @onready var health_bar: Slider = get_node("/root/Main/health")  
 @onready var freaky = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky") 
 @onready var freaky2 = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky/Freaky2")
@@ -55,7 +55,7 @@ var active = false
 @onready var hurt_sound_0: AudioStreamPlayer = get_node("/root/Main/Hurt0")
 @onready var hurt_sound_1: AudioStreamPlayer = get_node("/root/Main/Hurt1")
 @onready var hurt_sound_2: AudioStreamPlayer = get_node("/root/Main/Hurt2")
-@onready var por = get_node("/root/Main/POR")
+@onready var por = get_node("/root/Main/Sprites")
 @onready var flashlight = $Marker3D/Camera3D/SpotLight3D
 
 var is_game_over = false  

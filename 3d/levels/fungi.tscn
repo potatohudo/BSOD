@@ -154,6 +154,9 @@ max_thickness = 11.0
 surface_epsilon = -2.3
 vine_material = SubResource("ShaderMaterial_86wc7")
 
+[node name="Marker3D2" type="Marker3D" parent="." groups=["playerspawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.7568, 29.7573, -15.6412)
+
 [node name="Fungi" type="MeshInstance3D" parent="." groups=["fungi"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.08226, 9.33129, -1.62824)
 visible = false
@@ -225,7 +228,7 @@ mesh = SubResource("BoxMesh_vgbs7")
 shape = SubResource("ConcavePolygonShape3D_tpg1c")
 
 [node name="MeshInstance3D21" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(0.464348, -0.00741106, 105.141, 37.884, -0.0501441, -3.43009, 15.9454, 0.119351, 5.0876, 1.52454, 31.141, -43.2946)
+transform = Transform3D(0.464348, -0.00741106, 105.141, 37.884, -0.0501441, -3.43009, 15.9454, 0.119351, 5.0876, -70.4819, 31.141, -43.2946)
 mesh = SubResource("BoxMesh_vgbs7")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D21"]
@@ -254,7 +257,7 @@ mesh = SubResource("CylinderMesh_nlddg")
 shape = SubResource("ConcavePolygonShape3D_lblcp")
 
 [node name="MeshInstance3D12" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(0.930011, 0.0333222, -59.4853, -0.0650653, 0.47629, 4.1617, 33.46, 0, 1.66147, 31.18, 50.8951, 1.44446)
+transform = Transform3D(0.926308, -0.0539748, -59.2484, 10.2872, 0.451873, -5.91524, 31.8395, -0.144428, 3.63491, -43.946, 22.0632, 17.2538)
 mesh = SubResource("CylinderMesh_nlddg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D12"]
@@ -299,7 +302,7 @@ mesh = SubResource("CylinderMesh_nlddg")
 shape = SubResource("ConcavePolygonShape3D_ng88w")
 
 [node name="MeshInstance3D14" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(31.0844, 0, -22.1303, 0, 0.477455, 0, 12.4178, 0, 55.397, -47.3254, 35.0552, 27.8229)
+transform = Transform3D(31.0844, 0, -22.1303, 0, 0.477455, 0, 12.4178, 0, 55.397, -47.3254, 11.9807, 27.8229)
 mesh = SubResource("CylinderMesh_nlddg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D14"]
@@ -326,7 +329,7 @@ mesh = SubResource("CylinderMesh_nlddg")
 shape = SubResource("ConcavePolygonShape3D_esbsy")
 
 [node name="MeshInstance3D24" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(28.7794, -0.139279, -25.0034, 12.1012, 0.442788, 5.73539, 12.0724, -0.111816, 53.8564, -34.2358, 38.0807, -16.1499)
+transform = Transform3D(28.7794, -0.139279, -25.0034, 12.1012, 0.442788, 5.73539, 12.0724, -0.111816, 53.8564, -52.3804, 22.355, -34.0428)
 mesh = SubResource("CylinderMesh_nlddg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D24"]
@@ -335,7 +338,7 @@ mesh = SubResource("CylinderMesh_nlddg")
 shape = SubResource("ConcavePolygonShape3D_esbsy")
 
 [node name="MeshInstance3D25" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(28.7794, -0.139279, -25.0034, 12.1012, 0.442788, 5.73539, 12.0724, -0.111816, 53.8564, -34.2358, 50.4791, -16.1499)
+transform = Transform3D(28.7794, -0.139279, -25.0034, 12.1012, 0.442788, 5.73539, 12.0724, -0.111816, 53.8564, -52.3804, 34.7534, -34.0428)
 mesh = SubResource("CylinderMesh_nlddg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D25"]
@@ -344,7 +347,7 @@ mesh = SubResource("CylinderMesh_nlddg")
 shape = SubResource("ConcavePolygonShape3D_esbsy")
 
 [node name="MeshInstance3D26" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(28.7794, -0.139279, -25.0034, 12.1012, 0.442788, 5.73539, 12.0724, -0.111816, 53.8564, -34.2358, 63.2421, -16.1499)
+transform = Transform3D(28.7794, -0.139279, -25.0034, 12.1012, 0.442788, 5.73539, 12.0724, -0.111816, 53.8564, -52.3804, 47.5164, -34.0428)
 mesh = SubResource("CylinderMesh_nlddg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D26"]
@@ -353,7 +356,7 @@ mesh = SubResource("CylinderMesh_nlddg")
 shape = SubResource("ConcavePolygonShape3D_esbsy")
 
 [node name="MeshInstance3D32" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(13.9771, -0.120913, 52.0565, 12.1012, 0.442788, 5.73539, -27.9041, 0.131459, 28.5622, -22.3048, 34.1696, 15.8049)
+transform = Transform3D(13.9771, -0.120913, 52.0565, 12.1012, 0.442788, 5.73539, -27.9041, 0.131459, 28.5622, -59.49, 34.1696, 41.7043)
 mesh = SubResource("CylinderMesh_nlddg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D32"]
@@ -362,7 +365,7 @@ mesh = SubResource("CylinderMesh_nlddg")
 shape = SubResource("ConcavePolygonShape3D_esbsy")
 
 [node name="MeshInstance3D33" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(13.9771, -0.120913, 52.0565, 12.1012, 0.442788, 5.73539, -27.9041, 0.131459, 28.5622, -22.3048, 50.5142, 15.31)
+transform = Transform3D(13.9771, -0.120913, 52.0565, 12.1012, 0.442788, 5.73539, -27.9041, 0.131459, 28.5622, -59.49, 50.5142, 41.2094)
 mesh = SubResource("CylinderMesh_nlddg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D33"]
@@ -371,7 +374,7 @@ mesh = SubResource("CylinderMesh_nlddg")
 shape = SubResource("ConcavePolygonShape3D_esbsy")
 
 [node name="MeshInstance3D34" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(13.9771, -0.120913, 52.0565, 12.1012, 0.442788, 5.73539, -27.9041, 0.131459, 28.5622, -22.3048, 59.331, 15.8049)
+transform = Transform3D(13.9771, -0.120913, 52.0565, 12.1012, 0.442788, 5.73539, -27.9041, 0.131459, 28.5622, -59.49, 59.331, 41.7043)
 mesh = SubResource("CylinderMesh_nlddg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D34"]
@@ -504,7 +507,7 @@ mesh = SubResource("CylinderMesh_bbibg")
 shape = SubResource("ConcavePolygonShape3D_yjage")
 
 [node name="MeshInstance3D30" type="MeshInstance3D" parent="." groups=["fungi"]]
-transform = Transform3D(10.0324, 0.37686, 13.7145, -15.2517, -0.195954, 25.2333, 86.4674, -0.078289, 2.85958, -32.0659, 34.5441, 8.0309)
+transform = Transform3D(10.0324, 0.37686, 13.7145, -15.2517, -0.195954, 25.2333, 86.4674, -0.078289, 2.85958, -131.71, 34.5441, 8.0309)
 mesh = SubResource("CylinderMesh_bbibg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D30"]
@@ -576,7 +579,7 @@ mesh = SubResource("BoxMesh_6scve")
 shape = SubResource("ConcavePolygonShape3D_dv4f4")
 
 [node name="MeshInstance3D8" type="MeshInstance3D" parent="."]
-transform = Transform3D(97.529, 0.217394, 0, -21.7217, 0.976084, 0, 0, 0, 114.508, 0, 14.9978, 0)
+transform = Transform3D(99.8714, -0.0307476, 0, 3.07227, 0.999527, 0, 0, 0, 114.508, 0, 6.37864, 0)
 mesh = SubResource("BoxMesh_p5kew")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D8"]
@@ -623,11 +626,12 @@ mix_target = 1
 stream = ExtResource("6_vsruh")
 autoplay = true
 
-[node name="Marker3D2" type="Marker3D" parent="." groups=["playerspawn"]]
-
 [node name="OmniLight3D3" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.66851, 31.4863, 45.4982)
 omni_range = 19.223
 
 [node name="Node3D" parent="." instance=ExtResource("7_l78ly")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -103.485, 57.7844, 0)
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -103.485, 57.7844, 0)
+
+[node name="Node3D2" parent="." instance=ExtResource("7_l78ly")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -107.834, 40.5722, 62.1017)

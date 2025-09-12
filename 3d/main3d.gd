@@ -160,7 +160,7 @@ func handle_bonus_command(command: String):
 			command_output.append_text("\nExiting Bonus Menu.")
 
 func play_cat_animation():
-	var cat_sprite = $cat  
+	var cat_sprite = $Sprites/cat  
 	if cat_sprite:
 		cat_sprite.visible = true
 		if cat_sprite.has_method("play"):

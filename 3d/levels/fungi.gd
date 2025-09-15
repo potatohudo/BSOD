@@ -67,7 +67,7 @@ func _ready() -> void:
 			fungi_nodes.append(fungi)
 			spawn_state[fungi] = SpawnTier.NONE
 			_build_once_for_fungus(fungi)
-	$Node3D.call_nearest_whale(player)
+	#$Node3D.call_nearest_whale(player)
 
 func _process(delta: float) -> void:
 	if player == null:

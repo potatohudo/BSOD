@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://0ale17g8l7h7"
 path.s3tc="res://.godot/imported/mushtexture.png-71f4edf155665a8b3e4586eee9721848.s3tc.ctex"
+path.etc2="res://.godot/imported/mushtexture.png-71f4edf155665a8b3e4586eee9721848.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://3d/sprites/textures/mushtexture.png"
-dest_files=["res://.godot/imported/mushtexture.png-71f4edf155665a8b3e4586eee9721848.s3tc.ctex"]
+dest_files=["res://.godot/imported/mushtexture.png-71f4edf155665a8b3e4586eee9721848.s3tc.ctex", "res://.godot/imported/mushtexture.png-71f4edf155665a8b3e4586eee9721848.etc2.ctex"]
 
 [params]
 

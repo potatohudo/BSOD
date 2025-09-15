@@ -326,7 +326,7 @@ transform = Transform3D(1, 3.72529e-09, -9.77889e-09, -1.86265e-09, 1, 2.98023e-
 transform = Transform3D(0.784222, 0, 0, 0, 0.784222, 0, 0, 0, 0.784222, 0.52668, -0.212583, -0.067234)
 
 [node name="Skeleton3D" parent="whale/Armature_010" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.62413, -0.9893, -0.553269)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.62477, -0.984835, -0.554321)
 
 [node name="Armature_011" parent="whale" index="2"]
 transform = Transform3D(0.784222, 1.80164e-08, 5.11631e-09, -1.80164e-08, 0.667175, 0.412168, 5.11631e-09, -0.412168, 0.667174, 0.696913, -0.444864, -0.30428)
@@ -339,7 +339,7 @@ transform = Transform3D(0.784221, 0, 0, 0, 0.784221, 0, 0, 0, 0.784221, 0.562145
 rotation_order = 5
 
 [node name="Skeleton3D" parent="whale/Armature_012" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.55362, -0.964327, 0.379146)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5537, -0.96336, 0.379146)
 
 [node name="Armature_001" parent="whale" index="5"]
 transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.641533, -0.629352, 0)
@@ -353,8 +353,8 @@ bones/2/rotation = Quaternion(3.80414e-09, -5.23309e-09, -0.017495, 0.999847)
 [node name="Skeleton3D" parent="whale/Armature_002" index="0"]
 bones/0/rotation = Quaternion(0.00741575, 0.000125074, -0.0423139, 0.999077)
 bones/0/scale = Vector3(1, 1, 1)
-bones/1/rotation = Quaternion(-0.0202633, 0.0451171, 0.105074, 0.993234)
-bones/2/rotation = Quaternion(-0.000758519, -0.0200673, 0.112871, 0.993407)
+bones/1/rotation = Quaternion(-0.021055, 0.0465233, 0.119507, 0.991519)
+bones/2/rotation = Quaternion(-0.00129311, -0.0195432, 0.115276, 0.99314)
 bones/2/scale = Vector3(1, 1, 1)
 
 [node name="Skeleton3D" parent="whale/Armature_003" index="0"]

@@ -37,14 +37,13 @@ func _ready():
 	if not player:
 		push_error("Could not find player at SubViewportContainer/SubViewport/Node3D/CharacterBody3D")
 
-	# Sphere center: true geometric center from the mesh AABB (world space)
 	if mesh_instance and mesh_instance.mesh:
 		var aabb := mesh_instance.mesh.get_aabb()
 		sphere_center = mesh_instance.to_global(aabb.get_center())
 	else:
 		sphere_center = global_transform.origin
 	
-	# Viewport / materials hookup (unchanged)
+
 	var vp := _find_viewport()
 	var vp_tex := (vp.get_texture() if vp else null)
 	if not vp:
@@ -55,7 +54,6 @@ func _ready():
 	if vp_tex:
 		_assign_texture_to_material_resources(vp_tex)
 
-	# --- generate geometry (unchanged) ---
 	if not mesh_instance:
 		push_error("mesh_instance is not assigned!")
 		return
@@ -82,7 +80,6 @@ func _ready():
 	if vp_tex:
 		_assign_texture_to_scene_materials(vp_tex, "matcap")
 
-	# init last position AFTER everything is placed
 	if player:
 		last_player_pos = player.global_transform.origin
 		_have_last = true
@@ -98,19 +95,13 @@ func _physics_process(delta: float) -> void:
 	if to_center.length_squared() < ORIENT_EPS: # too close to center: nothing sensible to do
 		return
 
-	# Choose which way is UP for the player:
-	# false -> UP points toward the center (player's head faces center)
-	# true  -> UP points away from center (player stands on outside)
 	var tc_norm: Vector3 = to_center.normalized()
 	var up_dir: Vector3 = tc_norm if not invert_orientation else -tc_norm
 
-	# Current forward in world space (in Godot +Z is basis.z, forward is usually -Z)
 	var current_forward: Vector3 = player.global_transform.basis.z
 
-	# Project the current forward onto the tangent plane (perpendicular to up_dir)
 	var f_proj: Vector3 = current_forward - up_dir * current_forward.dot(up_dir)
 
-	# If projection is too small (player forward nearly parallel to up_dir), use fallbacks
 	if f_proj.length_squared() < ORIENT_EPS:
 		var fallback: Vector3 = Vector3.FORWARD # (0,0,-1)
 		f_proj = fallback - up_dir * fallback.dot(up_dir)
@@ -121,24 +112,21 @@ func _physics_process(delta: float) -> void:
 				# give up if everything is degenerate
 				return
 
-	# Normalize the tangent forward and try to preserve facing direction to avoid 180° flips
 	var f: Vector3 = f_proj.normalized()
 	if f.dot(current_forward) < 0.0:
 		f = -f
 
 	var right: Vector3 = up_dir.cross(f).normalized()
-	var forward_final: Vector3 = right.cross(up_dir).normalized() # re-orthogonalize
+	var forward_final: Vector3 = right.cross(up_dir).normalized() 
 
 	player.global_transform.basis = Basis(right, up_dir, forward_final).orthonormalized()
 
 # ---------------- helpers for viewport / assignment ----------------
 
 func _find_viewport() -> Viewport:
-	# Prefer the viewport this node is in
 	var vp := get_viewport()
 	if vp:
 		return vp
-	# Fallback: BFS search from the scene root for a Viewport node
 	var root = get_tree().get_root()
 	var queue := [root]
 	while queue.size() > 0:
@@ -152,7 +140,6 @@ func _find_viewport() -> Viewport:
 
 
 func _assign_texture_to_material_resources(vp_tex: Texture2D):
-	# assign to common exported ShaderMaterial resources (so new mesh instances using them already show it)
 	var mats := [debug_material_outer, debug_material_inner, column_material]
 	for mat in mats:
 		if mat and mat is ShaderMaterial:
@@ -202,7 +189,7 @@ func _assign_texture_to_node_and_children(node: Node, vp_tex: Texture2D, uniform
 
 
 
-# ---------------- sphere / column generation (same as before) ----------------
+# ---------------- sphere / column generation ----------------
 
 func _generate_tiled_sphere(
 	radius: float,
@@ -270,7 +257,6 @@ func _generate_tiled_sphere(
 			body.add_child(col_shape)
 			pivot.add_child(body)
 
-			# Debug mesh — inner sphere gets extra stretch for no gaps
 			var vis = MeshInstance3D.new()
 			vis.mesh = box_mesh
 			vis.material_override = mat
@@ -363,7 +349,6 @@ func _place_inner_column(radius_inner: float, center_local: Vector3, mesh_xform:
 	if ceiling:
 		up = -up
 
-	# Push toward outer wall (tunnel space)
 	world_pos += -up * (column_width * 0.5 + 0.05)
 
 	var right = Vector3.UP.cross(up).normalized()
@@ -374,7 +359,6 @@ func _place_inner_column(radius_inner: float, center_local: Vector3, mesh_xform:
 
 	var col_transform = Transform3D(basis, world_pos - up * (height / 2.0))
 
-	# Collision
 	var shape = BoxShape3D.new()
 	shape.size = Vector3(column_width, height, column_width)
 	var body = StaticBody3D.new()
@@ -393,7 +377,7 @@ func _place_inner_column(radius_inner: float, center_local: Vector3, mesh_xform:
 	vis.transform = col_transform
 	pivot.add_child(vis)
 
-
+##i dont fucking remember
 ## Case 1: Player has an Area3D detector (we receive AREA signals)
 #func _on_player_detector_area_shape_entered(_area_rid: RID, area: Area3D, _area_shape_idx: int, _local_shape_idx: int) -> void:
 	#if area and area.is_in_group("0g"):

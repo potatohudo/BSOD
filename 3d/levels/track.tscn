@@ -1,7 +1,5 @@
-[gd_scene load_steps=35 format=3 uid="uid://bj2r50s0df7p0"]
+[gd_scene load_steps=33 format=3 uid="uid://bj2r50s0df7p0"]
 
-[ext_resource type="Script" path="res://3d/levels/day_night.gd" id="1_ofh2h"]
-[ext_resource type="Script" path="res://3d/day_night.gd" id="1_wpk0n"]
 [ext_resource type="AudioStream" uid="uid://byukdv1if67mn" path="res://3d/sounds/ambient-w6.mp3" id="2_ppqim"]
 [ext_resource type="AudioStream" uid="uid://b7rslx60p4jwr" path="res://3d/sounds/pulsar.mp3" id="3_dj5k6"]
 
@@ -110,7 +108,6 @@ adjustment_enabled = true
 
 [node name="Node3D" type="Node3D"]
 process_mode = 1
-script = ExtResource("1_ofh2h")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 20, -14.5363, -0.501547, 0)
@@ -292,11 +289,8 @@ mesh = SubResource("BoxMesh_34085")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D18/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_b5bnc")
 
-[node name="DayNight" type="Node" parent="." node_paths=PackedStringArray("environment")]
+[node name="DayNight" type="Node" parent="."]
 process_mode = 1
-script = ExtResource("1_wpk0n")
-environment = NodePath("WorldEnvironment")
-day_duration = 100000.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="DayNight"]
 environment = SubResource("Environment_toutp")
@@ -309,3 +303,6 @@ parameters/looping = true
 
 [node name="Pulsar" type="AudioStreamPlayer" parent="DayNight"]
 stream = ExtResource("3_dj5k6")
+
+[node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.08284, 0)

@@ -32,7 +32,7 @@ var rest_timer: float = 0.0
 @export var rest_duration_max: float = 15.0
 
 # Navigation
-var target_queue: Array[Node3D] = []
+var target_queue: Array = []
 var target_node: Node3D = null
 @export var arrival_distance: float = 20.0
 var navigation_reached: bool = false
@@ -136,21 +136,25 @@ func _reset_rest_timer() -> void:
 # -------------------
 
 func _face_direction_smooth(direction: Vector3, delta: float, speed: float) -> void:
-	# stable, Euler-based smooth facing (avoids basis/quaternion instability)
 	if direction.length() < 0.001:
 		return
+
 	var dir := direction.normalized()
-	var yaw := atan2(dir.x, dir.z)
+	var yaw := atan2(dir.x, dir.z) + PI   # rotate 180° so whale faces forward
 	var flat_len := sqrt(dir.x * dir.x + dir.z * dir.z)
+
 	var pitch := 0.0
 	if flat_len > 0.0001:
-		pitch = -atan2(dir.y, flat_len) # negative to match look_at tilt direction
-	var cur := whale.rotation
+		pitch = -atan2(dir.y, flat_len)
+
+	var cur := rotation
 	var blend = clamp(speed * delta, 0.0, 1.0)
 	cur.x = lerp_angle(cur.x, pitch, blend)
 	cur.y = lerp_angle(cur.y, yaw, blend)
-	cur.z = lerp_angle(cur.z, 0.0, blend) # roll -> 0 smoothly
-	whale.rotation = cur
+	cur.z = lerp_angle(cur.z, 0.0, blend)
+	rotation = cur
+
+
 
 func _update_flight(delta: float) -> void:
 	match mode:
@@ -165,22 +169,21 @@ func _update_flight(delta: float) -> void:
 
 			current_dir = start_dir.slerp(target_dir, eased_t).normalized()
 			global_position += current_dir * (move_speed * movement_factor_current) * delta
-			look_at(global_position + current_dir, Vector3.UP)
+			_face_direction_smooth(current_dir, delta, rotation_smooth_speed)
 
 		Mode.RESTING:
 			global_position += current_dir * (move_speed * movement_factor_current) * delta
-			look_at(global_position + current_dir, Vector3.UP)
+			_face_direction_smooth(current_dir, delta, rotation_smooth_speed * 0.8)
 
 		Mode.STOP:
-			# drift if needed
 			if movement_factor_current > 0.001:
 				global_position += current_dir * (move_speed * movement_factor_current) * delta
-			# keep looking in current_dir, but slowly flatten horizontal
+			# Smoothly flatten orientation while parked
 			var flat_dir = current_dir
 			flat_dir.y = 0.0
 			if flat_dir.length() < 0.001:
 				flat_dir = Vector3.FORWARD
-			look_at(global_position + flat_dir.normalized(), Vector3.UP)
+			_face_direction_smooth(flat_dir.normalized(), delta, rotation_smooth_speed * 0.5)
 
 		Mode.NAVIGATING:
 			if target_node and not navigation_reached:
@@ -188,8 +191,14 @@ func _update_flight(delta: float) -> void:
 				if dir.length() > 0.001:
 					dir = dir.normalized()
 					current_dir = current_dir.slerp(dir, 0.8 * delta).normalized()
+
 				global_position += current_dir * (move_speed * movement_factor_current) * delta
-				look_at(global_position + current_dir, Vector3.UP)
+
+				var flat_dir = current_dir
+				flat_dir.y = 0.0
+				if flat_dir.length() < 0.001:
+					flat_dir = Vector3.FORWARD
+				_face_direction_smooth(flat_dir.normalized(), delta, rotation_smooth_speed)
 
 				if global_position.distance_to(target_node.global_position) <= arrival_distance:
 					navigation_reached = true
@@ -198,11 +207,13 @@ func _update_flight(delta: float) -> void:
 					movement_factor_target = 0.0
 					park_timer = park_time
 
-	# parking countdown handled only while actually parked
+
+	# Parking countdown
 	if mode == Mode.STOP and navigation_reached:
 		park_timer -= delta
 		if park_timer <= 0.0:
 			_go_to_next_target()
+
 
 
 func _pick_new_direction() -> void:
@@ -239,7 +250,7 @@ func call_nearest_whale(target: Node3D) -> void:
 	if nearest:
 		nearest.call_whale(target)
 		
-func navigate_to_points(points: Array[Node3D]) -> void:
+func navigate_to_points(points: Array) -> void:
 	target_queue = points.duplicate()
 	_go_to_next_target()
 	

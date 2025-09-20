@@ -1,3 +1,5 @@
+Node2D
+Marker3D
 Control
 Panel
 CollisionShape3D
@@ -8,6 +10,5 @@ AnimationTree
 Node3D
 OmniLight3D
 MeshInstance3D
-Marker3D
 AudioStreamPlayer
 Label

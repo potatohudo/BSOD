@@ -40,7 +40,10 @@ var movement_points = 0
 var max_speed_cap = DEFAULT_MAX_CHAIN_SPEED  
 
 var momentum = Vector3.ZERO
-var active = false
+var atk_mode = false
+enum PlayerMode { PEACEFUL, FIGHTING }
+var current_mode: PlayerMode = PlayerMode.PEACEFUL
+
 
 @onready var marker: Node3D = $Marker3D  
 @onready var camera: Camera3D = $Marker3D/Camera3D  
@@ -55,12 +58,20 @@ var active = false
 @onready var hurt_sound_0: AudioStreamPlayer = get_node("/root/Main/Hurt0")
 @onready var hurt_sound_1: AudioStreamPlayer = get_node("/root/Main/Hurt1")
 @onready var hurt_sound_2: AudioStreamPlayer = get_node("/root/Main/Hurt2")
-@onready var por = get_node("/root/Main/Sprites")
+@onready var por = get_node("/root/Main/Sprites/POR")
 @onready var flashlight = $Marker3D/Camera3D/SpotLight3D
 
 var is_game_over = false  
 var crouching = false
 var camera_locked = false 
+
+func toggle_mode():
+	current_mode = PlayerMode.FIGHTING if current_mode == PlayerMode.PEACEFUL else PlayerMode.PEACEFUL
+	atk_mode = (current_mode == PlayerMode.FIGHTING)
+	flashlight.visible = not flashlight.visible
+	por.visible = not por.visible
+	print(current_mode)
+	
 
 func update_camera():
 	if is_sliding or crouching:
@@ -70,8 +81,6 @@ func update_camera():
 		_reset_collision_size()
 		marker.position.y = 0
 	#it does not work any other way :(
-
-
 
 func update_dash_sprite():
 	if dash_efx == true:
@@ -84,16 +93,48 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var up := _up()
-	up_direction = up  
+	up_direction = up
 
+	_update_momentum(delta)
+	var direction := get_movement_direction()
+	var is_sprinting := Input.is_action_pressed("sprint") and not is_sliding and direction.length() > 0.0 and current_mode == PlayerMode.PEACEFUL
+
+	_compute_speed(delta, is_sprinting)
+	_update_sliding(delta)
+	_apply_gravity_if_needed(delta, up)
+	_idle_on_floor_reset(delta, is_sprinting, direction)
+
+	max_speed_cap = DEFAULT_MAX_CHAIN_SPEED + (movement_points * TRICK_ACCEL_GAIN)
+
+	_handle_attack_and_jump(up)
+	_handle_crouch_or_slide()
+
+	if speed >= SLIDE_THRESHOLD:
+		check_wall_impact()
+
+	_compose_velocity(direction, up)
+
+	move_and_slide()
+
+	if health <= 0 or global_transform.origin.y < -20000.0:
+		die()
+
+	if Input.is_action_just_pressed("f"):
+		toggle_mode()
+
+	update_camera()
+	update_dash_sprite()
+	LH.visible = health < 20
+
+
+func _update_momentum(delta: float) -> void:
 	if momentum.length() > 0.1:
 		momentum = momentum.lerp(Vector3.ZERO, MOMENTUM_DECAY * delta)
 	else:
 		momentum = Vector3.ZERO
 
-	var direction := get_movement_direction()  # already planar to local up
-	var is_sprinting := Input.is_action_pressed("sprint") and not is_sliding and direction.length() > 0.0
 
+func _compute_speed(delta: float, is_sprinting: bool) -> void:
 	if is_sprinting:
 		speed = min(speed + ACCELERATION, max_speed_cap)
 	else:
@@ -102,7 +143,8 @@ func _physics_process(delta: float) -> void:
 			decay_rate *= 0.25
 		speed = move_toward(speed, BASE_SPEED, decay_rate)
 
-	# Slide
+
+func _update_sliding(delta: float) -> void:
 	if is_sliding:
 		slide_timer -= delta
 		if slide_timer <= 0.0:
@@ -110,13 +152,15 @@ func _physics_process(delta: float) -> void:
 			if speed < SLIDE_CANCEL_SPEED:
 				exit_slide()
 
-	# Apply gravity along local down (note: GRAVITY is negative in your script)
+
+func _apply_gravity_if_needed(delta: float, up: Vector3) -> void:
 	if not is_on_floor():
-		velocity += up * GRAVITY * delta  # GRAVITY is -9.8 → accelerates toward -up
+		velocity += up * GRAVITY * delta
 		if is_sliding:
 			exit_slide()
 
-	# Idle-on-floor resets (unchanged logic)
+
+func _idle_on_floor_reset(delta: float, is_sprinting: bool, direction: Vector3) -> void:
 	if not is_sprinting and direction.length() == 0.0 and is_on_floor():
 		momentum = momentum.lerp(Vector3.ZERO, MOMENTUM_DECAY * delta)
 		if momentum.length() < 0.1:
@@ -124,47 +168,52 @@ func _physics_process(delta: float) -> void:
 			speed = BASE_SPEED
 			movement_points = 0
 
-	max_speed_cap = DEFAULT_MAX_CHAIN_SPEED + (movement_points * TRICK_ACCEL_GAIN)
 
-	if Input.is_action_just_pressed("attack") and can_dash:
-		perform_dash()
+func _handle_attack_and_jump(up: Vector3) -> void:
+	if Input.is_action_just_pressed("attack"):
+		if current_mode == PlayerMode.FIGHTING:
+			if can_dash:
+				perform_dash()
+		else:
+			perform_grab()
 
-	# Jump along local up
 	if Input.is_action_just_pressed("jump"):
 		if is_sliding and is_on_floor():
 			exit_slide_with_jump()
 		elif is_on_floor():
-			# clear any downward component then add jump along up
 			var vert := up * velocity.dot(up)
 			if vert.dot(up) < 0.0:
 				velocity -= vert
 			velocity += up * JUMP_VELOCITY
 
-	# Crouch (unchanged)
-	if Input.is_action_pressed("crouch") and not is_sliding:
-		if is_on_floor():
+
+func _handle_crouch_or_slide() -> void:
+	if current_mode == PlayerMode.PEACEFUL:
+		if Input.is_action_pressed("crouch") and not is_sliding and is_on_floor():
 			_apply_crouch_collision()
 			crouching = true
+		else:
+			_reset_collision_size()
+			crouching = false
 	else:
-		_reset_collision_size()
-		crouching = false
+		var decay_rate2 := ACCELERATION * 0.5
+		if not is_on_floor():
+			decay_rate2 *= 0.25
+		speed = move_toward(speed, BASE_SPEED, decay_rate2)
+		if Input.is_action_pressed("crouch"):
+			start_slide()
 
-	# High-speed wall impact checks (uses local up internally now)
-	if speed >= SLIDE_THRESHOLD:
-		check_wall_impact()
 
-	var vert_comp := up * velocity.dot(up) 
-	var current_tangent := velocity - vert_comp      
+func _compose_velocity(direction: Vector3, up: Vector3) -> void:
+	var vert_comp := up * velocity.dot(up)
+	var current_tangent := velocity - vert_comp
 	var target_tangent: Vector3
 
 	if direction.length() > 0.0:
-		# move on the local ground plane; momentum is also planarized
 		target_tangent = direction * speed + _project_on_plane(momentum, up)
 	else:
-		# no input → just coast on momentum on the plane
 		target_tangent = _project_on_plane(momentum, up)
 
-	# When no input, gently move toward target_tangent; with input we snap to target for responsiveness
 	if direction.length() > 0.0:
 		current_tangent = target_tangent
 	else:
@@ -172,29 +221,19 @@ func _physics_process(delta: float) -> void:
 
 	velocity = vert_comp + current_tangent
 
-	move_and_slide()
-
-	# Kill condition (kept as-is; if your world rotates a lot, consider a distance-based fail instead)
-	if health <= 0 or global_transform.origin.y < -20000.0:
-		die()
-
-	update_camera()
-	update_dash_sprite()
-	LH.visible = health < 20
-
-	if Input.is_action_just_pressed("f"):
-		flashlight.visible = not flashlight.visible
-		por.visible = not por.visible
-		active = not active
 
 
-# Returns the player's current local up (normalized).
 func _up() -> Vector3:
 	return global_transform.basis.y.normalized()
 
-# Projects v onto the plane perpendicular to n (i.e., removes the component along n).
 func _project_on_plane(v: Vector3, n: Vector3) -> Vector3:
 	return v - n * v.dot(n)
+
+func perform_grab():
+	print("perform_grab() called (peaceful)")
+
+func perform_wall_run():
+	print("perform_wall_run() called (peaceful)")
 
 
 func perform_dash():
@@ -211,7 +250,6 @@ func perform_dash():
 
 	var dash_direction := get_movement_direction()
 	if dash_direction.length() == 0.0:
-		# default to camera forward but flattened to the local ground plane
 		var cam_fwd := -camera.global_transform.basis.z
 		dash_direction = _project_on_plane(cam_fwd, up).normalized()
 
@@ -267,7 +305,7 @@ func check_wall_impact():
 
 
 func handle_wall_collision(direction: Vector3):
-	if dash_efx == true:
+	if dash_efx == true and current_mode == PlayerMode.FIGHTING:
 		var knockback_force = -direction * WALL_IMPACT_KNOCKBACK  
 		apply_knockback(knockback_force)  
 		movement_points += 1  

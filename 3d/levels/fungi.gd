@@ -67,7 +67,10 @@ func _ready() -> void:
 			fungi_nodes.append(fungi)
 			spawn_state[fungi] = SpawnTier.NONE
 			_build_once_for_fungus(fungi)
-	#$Node3D.call_nearest_whale(player)
+	await get_tree().create_timer(1).timeout
+	$Node3D.call_nearest_whale(player)
+	$Node3D.target_queue = [$NM, $NM2]
+
 
 func _process(delta: float) -> void:
 	if player == null:

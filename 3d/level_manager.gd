@@ -2,8 +2,8 @@ extends Node
 
 @onready var level_holder: Node3D = get_node_or_null("/root/Main/SubViewportContainer/SubViewport/Node3D/LevelHolder")
 @onready var subviewport_container: SubViewportContainer = get_node_or_null("/root/Main/SubViewportContainer")
-@onready var indicator: AnimatedSprite2D = get_node_or_null("/root/Main/Sprites/POR_Full")
-@onready var indicator1: AnimatedSprite2D = get_node_or_null("/root/Main/Sprites/POR_Idle")
+@onready var indicator: AnimatedSprite2D = get_node_or_null("/root/Main/Sprites/POR/POR_Full")
+@onready var indicator1: AnimatedSprite2D = get_node_or_null("/root/Main/Sprites/POR/POR_Idle")
 @onready var player_camera: Camera3D = get_node("/root/Main/SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D")
 @onready var player = get_node("/root/Main/SubViewportContainer/SubViewport/Node3D/CharacterBody3D")
 

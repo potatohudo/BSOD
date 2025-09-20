@@ -635,3 +635,9 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -103.485, 57.7844, 0)
 
 [node name="Node3D2" parent="." instance=ExtResource("7_l78ly")]
 transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -107.834, 40.5722, 62.1017)
+
+[node name="NM" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -262.732, 151.128, 0)
+
+[node name="NM2" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85.887, 66.5637, 93.2001)

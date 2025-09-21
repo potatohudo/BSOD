@@ -91,7 +91,18 @@ func update_dash_sprite():
 func _physics_process(delta: float) -> void:
 	if is_game_over:
 		return
-
+	if is_grabbing:
+		if Input.is_action_pressed("attack") and grabbed_body:
+			# lock player to object’s movement
+			global_transform.origin = grabbed_body.to_global(grab_offset)
+			velocity = Vector3.ZERO
+			momentum = Vector3.ZERO
+			return
+		else:
+			# release grab
+			is_grabbing = false
+			grabbed_body = null
+	
 	var up := _up()
 	up_direction = up
 
@@ -187,6 +198,33 @@ func _handle_attack_and_jump(up: Vector3) -> void:
 			velocity += up * JUMP_VELOCITY
 
 
+var is_grabbing = false
+var grabbed_body: Node3D = null
+var grab_offset: Vector3 = Vector3.ZERO
+
+func perform_grab():
+	if not current_mode == PlayerMode.PEACEFUL:
+		return
+	
+	var space_state = get_world_3d().direct_space_state
+	var origin = camera.global_transform.origin
+	var dir = -camera.global_transform.basis.z.normalized()
+	var target = origin + dir * 3.0  # grab range
+	
+	var query = PhysicsRayQueryParameters3D.create(origin, target)
+	query.exclude = [self]
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	
+	var result = space_state.intersect_ray(query)
+	if result:
+		is_grabbing = true
+		grabbed_body = result.collider
+		# save local offset so we stick correctly if object moves
+		grab_offset = grabbed_body.to_local(global_transform.origin)
+		velocity = Vector3.ZERO
+		momentum = Vector3.ZERO
+
 func _handle_crouch_or_slide() -> void:
 	if current_mode == PlayerMode.PEACEFUL:
 		if Input.is_action_pressed("crouch") and not is_sliding and is_on_floor():
@@ -229,8 +267,6 @@ func _up() -> Vector3:
 func _project_on_plane(v: Vector3, n: Vector3) -> Vector3:
 	return v - n * v.dot(n)
 
-func perform_grab():
-	print("perform_grab() called (peaceful)")
 
 func perform_wall_run():
 	print("perform_wall_run() called (peaceful)")

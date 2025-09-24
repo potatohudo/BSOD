@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://b4nnwkcihkug"]
+[gd_scene load_steps=46 format=3 uid="uid://b4nnwkcihkug"]
 
 [ext_resource type="Script" path="res://3d/levels/fungi.gd" id="1_36p2r"]
 [ext_resource type="Shader" path="res://3d/levels/fungi.gdshader" id="2_hu5g3"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://csi7in2cchg34" path="res://3d/sounds/wind_chime.wav" id="5_i1w1e"]
 [ext_resource type="AudioStream" uid="uid://byxqegms73cqp" path="res://3d/sounds/outfile_2025-08-18_22-11-23.wav" id="6_vsruh"]
 [ext_resource type="PackedScene" uid="uid://4dt17fvq83sv" path="res://3d/models/whale/whale.tscn" id="7_l78ly"]
+[ext_resource type="PackedScene" uid="uid://clxn76hx2hjpc" path="res://3d/models/whale/call.tscn" id="8_rflnp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_86wc7"]
 render_priority = 0
@@ -641,3 +642,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -262.732, 151.128, 0)
 
 [node name="NM2" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85.887, 66.5637, 93.2001)
+
+[node name="Node3D3" parent="." instance=ExtResource("8_rflnp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -118.896, 21.3078, 0)

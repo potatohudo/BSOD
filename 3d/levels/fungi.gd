@@ -24,6 +24,7 @@ extends Node3D
 # -------- Shared materials (keep shared to avoid dups) --------
 @export var vine_material: Material
 @export var impostor_material: Material
+@onready var bloop = $Node3D
 
 var player: CharacterBody3D
 
@@ -68,7 +69,7 @@ func _ready() -> void:
 			spawn_state[fungi] = SpawnTier.NONE
 			_build_once_for_fungus(fungi)
 	await get_tree().create_timer(1).timeout
-	$Node3D.call_nearest_whale(player)
+	#$Node3D.call_nearest_whale(player)
 	$Node3D.target_queue = [$NM, $NM2]
 
 

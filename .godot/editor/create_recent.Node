@@ -1,14 +1,14 @@
+CollisionShape3D
+MeshInstance3D
+Area3D
 Node2D
 Marker3D
 Control
 Panel
-CollisionShape3D
 StaticBody3D
 AudioStreamPlayer3D
 AnimationPlayer
 AnimationTree
 Node3D
 OmniLight3D
-MeshInstance3D
 AudioStreamPlayer
-Label

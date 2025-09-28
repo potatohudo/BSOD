@@ -46,3 +46,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.86359, 3.54745, -41.788)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="HiddenArea" groups=["hidden"]]
 mesh = SubResource("BoxMesh_2bb1d")
+
+[node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]

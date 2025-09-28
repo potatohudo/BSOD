@@ -1,3 +1,4 @@
+res://pc/pc.tscn
 res://pc/PC.tres
 res://3d/freaky.gdshader
 res://3d/datamoshing.gdshader
@@ -16,9 +17,6 @@ res://3d/levels/spark.gdshader
 res://3d/mv.gdshader
 res://3d/test1.gdshader
 res://3d/test.gdshader
-res://3d/models/whale/call.gd
-res://pc/pc.tscn
-res://3d/levels/fungi.gd
 res://main_menu.tscn
 res://pc/window.tscn
 res://pc/programs/browser.tscn

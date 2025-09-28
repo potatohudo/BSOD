@@ -1,6 +1,7 @@
-[gd_scene load_steps=33 format=3 uid="uid://bj2r50s0df7p0"]
+[gd_scene load_steps=34 format=3 uid="uid://bj2r50s0df7p0"]
 
 [ext_resource type="AudioStream" uid="uid://byukdv1if67mn" path="res://3d/sounds/ambient-w6.mp3" id="2_ppqim"]
+[ext_resource type="PackedScene" uid="uid://4dt17fvq83sv" path="res://3d/models/whale/whale.tscn" id="3_727si"]
 [ext_resource type="AudioStream" uid="uid://b7rslx60p4jwr" path="res://3d/sounds/pulsar.mp3" id="3_dj5k6"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_nvnlc"]
@@ -163,6 +164,15 @@ mesh = SubResource("BoxMesh_nr3ld")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D6/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_2lao6")
 
+[node name="MeshInstance3D19" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.51842, -0.999971, 0, 199.994, 0.00759208, 0, 0, 0, 10, 110.492, 8.65773, -30.0722)
+mesh = SubResource("BoxMesh_nr3ld")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D19"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D19/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_2lao6")
+
 [node name="MeshInstance3D7" type="MeshInstance3D" parent="."]
 transform = Transform3D(100, 0, 0, 0, 1, 0, 0, 0, 100, 48.753, 0, -71.7337)
 mesh = SubResource("BoxMesh_1wivc")
@@ -235,6 +245,15 @@ mesh = SubResource("BoxMesh_gyxql")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D13/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_0b3ht")
 
+[node name="MeshInstance3D20" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.667869, 29.9493, 0.0475895, 1.25191, -1.48835, 0.996805, 19.9496, -0.909234, -0.0641461, 109.371, -90.4476, -27.5263)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D20"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D20/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_0b3ht")
+
 [node name="MeshInstance3D14" type="MeshInstance3D" parent="."]
 transform = Transform3D(-99.9927, 0, 0.01206, 0, 20, 0, -1.206, 0, -0.999927, 44.2502, 10.3171, -120.421)
 mesh = SubResource("BoxMesh_gyxql")
@@ -305,4 +324,7 @@ parameters/looping = true
 stream = ExtResource("3_dj5k6")
 
 [node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.08284, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 5.08284, 0)
+
+[node name="Node3D" parent="." instance=ExtResource("3_727si")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.9279, 7.36496, -58.585)

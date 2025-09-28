@@ -43,7 +43,7 @@ var momentum = Vector3.ZERO
 var atk_mode = false
 enum PlayerMode { PEACEFUL, FIGHTING }
 var current_mode: PlayerMode = PlayerMode.PEACEFUL
-
+const SLIDE_GRAVITY = -2.5  # weaker gravity while sliding down a wall
 
 @onready var marker: Node3D = $Marker3D  
 @onready var camera: Camera3D = $Marker3D/Camera3D  
@@ -92,16 +92,37 @@ func _physics_process(delta: float) -> void:
 	if is_game_over:
 		return
 	if is_grabbing:
-		if Input.is_action_pressed("attack") and grabbed_body:
-			# lock player to object’s movement
-			global_transform.origin = grabbed_body.to_global(grab_offset)
-			velocity = Vector3.ZERO
-			momentum = Vector3.ZERO
-			return
-		else:
-			# release grab
-			is_grabbing = false
-			grabbed_body = null
+		# cancel immediately if key is released
+		if not Input.is_action_pressed("attack"):
+			_release_grab()
+		elif grabbed_body:
+			var target_pos = grabbed_body.to_global(grab_offset)
+			
+			if grab_timer > 0.0:
+				# fully locked: stick in place
+				global_transform.origin = target_pos
+				velocity = Vector3.ZERO
+				momentum = Vector3.ZERO
+				grab_timer -= delta
+				# allow jump while locked
+				if Input.is_action_just_pressed("jump"):
+					_perform_grab_jump()
+				return
+			else:
+				# timer ran out: horizontal locked, vertical slides
+				global_transform.origin.x = target_pos.x
+				global_transform.origin.z = target_pos.z
+				
+				var up := _up()
+				# apply weaker gravity so slide is slower
+				velocity += up * SLIDE_GRAVITY * delta  
+				velocity = up * velocity.dot(up)
+				move_and_slide()
+				
+				# allow jump while sliding
+				if Input.is_action_just_pressed("jump"):
+					_perform_grab_jump()
+				return
 	
 	var up := _up()
 	up_direction = up
@@ -201,9 +222,11 @@ func _handle_attack_and_jump(up: Vector3) -> void:
 var is_grabbing = false
 var grabbed_body: Node3D = null
 var grab_offset: Vector3 = Vector3.ZERO
+var grab_timer: float = 0.0
+const MAX_GRAB_TIME = 2.0   # how long to stay locked before sliding
 
 func perform_grab():
-	if not current_mode == PlayerMode.PEACEFUL:
+	if current_mode != PlayerMode.PEACEFUL:
 		return
 	
 	var space_state = get_world_3d().direct_space_state
@@ -220,11 +243,22 @@ func perform_grab():
 	if result:
 		is_grabbing = true
 		grabbed_body = result.collider
-		# save local offset so we stick correctly if object moves
 		grab_offset = grabbed_body.to_local(global_transform.origin)
+		grab_timer = MAX_GRAB_TIME
 		velocity = Vector3.ZERO
 		momentum = Vector3.ZERO
+func _release_grab():
+	is_grabbing = false
+	grabbed_body = null
+	grab_timer = 0.0
 
+func _perform_grab_jump():
+	var up := _up()
+	var forward := -camera.global_transform.basis.z
+	# push away from wall + upward force
+	velocity = _project_on_plane(forward, up).normalized() * WALL_JUMP_PUSH
+	velocity += up * WALL_JUMP_VELOCITY
+	_release_grab()
 func _handle_crouch_or_slide() -> void:
 	if current_mode == PlayerMode.PEACEFUL:
 		if Input.is_action_pressed("crouch") and not is_sliding and is_on_floor():

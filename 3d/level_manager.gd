@@ -73,6 +73,7 @@ func _load_level(level_path: String):
 	var spawn_points = new_level.get_tree().get_nodes_in_group("playerspawn")
 	if not spawn_points.is_empty():
 		var spawn = spawn_points[0] # use the first spawn point in the group
+		player.global_transform.basis = Basis.IDENTITY
 		player.global_transform.origin = spawn.global_transform.origin
 	else:
 		print("[WARN] No playerspawn marker found in this level.")

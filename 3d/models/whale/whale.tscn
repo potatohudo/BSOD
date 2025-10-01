@@ -1,13 +1,15 @@
-[gd_scene load_steps=14 format=3 uid="uid://4dt17fvq83sv"]
+[gd_scene load_steps=16 format=3 uid="uid://4dt17fvq83sv"]
 
 [ext_resource type="Script" path="res://3d/models/whale/whale.gd" id="1_3g7ey"]
 [ext_resource type="PackedScene" uid="uid://clngc7whjx0h5" path="res://3d/models/whale/whale.glb" id="2_gi3rg"]
+[ext_resource type="Script" path="res://addons/raytraced_audio/raytraced_audio_player_3d.gd" id="3_geum1"]
 [ext_resource type="AudioStream" uid="uid://c6kmisrambklq" path="res://3d/models/whale/whaleDOU3.wav" id="3_joh3i"]
 [ext_resource type="AudioStream" uid="uid://bsey7m55qf8o6" path="res://3d/models/whale/whaleDO1.wav" id="3_ln3xj"]
 [ext_resource type="AudioStream" uid="uid://dajhov2ujm4q8" path="res://3d/models/whale/whaleDO2.wav" id="4_ep342"]
 [ext_resource type="AudioStream" uid="uid://b80vkhgxqostm" path="res://3d/models/whale/whaleDOU5.wav" id="4_tvm3u"]
 [ext_resource type="Animation" uid="uid://ct3b6vn2xdyl2" path="res://3d/models/whale/whaleanim.tres" id="5_jscfq"]
 [ext_resource type="AudioStream" uid="uid://2mekvalmv7gd" path="res://3d/models/whale/whaleDOU4.wav" id="6_288yf"]
+[ext_resource type="AudioStream" uid="uid://c68e1o2p4wtwa" path="res://3d/models/whale/whale_uuh,,,joksies_version.wav" id="8_lm3ll"]
 
 [sub_resource type="Animation" id="Animation_j24hs"]
 length = 0.001
@@ -290,18 +292,27 @@ transition_speed = 2.0
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("3_ln3xj")
+script = ExtResource("3_geum1")
 
 [node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("4_ep342")
+script = ExtResource("3_geum1")
 
 [node name="AudioStreamPlayer3D3" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("3_joh3i")
+script = ExtResource("3_geum1")
 
 [node name="AudioStreamPlayer3D4" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("6_288yf")
+script = ExtResource("3_geum1")
 
 [node name="AudioStreamPlayer3D5" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("4_tvm3u")
+script = ExtResource("3_geum1")
+
+[node name="RaytracedAudioPlayer3D" type="AudioStreamPlayer3D" parent="Audio"]
+stream = ExtResource("8_lm3ll")
+script = ExtResource("3_geum1")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

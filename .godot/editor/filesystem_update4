@@ -1,3 +1,4 @@
+res://default_bus_layout.tres
 res://pc/pc.tscn
 res://pc/PC.tres
 res://3d/freaky.gdshader
@@ -7,10 +8,10 @@ res://3d/glitch.gdshader
 res://3d/levels/merc.gdshader
 res://3d/low_health.gdshader
 res://3d/main.gdshader
-res://3d/levels/fungi.gdshader
 res://3d/sphere.gdshader
 res://3d/levels/merc1.gdshader
 res://3d/levels/merc.tres
+res://3d/levels/fungi.gdshader
 res://3d/levels/fungiparticle.gdshader
 res://3d/levels/mercHIGHLIGHT.gdshader
 res://3d/levels/spark.gdshader
@@ -38,10 +39,12 @@ res://3d/levels/1.tscn
 res://3d/levels/2.tscn
 res://3d/levels/level_test.tscn
 res://3d/levels/level_test_2.tscn
-res://3d/levels/fungi.tscn
 res://3d/levels/test.tscn
 res://3d/levels/track.tscn
 res://3d/levels/merc.tscn
 res://3d/models/LES/les.tscn
 res://3d/models/whale/whale.tscn
-res://3d/models/whale/call.tscn
+res://3d/models/whale/station.tscn
+res://3d/levels/fungi.tscn
+res://3d/models/whale/station.gd
+res://3d/main3d.gd

@@ -20,7 +20,7 @@ const WALL_IMPACT_KNOCKBACK = 40.0
 const WALL_IMPACT_DECAY = 0.08
 
 const JUMP_VELOCITY = 6.5  
-const WALL_JUMP_VELOCITY = 4.0  
+const WALL_JUMP_VELOCITY = 10.0  
 const WALL_JUMP_PUSH = 10.0  
 const GRAVITY = -9.8
 
@@ -59,18 +59,38 @@ const SLIDE_GRAVITY = -2.5  # weaker gravity while sliding down a wall
 @onready var hurt_sound_1: AudioStreamPlayer = get_node("/root/Main/Hurt1")
 @onready var hurt_sound_2: AudioStreamPlayer = get_node("/root/Main/Hurt2")
 @onready var por = get_node("/root/Main/Sprites/POR")
+#@onready var sword = get_node("/root/Main/Sprites/POR_Transition")
+#@onready var sword1 = get_node("/root/Main/Sprites/POR_Sword/Idle")
 @onready var flashlight = $Marker3D/Camera3D/SpotLight3D
 
 var is_game_over = false  
 var crouching = false
 var camera_locked = false 
 
-func toggle_mode():
-	current_mode = PlayerMode.FIGHTING if current_mode == PlayerMode.PEACEFUL else PlayerMode.PEACEFUL
-	atk_mode = (current_mode == PlayerMode.FIGHTING)
+@onready var sprite_handler = get_node("/root/Main/Sprites") # central controller
+
+func _ready() -> void:
+	sprite_handler.mode_toggled.connect(_on_mode_toggled)
+
+func _on_mode_toggled(new_mode: int):
+	current_mode = new_mode
+	atk_mode = (new_mode == PlayerMode.FIGHTING)
 	flashlight.visible = not flashlight.visible
-	por.visible = not por.visible
-	print(current_mode)
+	mode_locked = false
+
+var mode_locked = false
+
+func toggle_mode():
+	if mode_locked:
+		return
+	mode_locked = true
+	sprite_handler.request_toggle_mode(current_mode)
+	
+	#current_mode = PlayerMode.FIGHTING if current_mode == PlayerMode.PEACEFUL else PlayerMode.PEACEFUL
+	#atk_mode = (current_mode == PlayerMode.FIGHTING)
+	#flashlight.visible = not flashlight.visible
+	#por.visible = not por.visible
+	#print(current_mode)
 	
 
 func update_camera():
@@ -83,7 +103,7 @@ func update_camera():
 	#it does not work any other way :(
 
 func update_dash_sprite():
-	if dash_efx == true:
+	if is_grabbing == true:
 		dash_sprite.visible = true
 	else:
 		dash_sprite.visible = false
@@ -228,7 +248,7 @@ const MAX_GRAB_TIME = 2.0   # how long to stay locked before sliding
 func perform_grab():
 	if current_mode != PlayerMode.PEACEFUL:
 		return
-	
+	dash_efx = true
 	var space_state = get_world_3d().direct_space_state
 	var origin = camera.global_transform.origin
 	var dir = -camera.global_transform.basis.z.normalized()
@@ -251,6 +271,7 @@ func _release_grab():
 	is_grabbing = false
 	grabbed_body = null
 	grab_timer = 0.0
+	dash_efx = false
 
 func _perform_grab_jump():
 	var up := _up()
@@ -259,6 +280,7 @@ func _perform_grab_jump():
 	velocity = _project_on_plane(forward, up).normalized() * WALL_JUMP_PUSH
 	velocity += up * WALL_JUMP_VELOCITY
 	_release_grab()
+	
 func _handle_crouch_or_slide() -> void:
 	if current_mode == PlayerMode.PEACEFUL:
 		if Input.is_action_pressed("crouch") and not is_sliding and is_on_floor():
@@ -311,7 +333,7 @@ func perform_dash():
 		return
 
 	can_dash = false
-	dash_efx = true
+
 
 	if not is_on_floor():
 		movement_points += 1
@@ -335,10 +357,10 @@ func perform_dash():
 	velocity += momentum
 	speed = max(speed, speed + dash_force * 0.5)
 
-	await get_tree().create_timer(DASH_EFX).timeout
-	dash_efx = false
-	await get_tree().create_timer(DASH_COOLDOWN).timeout
-	can_dash = true
+	#await get_tree().create_timer(DASH_EFX).timeout
+	#dash_efx = false
+	#await get_tree().create_timer(DASH_COOLDOWN).timeout
+	#can_dash = true
 
 var input_locked = false  
 

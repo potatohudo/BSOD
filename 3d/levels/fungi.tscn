@@ -638,10 +638,10 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -103.485, 57.7844, 0)
 transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -107.834, 40.5722, 62.1017)
 
 [node name="NM" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -262.732, 151.128, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57.9111, 151.128, 146.222)
 
 [node name="NM2" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85.887, 66.5637, 93.2001)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85.887, 66.5637, -519.023)
 
 [node name="Node3D3" parent="." instance=ExtResource("8_k8axs")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -125.96, 19.9181, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -125.96, 19.8077, 0)

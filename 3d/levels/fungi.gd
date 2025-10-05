@@ -47,14 +47,12 @@ func _ready() -> void:
 	await get_tree().process_frame
 	player = get_node_or_null("../../CharacterBody3D") as CharacterBody3D
 	if player == null:
-		push_error("Could not find player at ../../CharacterBody3D")
+		push_error("rover got lost somewhere")
 
-	# Clamp & enforce identical counts across LODs (no popping by density)
 	inner_count = max(inner_count, 0)
 	outer_count = inner_count
 	impostor_count = inner_count
 
-	# Distances monotonic
 	if !(inner_spawn_distance <= outer_spawn_distance && outer_spawn_distance <= far_lod_distance):
 		push_warning("Distances not monotonic; fixing ordering.")
 		inner_spawn_distance = min(inner_spawn_distance, outer_spawn_distance)

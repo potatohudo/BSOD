@@ -1,13 +1,13 @@
+RaytracedAudioPlayer3D
+MeshInstance3D
 CollisionShape3D
 StaticBody3D
 Marker3D
-RaytracedAudioPlayer3D
 RaytracedAudioListener
 AnimationPlayer
 AnimatedSprite2D
 Node2D
 AnimationTree
-MeshInstance3D
 Area3D
 Control
 Panel

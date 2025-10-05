@@ -1,9 +1,14 @@
 extends Node3D
 
-@onready var player: CharacterBody3D = get_node_or_null("../../CharacterBody3D")
+@onready var player = get_node_or_null("SubViewportContainer/SubViewport/Node3D/CharacterBody3D")
 @onready var audio: Node = $Audio
 @onready var whale: Node3D = $whale
 @onready var anim: AnimationPlayer = $AnimationPlayer
+@export var call_cooldown: float = 40.0
+@export var player_proximity: float = 60.0  
+
+var last_call_time: float = -INF
+
 
 var rng := RandomNumberGenerator.new()
 var time_accum: float = 0.0
@@ -51,6 +56,12 @@ var movement_factor_current: float = 1.0
 @export var base_interval: float = 1.0
 @export var extra_pause_min: float = 1.0
 @export var extra_pause_max: float = 2.0
+
+#wall detection,,, uuuh stuff ig
+@export var avoid_distance: float = 10.0      
+@export var avoid_turn_strength: float = 0.5   
+@export var whale_avoid_distance: float = 15.0  
+
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -157,6 +168,7 @@ func _face_direction_smooth(direction: Vector3, delta: float, speed: float) -> v
 
 
 func _update_flight(delta: float) -> void:
+	_avoid_collisions(delta)
 	match mode:
 		Mode.MOVING:
 			next_turn_timer -= delta
@@ -207,14 +219,10 @@ func _update_flight(delta: float) -> void:
 					movement_factor_target = 0.0
 					park_timer = park_time
 
-
-	# Parking countdown
 	if mode == Mode.STOP and navigation_reached:
 		park_timer -= delta
 		if park_timer <= 0.0:
 			_go_to_next_target()
-
-
 
 func _pick_new_direction() -> void:
 	start_dir = current_dir
@@ -229,12 +237,16 @@ func _pick_new_direction() -> void:
 # -------------------
 # Navigation helpers
 # -------------------
-func call_whale(target) -> void:
+func call_whale(target: Node3D) -> void:
+	if mode == Mode.NAVIGATING and (Time.get_ticks_msec() / 1000.0 - last_call_time) < call_cooldown:
+		return # ignore call
+
 	mode = Mode.NAVIGATING
 	target_node = target
 	navigation_reached = false
 	anim_speed_target = 1.0
 	movement_factor_target = 1.0
+	last_call_time = Time.get_ticks_msec() / 1000.0
 	
 
 func call_nearest_whale(target: Node3D) -> void:
@@ -259,7 +271,16 @@ func _go_to_next_target() -> void:
 		mode = Mode.MOVING
 		anim_speed_target = 1.0
 		movement_factor_target = 1.0
+		print("rover GET OFF THE WHAAAAAAAAALE")
 		return
+
+	#if global_position.distance_to(player.global_position) > player_proximity:
+		#mode = Mode.MOVING
+		#anim_speed_target = 1.0
+		#movement_factor_target = 1.0
+		##target_queue.clear() 
+		#print("rover GET BACK TO THE WHALE")
+		#return
 
 	target_node = target_queue.pop_front()
 	mode = Mode.NAVIGATING
@@ -267,3 +288,28 @@ func _go_to_next_target() -> void:
 	anim_speed_target = 1.0
 	movement_factor_target = 1.0
 	park_timer = 0.0
+
+func _avoid_collisions(delta: float) -> void:
+	var space_state = get_world_3d().direct_space_state
+	var from = global_position
+	var to = from + current_dir * avoid_distance
+
+	# --- Raycast for walls ---
+	var query = PhysicsRayQueryParameters3D.create(from, to)
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	var result = space_state.intersect_ray(query)
+
+	if result.size() > 0:
+		var normal = result.normal
+		var away_dir = (current_dir + normal * avoid_turn_strength).normalized()
+		current_dir = current_dir.slerp(away_dir, delta * 3.0).normalized()
+
+	# --- Avoid other whales ---
+	for other in get_tree().get_nodes_in_group("bloop"):
+		if other == self:
+			continue
+		var dist = global_position.distance_to(other.global_position)
+		if dist < whale_avoid_distance:
+			var push_dir = (global_position - other.global_position).normalized()
+			current_dir = current_dir.slerp(push_dir, delta * 2.0).normalized()

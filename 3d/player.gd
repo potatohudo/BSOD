@@ -45,6 +45,9 @@ enum PlayerMode { PEACEFUL, FIGHTING }
 var current_mode: PlayerMode = PlayerMode.PEACEFUL
 const SLIDE_GRAVITY = -2.5  # weaker gravity while sliding down a wall
 
+var crouch_parent: Node3D = null
+var crouch_offset: Vector3 = Vector3.ZERO
+
 @onready var marker: Node3D = $Marker3D  
 @onready var camera: Camera3D = $Marker3D/Camera3D  
 @onready var main_node = get_node("/root/Main")  
@@ -76,6 +79,7 @@ func _on_mode_toggled(new_mode: int):
 	current_mode = new_mode
 	atk_mode = (new_mode == PlayerMode.FIGHTING)
 	flashlight.visible = not flashlight.visible
+	crouching = false
 	mode_locked = false
 
 var mode_locked = false
@@ -283,12 +287,35 @@ func _perform_grab_jump():
 	
 func _handle_crouch_or_slide() -> void:
 	if current_mode == PlayerMode.PEACEFUL:
-		if Input.is_action_pressed("crouch") and not is_sliding and is_on_floor():
+		if Input.is_action_pressed("crouch") and not is_sliding:
 			_apply_crouch_collision()
 			crouching = true
+
+			# Try to identify what we're standing on
+			var floor_body: Node3D = null
+			if get_slide_collision_count() > 0:
+				for i in range(get_slide_collision_count()):
+					var collision = get_slide_collision(i)
+					if collision.get_normal().dot(_up()) > 0.7: # reasonably flat surface
+						floor_body = collision.get_collider()
+						break
+
+			# Lock to floor object if found
+			if floor_body and crouch_parent == null:
+				crouch_parent = floor_body
+				crouch_offset = floor_body.to_local(global_transform.origin)
+
+			# Sync player with moving platform
+			if crouch_parent:
+				global_transform.origin = crouch_parent.to_global(crouch_offset)
+				velocity = Vector3.ZERO
+				momentum = Vector3.ZERO
+
 		else:
 			_reset_collision_size()
 			crouching = false
+			crouch_parent = null
+
 	else:
 		var decay_rate2 := ACCELERATION * 0.5
 		if not is_on_floor():
@@ -296,6 +323,8 @@ func _handle_crouch_or_slide() -> void:
 		speed = move_toward(speed, BASE_SPEED, decay_rate2)
 		if Input.is_action_pressed("crouch"):
 			start_slide()
+
+
 
 
 func _compose_velocity(direction: Vector3, up: Vector3) -> void:
@@ -328,39 +357,41 @@ func perform_wall_run():
 	print("perform_wall_run() called (peaceful)")
 
 
-func perform_dash():
+func perform_dash() -> void:
 	if not can_dash:
 		return
 
 	can_dash = false
-
+	dash_efx = true
 
 	if not is_on_floor():
 		movement_points += 1
 
 	var up := _up()
-
 	var dash_direction := get_movement_direction()
 	if dash_direction.length() == 0.0:
 		var cam_fwd := -camera.global_transform.basis.z
 		dash_direction = _project_on_plane(cam_fwd, up).normalized()
-
-	dash_direction = _project_on_plane(dash_direction, up).normalized()
+	else:
+		dash_direction = _project_on_plane(dash_direction, up).normalized()
 
 	var dash_force := DASH_FORCE
 	if not is_on_floor():
 		dash_force *= 2.0
-	else:
-		dash_force *= 1.0
 
 	momentum = dash_direction * dash_force
 	velocity += momentum
 	speed = max(speed, speed + dash_force * 0.5)
 
-	#await get_tree().create_timer(DASH_EFX).timeout
-	#dash_efx = false
-	#await get_tree().create_timer(DASH_COOLDOWN).timeout
-	#can_dash = true
+	# always reset effect and cooldown, even if interrupted
+	await get_tree().create_timer(DASH_EFX).timeout
+	dash_efx = false
+
+	var cooldown_timer = get_tree().create_timer(DASH_COOLDOWN)
+	await cooldown_timer.timeout
+	if is_instance_valid(self): # ensure player still exists
+		can_dash = true
+
 
 var input_locked = false  
 

@@ -1,7 +1,9 @@
-[gd_scene load_steps=33 format=3 uid="uid://bj2r50s0df7p0"]
+[gd_scene load_steps=35 format=3 uid="uid://bj2r50s0df7p0"]
 
 [ext_resource type="AudioStream" uid="uid://byukdv1if67mn" path="res://3d/sounds/ambient-w6.mp3" id="2_ppqim"]
 [ext_resource type="AudioStream" uid="uid://b7rslx60p4jwr" path="res://3d/sounds/pulsar.mp3" id="3_dj5k6"]
+[ext_resource type="Script" path="res://addons/raytraced_audio/raytraced_audio_player_3d.gd" id="3_qmyru"]
+[ext_resource type="AudioStream" uid="uid://ciovs1ekk0doe" path="res://3d/junk/ahhhh-37191.mp3" id="4_d46u0"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_nvnlc"]
 
@@ -217,6 +219,60 @@ mesh = SubResource("BoxMesh_gyxql")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D10/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_fo43q")
 
+[node name="MeshInstance3D21" type="MeshInstance3D" parent="."]
+transform = Transform3D(115.501, 0, 0, 0, -5.13594e-06, -1, 0, 117.497, -4.37114e-08, 49.5571, 1.03474, 72.3975)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D21"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D21/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D22" type="MeshInstance3D" parent="."]
+transform = Transform3D(98.4499, 0, 0, 0, -36.1279, -0.0468798, 0, 1.69553, -0.9989, 40.2662, 17.7473, 72.3975)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D22"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D22/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D23" type="MeshInstance3D" parent="."]
+transform = Transform3D(98.4499, 0, 0, 0, -36.1279, -0.0468798, 0, 1.69553, -0.9989, 40.2662, 17.7473, 130.613)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D23"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D23/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D24" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.14048, -1.69583, 0.990943, 0, -36.141, -0.046515, 58.8617, -0.0328578, 0.0192, -6.57522, 17.7473, 101.316)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D24"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D24/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D25" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.0148686, -36.1601, -0.0335919, 1.14038, 1.2245, -0.991465, 58.8617, -0.0328577, 0.0192, 9.74603, 33.0371, 101.316)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D25"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D25/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D26" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.63082, -1.74662, -0.990681, -58.85, 0.0432002, -0.0275745, 0.149169, 36.1386, -0.0478477, 26.1329, 12.1613, 113.721)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D26"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D26/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
 [node name="MeshInstance3D11" type="MeshInstance3D" parent="."]
 transform = Transform3D(5.55651, 27.4348, -0.294131, -12.5591, 12.138, 0.66481, 14.5394, 0, 0.686669, 12.1041, 1.94204, -53.5968)
 mesh = SubResource("BoxMesh_gyxql")
@@ -324,3 +380,17 @@ stream = ExtResource("3_dj5k6")
 
 [node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 5.08284, 0)
+
+[node name="RaytracedAudioPlayer3D" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.3567, 24.1903, 100.782)
+stream = ExtResource("3_dj5k6")
+autoplay = true
+max_distance = 109.35
+max_polyphony = 3
+script = ExtResource("3_qmyru")
+
+[node name="RaytracedAudioPlayer3D2" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.90451, -29.9318)
+stream = ExtResource("4_d46u0")
+parameters/looping = true
+script = ExtResource("3_qmyru")

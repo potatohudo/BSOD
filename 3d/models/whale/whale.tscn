@@ -281,37 +281,54 @@ radius = 0.376
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_3g7ey")
+player_proximity = 600.0
 turn_duration = 5.0
 turn_interval_max = 10.0
 rest_interval_min = 15.0
 rest_interval_max = 50.0
 rest_duration_max = 20.0
+arrival_distance = 5.0
 transition_speed = 2.0
+avoid_distance = 15.0
+whale_avoid_distance = 25.0
 
 [node name="Audio" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.747048, -2.64654)
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("3_ln3xj")
+unit_size = 6.4
+emission_angle_enabled = true
 script = ExtResource("3_geum1")
 
 [node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("4_ep342")
+unit_size = 6.4
+emission_angle_enabled = true
 script = ExtResource("3_geum1")
 
 [node name="AudioStreamPlayer3D3" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("3_joh3i")
+unit_size = 6.4
+emission_angle_enabled = true
 script = ExtResource("3_geum1")
 
 [node name="AudioStreamPlayer3D4" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("6_288yf")
+unit_size = 6.4
+emission_angle_enabled = true
 script = ExtResource("3_geum1")
 
 [node name="AudioStreamPlayer3D5" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("4_tvm3u")
+unit_size = 6.4
+emission_angle_enabled = true
 script = ExtResource("3_geum1")
 
 [node name="RaytracedAudioPlayer3D" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource("8_lm3ll")
+unit_size = 6.4
+emission_angle_enabled = true
 script = ExtResource("3_geum1")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

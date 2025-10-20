@@ -43,6 +43,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.337158, 0.280273, 0.154907)
 shape = SubResource("BoxShape3D_fybam")
 
 [node name="Marker3D" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.12303, 0.851505, 1.23458)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.42654, 2.01042, 1.23458)
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

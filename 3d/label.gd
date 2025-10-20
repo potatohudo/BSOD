@@ -6,6 +6,7 @@ extends Control
 @onready var mem_label: Label = $Memory
 @onready var hardware_label: Label = $Hardware
 
+
 var min_fps: int = 9999
 var max_fps: int = 0
 var show_detailed := false
@@ -34,6 +35,7 @@ func _process(delta: float) -> void:
 		return
 	update_timer = 0.0
 
+	$Speed.text = (str(round($"../SubViewportContainer/SubViewport/Node3D/CharacterBody3D".speed)))
 	var fps := Engine.get_frames_per_second()
 	if fps < min_fps:
 		min_fps = fps

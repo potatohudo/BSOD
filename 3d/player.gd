@@ -65,12 +65,14 @@ var crouch_offset: Vector3 = Vector3.ZERO
 #@onready var sword = get_node("/root/Main/Sprites/POR_Transition")
 #@onready var sword1 = get_node("/root/Main/Sprites/POR_Sword/Idle")
 @onready var flashlight = $Marker3D/Camera3D/SpotLight3D
+@onready var slope_node: Node3D = $slope
+
 
 var is_game_over = false  
 var crouching = false
 var camera_locked = false 
 
-@onready var sprite_handler = get_node("/root/Main/Sprites") # central controller
+@onready var sprite_handler = get_node("/root/Main/Sprites") 
 
 func _ready() -> void:
 	sprite_handler.mode_toggled.connect(_on_mode_toggled)
@@ -147,12 +149,14 @@ func _physics_process(delta: float) -> void:
 				if Input.is_action_just_pressed("jump"):
 					_perform_grab_jump()
 				return
-	
 	var up := _up()
 	up_direction = up
 
 	_update_momentum(delta)
-	var direction := get_movement_direction()
+	var direction := Vector3.ZERO
+	if not is_sliding:
+		direction = get_movement_direction()
+
 	var is_sprinting := Input.is_action_pressed("sprint") and not is_sliding and direction.length() > 0.0 and current_mode == PlayerMode.PEACEFUL
 
 	_compute_speed(delta, is_sprinting)
@@ -163,7 +167,7 @@ func _physics_process(delta: float) -> void:
 	max_speed_cap = DEFAULT_MAX_CHAIN_SPEED + (movement_points * TRICK_ACCEL_GAIN)
 
 	_handle_attack_and_jump(up)
-	_handle_crouch_or_slide()
+	_handle_crouch_or_slide(delta)
 
 	if speed >= SLIDE_THRESHOLD:
 		check_wall_impact()
@@ -179,8 +183,10 @@ func _physics_process(delta: float) -> void:
 		toggle_mode()
 
 	update_camera()
+	#_apply_slide_tilt(delta)
 	update_dash_sprite()
 	LH.visible = health < 20
+	
 
 
 func _update_momentum(delta: float) -> void:
@@ -202,6 +208,8 @@ func _compute_speed(delta: float, is_sprinting: bool) -> void:
 
 func _update_sliding(delta: float) -> void:
 	if is_sliding:
+		return
+	if is_sliding:
 		slide_timer -= delta
 		if slide_timer <= 0.0:
 			speed *= SLIDE_FRICTION
@@ -212,8 +220,8 @@ func _update_sliding(delta: float) -> void:
 func _apply_gravity_if_needed(delta: float, up: Vector3) -> void:
 	if not is_on_floor():
 		velocity += up * GRAVITY * delta
-		if is_sliding:
-			exit_slide()
+		#if is_sliding:
+			#exit_slide()
 
 
 func _idle_on_floor_reset(delta: float, is_sprinting: bool, direction: Vector3) -> void:
@@ -284,47 +292,96 @@ func _perform_grab_jump():
 	velocity = _project_on_plane(forward, up).normalized() * WALL_JUMP_PUSH
 	velocity += up * WALL_JUMP_VELOCITY
 	_release_grab()
-	
-func _handle_crouch_or_slide() -> void:
+
+# uuh slide slope stuff
+
+var slide_speed: float = 0.0
+var slide_dir: Vector3 = Vector3.ZERO
+const SLOPE_SPEED_DECAY = 6.0      # speed loss per slope angle FOR LATER
+
+var slope_tilt_current := 0.0
+func _get_floor_normal() -> Vector3:
+	if get_slide_collision_count() == 0:
+		return _up()
+	for i in range(get_slide_collision_count()):
+		var c = get_slide_collision(i)
+		if c.get_normal().dot(_up()) > 0.4:
+			return c.get_normal().normalized()
+	return _up()
+
+func _start_slide_from_player() -> void:
+	# called when player initiates slide (presses crouch in fighting mode)
+	if not is_on_floor():
+		return
+	is_sliding = true
+	_apply_crouch_collision()
+	crouching = true
+	momentum = Vector3.ZERO
+	slide_speed = max(speed, BASE_SPEED)
+	# determine initial_dir from player's movement intent (not camera yaw). Use get_movement_direction()
+	var initial_dir := get_movement_direction()
+	if initial_dir.length() == 0.0:
+		# fallback to camera forward flattened to local up
+		initial_dir = -camera.global_transform.basis.z
+		initial_dir = _project_on_plane(initial_dir, _up()).normalized()
+	# ensure slope faces player's current direction and initialize slope velocity
+	if slope_node and slope_node.has_method("start_slide"):
+		slope_node.start_slide(initial_dir, slide_speed)
+	slope_node.visible = true
+
+# --- the handler function where slide is maintained (replace previous slide block) ---
+func _handle_crouch_or_slide(delta: float) -> void:
+	var crouch_pressed := Input.is_action_pressed("crouch")
+
 	if current_mode == PlayerMode.PEACEFUL:
-		if Input.is_action_pressed("crouch") and not is_sliding:
+		if crouch_pressed and not crouching:
 			_apply_crouch_collision()
 			crouching = true
-
-			# Try to identify what we're standing on
-			var floor_body: Node3D = null
-			if get_slide_collision_count() > 0:
-				for i in range(get_slide_collision_count()):
-					var collision = get_slide_collision(i)
-					if collision.get_normal().dot(_up()) > 0.7: # reasonably flat surface
-						floor_body = collision.get_collider()
-						break
-
-			# Lock to floor object if found
-			if floor_body and crouch_parent == null:
-				crouch_parent = floor_body
-				crouch_offset = floor_body.to_local(global_transform.origin)
-
-			# Sync player with moving platform
-			if crouch_parent:
-				global_transform.origin = crouch_parent.to_global(crouch_offset)
-				velocity = Vector3.ZERO
-				momentum = Vector3.ZERO
-
-		else:
+			crouch_parent = null
+			momentum = Vector3.ZERO
+			speed = BASE_SPEED
+		elif not crouch_pressed and crouching:
 			_reset_collision_size()
 			crouching = false
-			crouch_parent = null
+		return
+
+	# Fighting mode = slope-based slide
+	if crouch_pressed:
+		if not is_sliding and is_on_floor():
+			_start_slide_from_player()
+
+		if is_sliding:
+			# entirely inherit slope velocity; player input only influences the slope node
+			if slope_node and slope_node.has_method("get_slide_velocity"):
+				var slope_velocity: Vector3 = slope_node.get_slide_velocity(self, delta)
+				# if slope node returns a valid velocity, follow it exactly
+				if slope_velocity.length() > 0.001:
+					velocity = slope_velocity
+					speed = slope_velocity.length()
+				else:
+					# fallback if slope returned zero
+					var up := _up()
+					var planar := velocity - up * velocity.dot(up)
+					if planar.length() < 0.01:
+						planar = -camera.global_transform.basis.z
+						planar = _project_on_plane(planar, up)
+					velocity = planar.normalized() * max(speed, BASE_SPEED)
+					speed = velocity.length()
+			else:
+				# no slope node available: keep previous slide_dir speed
+				velocity = slide_dir * slide_speed
+				speed = slide_speed
 
 	else:
-		var decay_rate2 := ACCELERATION * 0.5
-		if not is_on_floor():
-			decay_rate2 *= 0.25
-		speed = move_toward(speed, BASE_SPEED, decay_rate2)
-		if Input.is_action_pressed("crouch"):
-			start_slide()
-
-
+		# release slide
+		if is_sliding:
+			exit_slide()
+			if slope_node and slope_node.has_method("reset_slide_velocity"):
+				slope_node.reset_slide_velocity()
+			if slope_node:
+				slope_node.visible = false
+		crouching = false
+		_reset_collision_size()
 
 
 func _compose_velocity(direction: Vector3, up: Vector3) -> void:
@@ -492,10 +549,10 @@ func _reset_collision_size():
 func apply_damage(amount: int):
 	if amount >= 15 and amount <= 29:
 		hurt_sound_0.play()
-	elif amount >= 30 and amount <= 39:
+	elif amount >= 30:
 		hurt_sound_1.play()
-	elif amount >= 40:
-		hurt_sound_2.play()
+	#elif amount >= 40:
+		#hurt_sound_2.play()
 
 	health -= amount
 	health = max(health, 0)

@@ -1,11 +1,16 @@
 extends Node
 
+
+
 var target_level_path: String = ""
 var just_teleported := false
 
+@onready var player := CharacterBody2D 
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	
+	print(player)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

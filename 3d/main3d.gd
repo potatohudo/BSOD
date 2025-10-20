@@ -35,7 +35,7 @@ func _ready() -> void:
 	settings_manager.set_main_reference(self)
 	DisplayServer.window_set_size(Vector2i(1280, 800))
 	
-	handle_command("load fungi")
+	handle_command("load track")
 
 
 func get_subviewport_container():
@@ -103,6 +103,8 @@ func handle_command(command: String):
 				settings_manager.handle_settings_command(command, command_output)
 			else:
 				command_output.append_text("\nUnknown command: %s" % command)
+		"reload":
+			pass
 
 func handle_reset_confirmation(command: String):
 	command = command.to_lower()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=117 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=120 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
@@ -7,6 +7,8 @@
 [ext_resource type="Shader" path="res://3d/levels/merc.gdshader" id="4_36mum"]
 [ext_resource type="PackedScene" uid="uid://4dt17fvq83sv" path="res://3d/models/whale/whale.tscn" id="4_h41uw"]
 [ext_resource type="Script" path="res://addons/raytraced_audio/raytraced_audio_listener.gd" id="4_v7286"]
+[ext_resource type="Texture2D" uid="uid://c6awahg47ubah" path="res://3d/sprites/por/slide.png" id="5_81jb4"]
+[ext_resource type="Script" path="res://3d/slope.gd" id="5_087wm"]
 [ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
 [ext_resource type="Script" path="res://3d/settings.gd" id="7_4qtkp"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="7_6cqs6"]
@@ -18,14 +20,25 @@
 [ext_resource type="Shader" path="res://3d/low_health.gdshader" id="9_vf5oh"]
 [ext_resource type="AudioStream" uid="uid://cfyc0gmsnnx4r" path="res://3d/sounds/hurt_test.mp3" id="13_drwl6"]
 [ext_resource type="Texture2D" uid="uid://cb8d6ayiynkjv" path="res://3d/sprites/attack_hands.png" id="13_j0ygm"]
-[ext_resource type="AudioStream" uid="uid://c0wn62dke1gql" path="res://3d/sounds/Track2_VoiceAudio.wav" id="13_ou8n6"]
 [ext_resource type="Texture2D" uid="uid://p7g5csfulnmq" path="res://3d/sprites/por/porsword.png" id="13_p61ww"]
 [ext_resource type="AudioStream" uid="uid://dp116jp7otldi" path="res://3d/sounds/Track3_VoiceAudio.wav" id="14_em0p2"]
 [ext_resource type="Texture2D" uid="uid://kej5iqewk8fj" path="res://3d/sprites/por/rovpor.png" id="14_tf4kn"]
 [ext_resource type="Script" path="res://3d/texture_rect.gd" id="17_ocwrj"]
+[ext_resource type="AudioStream" uid="uid://cx0nx5fojogdv" path="res://3d/sounds/lobotomy.mp3" id="19_gqa5e"]
 [ext_resource type="Material" uid="uid://dg1dkawqqqtwb" path="res://3d/main.tres" id="19_vs7pb"]
 [ext_resource type="Script" path="res://3d/label.gd" id="20_iqmpm"]
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="20_xlvs1"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ddcy3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_81jb4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rmvd8"]
 size = Vector3(10, 1, 10)
@@ -739,6 +752,22 @@ script = ExtResource("4_v7286")
 max_raycast_dist = 1000.0
 max_bounces = 7
 
+[node name="slope" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D"]
+visible = false
+script = ExtResource("5_087wm")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
+transform = Transform3D(1, 0, 0, 0, 0.0164926, 0.999864, 0, -0.999864, 0.0164926, 0, 0.132142, 1.00321)
+sprite_frames = SubResource("SpriteFrames_ddcy3")
+
+[node name="AnimatedSprite3D2" type="AnimatedSprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
+transform = Transform3D(0.751243, 0, 0, 0, 0.0144115, 0.641093, 0, -0.873694, 0.0105748, 0, 0.30516, 0.753502)
+sprite_frames = SubResource("SpriteFrames_ddcy3")
+
+[node name="AnimatedSprite3D3" type="AnimatedSprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
+transform = Transform3D(0.59633, 0, 0, 0, 0.0119755, 0.64288, 0, -0.72601, 0.0106042, 0, 0.398926, 0.753502)
+sprite_frames = SubResource("SpriteFrames_ddcy3")
+
 [node name="floor" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
@@ -982,7 +1011,7 @@ editable = false
 stream = ExtResource("13_drwl6")
 
 [node name="Hurt1" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("13_ou8n6")
+stream = ExtResource("19_gqa5e")
 
 [node name="Hurt2" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("14_em0p2")
@@ -1066,6 +1095,14 @@ offset_top = 86.0
 offset_right = 63.0
 offset_bottom = 102.0
 text = "Memory"
+
+[node name="Speed" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 1145.0
+offset_top = 9.0
+offset_right = 1193.0
+offset_bottom = 796.0
+text = "SPEED"
 
 [connection signal="animation_finished" from="Sprites/POR_Sword/AnimationPlayer" to="Sprites" method="_on_animation_player_animation_finished"]
 [connection signal="animation_finished" from="Sprites/POR_Transition" to="Sprites" method="_on_por_transition_animation_finished"]

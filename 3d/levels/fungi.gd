@@ -71,6 +71,7 @@ func _ready() -> void:
 	$Node3D.target_queue = [$NM, $NM2]
 
 
+
 func _process(delta: float) -> void:
 	if player == null:
 		return

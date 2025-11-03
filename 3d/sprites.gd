@@ -4,6 +4,8 @@ extends Node2D
 @onready var sword_idle = $POR_Sword/Idle
 @onready var sword_anim = $POR_Sword/AnimationPlayer
 @onready var sword_transition = $POR_Transition
+@onready var slash_anim = $POR_Sword/Slash
+
 
 signal mode_toggled(new_mode: int)
 
@@ -25,6 +27,13 @@ func request_toggle_mode(current_mode: int) -> void:
 		is_animating = false
 		emit_signal("mode_toggled", 0) 
 
+func slash_play():
+	is_animating = true
+	sword_idle.visible = false
+	sword_idle.frame = 0
+	slash_anim.visible = true
+	slash_anim.play()
+
 func _on_por_transition_animation_finished() -> void:
 	sword_transition.visible = false
 	sword_idle.visible = true
@@ -35,3 +44,8 @@ func _on_por_transition_animation_finished() -> void:
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "POR_sword_transition":
 		sword_idle.play()
+
+
+func _on_slash_animation_finished() -> void:
+	slash_anim.visible = false
+	sword_transition.play()

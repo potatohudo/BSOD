@@ -1,0 +1,261 @@
+[gd_scene load_steps=79 format=3 uid="uid://b8i2y52nvs1kh"]
+
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_31lf0"]
+[ext_resource type="Script" path="res://dialog_system/dialog_bubble.gd" id="1_s8mbf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ax4k3"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="GDScript" id="GDScript_kb4f7"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_a314g"]
+script = SubResource("GDScript_kb4f7")
+
+[sub_resource type="GDScript" id="GDScript_h3w1p"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_58720"]
+script = SubResource("GDScript_h3w1p")
+
+[sub_resource type="GDScript" id="GDScript_3b3kw"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_0uaef"]
+script = SubResource("GDScript_3b3kw")
+
+[sub_resource type="GDScript" id="GDScript_wl0g2"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_bntdy"]
+script = SubResource("GDScript_wl0g2")
+
+[sub_resource type="GDScript" id="GDScript_nda6r"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_1mar8"]
+script = SubResource("GDScript_nda6r")
+
+[sub_resource type="GDScript" id="GDScript_8dvje"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_vxvof"]
+script = SubResource("GDScript_8dvje")
+
+[sub_resource type="GDScript" id="GDScript_drq7a"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_7dv35"]
+script = SubResource("GDScript_drq7a")
+
+[sub_resource type="GDScript" id="GDScript_uevce"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_mmxs3"]
+script = SubResource("GDScript_uevce")
+
+[sub_resource type="GDScript" id="GDScript_ssmns"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_o3okv"]
+script = SubResource("GDScript_ssmns")
+
+[sub_resource type="GDScript" id="GDScript_nmngk"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_0jdrm"]
+script = SubResource("GDScript_nmngk")
+
+[sub_resource type="GDScript" id="GDScript_53geo"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_pakih"]
+script = SubResource("GDScript_53geo")
+
+[sub_resource type="GDScript" id="GDScript_77snq"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_e2o78"]
+script = SubResource("GDScript_77snq")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_i8cg4"]
+script = SubResource("GDScript_nmngk")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_fcjur"]
+script = SubResource("GDScript_53geo")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_ls6j7"]
+script = SubResource("GDScript_77snq")
+
+[sub_resource type="GDScript" id="GDScript_bsmys"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_4yxfj"]
+script = SubResource("GDScript_bsmys")
+
+[sub_resource type="GDScript" id="GDScript_kvrug"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_dijmn"]
+script = SubResource("GDScript_kvrug")
+
+[sub_resource type="GDScript" id="GDScript_cf7h5"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_irj11"]
+script = SubResource("GDScript_cf7h5")
+
+[sub_resource type="GDScript" id="GDScript_ija55"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_p44c4"]
+script = SubResource("GDScript_ija55")
+
+[sub_resource type="GDScript" id="GDScript_rqpq8"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_0fo60"]
+script = SubResource("GDScript_rqpq8")
+
+[sub_resource type="GDScript" id="GDScript_yalfd"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_lfffq"]
+script = SubResource("GDScript_yalfd")
+
+[sub_resource type="GDScript" id="GDScript_qxsut"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_rmnlr"]
+script = SubResource("GDScript_qxsut")
+
+[sub_resource type="GDScript" id="GDScript_by8nr"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_gg1nq"]
+script = SubResource("GDScript_by8nr")
+
+[sub_resource type="GDScript" id="GDScript_3jy12"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_1t61i"]
+script = SubResource("GDScript_3jy12")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_bv4as"]
+script = SubResource("GDScript_qxsut")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_cd21q"]
+script = SubResource("GDScript_by8nr")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_13rhi"]
+script = SubResource("GDScript_3jy12")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_552bh"]
+script = SubResource("GDScript_qxsut")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_murjm"]
+script = SubResource("GDScript_by8nr")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_nm7hx"]
+script = SubResource("GDScript_3jy12")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_sa3gm"]
+script = SubResource("GDScript_qxsut")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_m5wtf"]
+script = SubResource("GDScript_by8nr")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_esjpx"]
+script = SubResource("GDScript_3jy12")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_f4wpy"]
+script = SubResource("GDScript_qxsut")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_orxj7"]
+script = SubResource("GDScript_by8nr")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_6vcgp"]
+script = SubResource("GDScript_3jy12")
+
+[sub_resource type="GDScript" id="GDScript_80pnj"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_dt30n"]
+script = SubResource("GDScript_80pnj")
+
+[sub_resource type="GDScript" id="GDScript_tns7c"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_bakhq"]
+script = SubResource("GDScript_tns7c")
+
+[sub_resource type="GDScript" id="GDScript_drasq"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_grcm3"]
+script = SubResource("GDScript_drasq")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_70xlu"]
+script = SubResource("GDScript_80pnj")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_gv68r"]
+script = SubResource("GDScript_tns7c")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_04ksf"]
+script = SubResource("GDScript_drasq")
+
+[sub_resource type="GDScript" id="GDScript_y4c48"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_4ut2y"]
+script = SubResource("GDScript_y4c48")
+
+[sub_resource type="GDScript" id="GDScript_6vdvl"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_j2h3o"]
+script = SubResource("GDScript_6vdvl")
+
+[sub_resource type="GDScript" id="GDScript_wp0a5"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_kgvn3"]
+script = SubResource("GDScript_wp0a5")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_chpdj"]
+script = SubResource("GDScript_y4c48")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_eer1y"]
+script = SubResource("GDScript_6vdvl")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_o2moh"]
+script = SubResource("GDScript_wp0a5")
+
+[node name="DialogBubble" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 36.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_31lf0")
+script = ExtResource("1_s8mbf")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 6.0
+offset_right = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = 18.0
+offset_right = -17.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ax4k3")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer"]
+unique_name_in_owner = true
+clip_contents = false
+layout_direction = 2
+layout_mode = 2
+bbcode_enabled = true
+text = "blehhhhhhhhh"
+scroll_active = false
+custom_effects = [SubResource("RichTextEffect_a314g"), SubResource("RichTextEffect_58720"), SubResource("RichTextEffect_0uaef"), SubResource("RichTextEffect_bntdy"), SubResource("RichTextEffect_1mar8"), SubResource("RichTextEffect_vxvof"), SubResource("RichTextEffect_7dv35"), SubResource("RichTextEffect_mmxs3"), SubResource("RichTextEffect_o3okv"), SubResource("RichTextEffect_0jdrm"), SubResource("RichTextEffect_pakih"), SubResource("RichTextEffect_e2o78"), SubResource("RichTextEffect_i8cg4"), SubResource("RichTextEffect_fcjur"), SubResource("RichTextEffect_ls6j7"), SubResource("RichTextEffect_4yxfj"), SubResource("RichTextEffect_dijmn"), SubResource("RichTextEffect_irj11"), SubResource("RichTextEffect_p44c4"), SubResource("RichTextEffect_0fo60"), SubResource("RichTextEffect_lfffq"), SubResource("RichTextEffect_rmnlr"), SubResource("RichTextEffect_gg1nq"), SubResource("RichTextEffect_1t61i"), SubResource("RichTextEffect_bv4as"), SubResource("RichTextEffect_cd21q"), SubResource("RichTextEffect_13rhi"), SubResource("RichTextEffect_552bh"), SubResource("RichTextEffect_murjm"), SubResource("RichTextEffect_nm7hx"), SubResource("RichTextEffect_sa3gm"), SubResource("RichTextEffect_m5wtf"), SubResource("RichTextEffect_esjpx"), SubResource("RichTextEffect_f4wpy"), SubResource("RichTextEffect_orxj7"), SubResource("RichTextEffect_6vcgp"), SubResource("RichTextEffect_dt30n"), SubResource("RichTextEffect_bakhq"), SubResource("RichTextEffect_grcm3"), SubResource("RichTextEffect_70xlu"), SubResource("RichTextEffect_gv68r"), SubResource("RichTextEffect_04ksf"), SubResource("RichTextEffect_4ut2y"), SubResource("RichTextEffect_j2h3o"), SubResource("RichTextEffect_kgvn3"), SubResource("RichTextEffect_chpdj"), SubResource("RichTextEffect_eer1y"), SubResource("RichTextEffect_o2moh")]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+
+[node name="NameLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 1.0
+offset_top = -17.0
+offset_right = 264.0
+offset_bottom = 33.0

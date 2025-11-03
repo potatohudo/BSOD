@@ -1,9 +1,11 @@
-[gd_scene load_steps=35 format=3 uid="uid://bj2r50s0df7p0"]
+[gd_scene load_steps=37 format=3 uid="uid://bj2r50s0df7p0"]
 
+[ext_resource type="Script" path="res://3d/levels/day_night.gd" id="1_7pq6i"]
 [ext_resource type="AudioStream" uid="uid://byukdv1if67mn" path="res://3d/sounds/ambient-w6.mp3" id="2_ppqim"]
 [ext_resource type="AudioStream" uid="uid://b7rslx60p4jwr" path="res://3d/sounds/pulsar.mp3" id="3_dj5k6"]
 [ext_resource type="Script" path="res://addons/raytraced_audio/raytraced_audio_player_3d.gd" id="3_qmyru"]
 [ext_resource type="AudioStream" uid="uid://ciovs1ekk0doe" path="res://3d/junk/ahhhh-37191.mp3" id="4_d46u0"]
+[ext_resource type="PackedScene" uid="uid://b8i2y52nvs1kh" path="res://dialog_system/dialog_bubble.tscn" id="6_0q3lm"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_nvnlc"]
 
@@ -238,7 +240,7 @@ mesh = SubResource("BoxMesh_gyxql")
 shape = SubResource("ConcavePolygonShape3D_fo43q")
 
 [node name="MeshInstance3D21" type="MeshInstance3D" parent="."]
-transform = Transform3D(115.501, 0, 0, 0, -5.13594e-06, -1, 0, 117.497, -4.37114e-08, 49.5571, 1.03474, 72.3975)
+transform = Transform3D(638.321, 0, 0, 0, -9.2927e-06, -1.80935, 0, 212.593, -7.90891e-08, 49.5571, -2.10467, 111.932)
 mesh = SubResource("BoxMesh_gyxql")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D21"]
@@ -247,7 +249,7 @@ mesh = SubResource("BoxMesh_gyxql")
 shape = SubResource("ConcavePolygonShape3D_fo43q")
 
 [node name="MeshInstance3D22" type="MeshInstance3D" parent="."]
-transform = Transform3D(98.4499, 0, 0, 0, -36.1279, -0.0468798, 0, 1.69553, -0.9989, 40.2662, 17.7473, 72.3975)
+transform = Transform3D(98.4499, 0, 0, 0, -36.1279, -0.0468798, 0, 1.69553, -0.9989, 40.2662, 13.4705, 72.3975)
 mesh = SubResource("BoxMesh_gyxql")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D22"]
@@ -255,8 +257,62 @@ mesh = SubResource("BoxMesh_gyxql")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D22/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_fo43q")
 
+[node name="MeshInstance3D29" type="MeshInstance3D" parent="."]
+transform = Transform3D(13.0095, 0, 0, 0, -36.1279, -0.0468798, 0, 1.69553, -0.9989, 124.652, 17.7473, 72.3975)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D29"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D29/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D30" type="MeshInstance3D" parent="."]
+transform = Transform3D(5.59219, 0, 0, 0, -31.8054, -0.166393, 0, 1.49267, -3.54545, 161.856, 17.7473, 122.177)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D30"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D30/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D31" type="MeshInstance3D" parent="."]
+transform = Transform3D(5.59219, 0, 0, 0, -5.33856, -0.159895, 0, 0.250546, -3.40698, 161.856, 0.59713, 50.8855)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D31"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D31/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D32" type="MeshInstance3D" parent="."]
+transform = Transform3D(5.59219, 0, 0, 0, -5.33856, -0.159895, 0, 0.250546, -3.40698, 161.856, -2.61821, 82.7388)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D32"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D32/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D33" type="MeshInstance3D" parent="."]
+transform = Transform3D(5.59219, 0, 0, 0, -5.33856, -0.159895, 0, 0.250546, -3.40698, 206.64, 0.59713, 93.8473)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D33"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D33/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
+[node name="MeshInstance3D34" type="MeshInstance3D" parent="."]
+transform = Transform3D(5.59219, 0, 0, 0, -5.33856, -0.159895, 0, 0.250546, -3.40698, 206.64, -2.61821, 125.701)
+mesh = SubResource("BoxMesh_gyxql")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D34"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D34/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fo43q")
+
 [node name="MeshInstance3D23" type="MeshInstance3D" parent="."]
-transform = Transform3D(98.4499, 0, 0, 0, -36.1279, -0.0468798, 0, 1.69553, -0.9989, 40.2662, 17.7473, 130.613)
+transform = Transform3D(98.4499, 0, 0, 0, -36.1279, -0.0468798, 0, 1.69553, -0.9989, 40.2662, 13.4705, 130.613)
 mesh = SubResource("BoxMesh_gyxql")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D23"]
@@ -265,7 +321,7 @@ mesh = SubResource("BoxMesh_gyxql")
 shape = SubResource("ConcavePolygonShape3D_fo43q")
 
 [node name="MeshInstance3D24" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1.14048, -1.69583, 0.990943, 0, -36.141, -0.046515, 58.8617, -0.0328578, 0.0192, -6.57522, 17.7473, 101.316)
+transform = Transform3D(-1.14048, -1.69583, 0.990943, 0, -36.141, -0.046515, 58.8617, -0.0328578, 0.0192, -6.2912, 17.7473, 101.316)
 mesh = SubResource("BoxMesh_gyxql")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D24"]
@@ -274,7 +330,7 @@ mesh = SubResource("BoxMesh_gyxql")
 shape = SubResource("ConcavePolygonShape3D_fo43q")
 
 [node name="MeshInstance3D25" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.0148686, -36.1601, -0.0335919, 1.14038, 1.2245, -0.991465, 58.8617, -0.0328577, 0.0192, 9.74603, 33.0371, 101.316)
+transform = Transform3D(-0.0148686, -36.1601, -0.0335919, 1.14038, 1.2245, -0.991465, 58.8617, -0.0328577, 0.0192, 9.74603, 28.7603, 101.316)
 mesh = SubResource("BoxMesh_gyxql")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D25"]
@@ -283,7 +339,7 @@ mesh = SubResource("BoxMesh_gyxql")
 shape = SubResource("ConcavePolygonShape3D_fo43q")
 
 [node name="MeshInstance3D26" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.63082, -1.74662, -0.990681, -58.85, 0.0432002, -0.0275745, 0.149169, 36.1386, -0.0478477, 26.1329, 12.1613, 113.721)
+transform = Transform3D(1.63082, -1.74662, -0.990681, -58.85, 0.0432002, -0.0275745, 0.149169, 36.1386, -0.0478477, 26.1329, 7.88455, 113.721)
 mesh = SubResource("BoxMesh_gyxql")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D26"]
@@ -381,8 +437,10 @@ mesh = SubResource("BoxMesh_34085")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D18/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_b5bnc")
 
-[node name="DayNight" type="Node" parent="."]
+[node name="DayNight" type="Node" parent="." node_paths=PackedStringArray("environment")]
 process_mode = 1
+script = ExtResource("1_7pq6i")
+environment = NodePath("WorldEnvironment")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="DayNight"]
 environment = SubResource("Environment_toutp")
@@ -395,12 +453,14 @@ parameters/looping = true
 
 [node name="Pulsar" type="AudioStreamPlayer" parent="DayNight"]
 stream = ExtResource("3_dj5k6")
+volume_db = -80.0
+pitch_scale = 0.01
 
 [node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 5.08284, 0)
 
 [node name="RaytracedAudioPlayer3D" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.3567, 24.1903, 100.782)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.356, 19.9135, 100.782)
 stream = ExtResource("3_dj5k6")
 autoplay = true
 max_distance = 109.35
@@ -412,3 +472,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.90451, -29.9318)
 stream = ExtResource("4_d46u0")
 parameters/looping = true
 script = ExtResource("3_qmyru")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.999336, 0.0364345, -3.19542e-08, -0.0323413, -0.887065, 0.46051, 0.0167784, 0.460204, 0.887655, 196.256, 75.5766, 149.117)
+light_color = Color(0.986362, 0.811532, 0.760481, 1)
+directional_shadow_max_distance = 8192.0
+directional_shadow_pancake_size = 70.1
+
+[node name="DialogBubble" parent="." instance=ExtResource("6_0q3lm")]
+anchors_preset = -1
+anchor_left = 0.002
+anchor_top = 0.571
+anchor_bottom = 0.996
+offset_left = 3.6
+offset_top = 0.199982
+offset_bottom = -5.80005
+size_flags_horizontal = 3
+size_flags_vertical = 3
+dialogs = Array[String](["heyyy look i can make the text [shake]shake[/shake] or [wave]wave[/wave].", "it skips every second dialog fml", "F to switch modes. [wave] you can do some sick tricks when pressing buttons,, heh,,, [/wave]by pressing CTRL you can [shake]SLIDE!![/shake] be careful not to hit a wall though. by pressing SHIFT you [shake]DASH.[/shake] ..thats pretty much all", "dgfdg", ".. also no YA3 this update, sorry caked", "[END]"])
+dialog_names = Array[String](["chuchu", "h", "mieow", "h", "i hate godot sm", "[END]"])
+fade_in = false
+fade_out = false
+
+[editable path="DialogBubble"]

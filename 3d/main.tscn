@@ -1,4 +1,4 @@
-[gd_scene load_steps=120 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=129 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
 [ext_resource type="Script" path="res://3d/settings.gd" id="7_4qtkp"]
 [ext_resource type="Shader" path="res://3d/freaky.gdshader" id="7_6cqs6"]
+[ext_resource type="AudioStream" uid="uid://cyas5gyubatuc" path="res://3d/sounds/slide_fail.mp3" id="7_fuas2"]
 [ext_resource type="Texture2D" uid="uid://dk30ciya5qldy" path="res://3d/sprites/catexp/Untitled-3.png" id="7_jkdwh"]
 [ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="7_y4vo8"]
 [ext_resource type="Texture2D" uid="uid://gc66jmxju5g5" path="res://3d/sprites/por/star_sprite.png" id="8_54vq2"]
@@ -25,6 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://kej5iqewk8fj" path="res://3d/sprites/por/rovpor.png" id="14_tf4kn"]
 [ext_resource type="Script" path="res://3d/texture_rect.gd" id="17_ocwrj"]
 [ext_resource type="AudioStream" uid="uid://cx0nx5fojogdv" path="res://3d/sounds/lobotomy.mp3" id="19_gqa5e"]
+[ext_resource type="Texture2D" uid="uid://dim6f2dw8kyf" path="res://3d/sprites/por/slash.png" id="19_rucir"]
 [ext_resource type="Material" uid="uid://dg1dkawqqqtwb" path="res://3d/main.tres" id="19_vs7pb"]
 [ext_resource type="Script" path="res://3d/label.gd" id="20_iqmpm"]
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="20_xlvs1"]
@@ -677,6 +679,56 @@ _data = {
 "RESET": SubResource("Animation_bsq1f")
 }
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_4qxdx"]
+atlas = ExtResource("19_rucir")
+region = Rect2(0, 0, 1923, 1077)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8f61r"]
+atlas = ExtResource("19_rucir")
+region = Rect2(1923, 0, 1923, 1077)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_le8s2"]
+atlas = ExtResource("19_rucir")
+region = Rect2(3846, 0, 1923, 1077)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ir3ky"]
+atlas = ExtResource("19_rucir")
+region = Rect2(5769, 0, 1923, 1077)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6oclv"]
+atlas = ExtResource("19_rucir")
+region = Rect2(0, 1077, 1923, 1077)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4u02j"]
+atlas = ExtResource("19_rucir")
+region = Rect2(1923, 1077, 1923, 1077)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wr0ba"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4qxdx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8f61r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_le8s2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ir3ky")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6oclv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4u02j")
+}],
+"loop": false,
+"name": &"default",
+"speed": 24.0
+}]
+
 [sub_resource type="Theme" id="Theme_jpke2"]
 resource_local_to_scene = true
 HBoxContainer/colors/body_color = Color(0, 0, 0, 1)
@@ -767,6 +819,9 @@ sprite_frames = SubResource("SpriteFrames_ddcy3")
 [node name="AnimatedSprite3D3" type="AnimatedSprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
 transform = Transform3D(0.59633, 0, 0, 0, 0.0119755, 0.64288, 0, -0.72601, 0.0106042, 0, 0.398926, 0.753502)
 sprite_frames = SubResource("SpriteFrames_ddcy3")
+
+[node name="Fail" type="AudioStreamPlayer3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
+stream = ExtResource("7_fuas2")
 
 [node name="floor" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
@@ -883,8 +938,8 @@ sprite_frames = SubResource("SpriteFrames_6s88e")
 
 [node name="DashSprite" type="Sprite2D" parent="Sprites"]
 visible = false
-position = Vector2(630.86, 724.398)
-scale = Vector2(2.9707, 1.64799)
+position = Vector2(600, 512)
+scale = Vector2(1, 0.742871)
 texture = ExtResource("13_j0ygm")
 
 [node name="POR" type="Node2D" parent="Sprites"]
@@ -915,6 +970,12 @@ libraries = {
 "": SubResource("AnimationLibrary_al43o")
 }
 movie_quit_on_finish = true
+
+[node name="Slash" type="AnimatedSprite2D" parent="Sprites/POR_Sword"]
+visible = false
+position = Vector2(623, 386)
+scale = Vector2(0.756732, 0.756732)
+sprite_frames = SubResource("SpriteFrames_wr0ba")
 
 [node name="POR_Transition" type="AnimatedSprite2D" parent="Sprites"]
 visible = false
@@ -1105,4 +1166,5 @@ offset_bottom = 796.0
 text = "SPEED"
 
 [connection signal="animation_finished" from="Sprites/POR_Sword/AnimationPlayer" to="Sprites" method="_on_animation_player_animation_finished"]
+[connection signal="animation_finished" from="Sprites/POR_Sword/Slash" to="Sprites" method="_on_slash_animation_finished"]
 [connection signal="animation_finished" from="Sprites/POR_Transition" to="Sprites" method="_on_por_transition_animation_finished"]

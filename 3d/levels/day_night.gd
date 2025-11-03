@@ -11,6 +11,7 @@ var flicker_timer: Timer
 var is_day: bool = true  
 
 func _ready():
+	await get_tree().process_frame
 	if environment and environment.environment and environment.environment.sky:
 		sky_mat = environment.environment.sky.get_material()
 
@@ -27,6 +28,7 @@ func _ready():
 
 	# Start with daytime
 	trigger_day()
+	$"../DialogBubble".start_dialog()
 
 func trigger_day():
 	if not sky_mat:

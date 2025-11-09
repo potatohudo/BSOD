@@ -18,6 +18,8 @@ extends Node3D
 
 @export var facing_delay_strength: float = 4.0 # smaller = tighter, larger = slower follow
 @export var air_turn_influence: float = 1.0 # 0 = frozen velocity, 1 = full ground control
+@export var slope_friction: float = 1.2
+
 
 var current_velocity: Vector3 = Vector3.ZERO
 var facing_dir: Vector3 = Vector3.FORWARD
@@ -49,10 +51,11 @@ func get_slide_velocity(player: CharacterBody3D, delta: float) -> Vector3:
 	var ground_normal: Vector3 = Vector3.UP
 
 	# --- Find ground normal if on floor ---
-	if on_ground:
+	if on_ground and player != null:
 		var space_state = player.get_world_3d().direct_space_state
-		var origin: Vector3 = player.global_transform.origin
-		var target: Vector3 = origin - Vector3.UP * 1.6
+		# start the ray a bit above the player's feet to avoid hitting geometry close to the body
+		var origin: Vector3 = player.global_transform.origin + Vector3.UP * 0.1
+		var target: Vector3 = origin - Vector3.UP * 2.0  # slightly longer to be more robust
 		var query := PhysicsRayQueryParameters3D.create(origin, target)
 		query.exclude = [player]
 		query.collide_with_areas = false
@@ -68,21 +71,50 @@ func get_slide_velocity(player: CharacterBody3D, delta: float) -> Vector3:
 		else:
 			facing_dir = facing_dir.rotated(Vector3.UP, -turn_input * (turn_rate * air_turn_influence) * delta).normalized()
 
-	# --- Acceleration & physics ---
+	# --- Acceleration & physics (grounded) ---
 	if on_ground:
-		var slope_tangent: Vector3 = (facing_dir - ground_normal * facing_dir.dot(ground_normal)).normalized()
+		# tangent along the slope according to facing_dir
+		var slope_tangent: Vector3 = (facing_dir - ground_normal * facing_dir.dot(ground_normal))
+		if slope_tangent.length() > 0.001:
+			slope_tangent = slope_tangent.normalized()
+		else:
+			# fallback to current horizontal motion
+			var flat := current_velocity
+			flat.y = 0.0
+			if flat.length() > 0.001:
+				slope_tangent = flat.normalized()
+			else:
+				slope_tangent = (facing_dir - ground_normal * facing_dir.dot(ground_normal)).normalized()
+
+		var downhill_dir: Vector3 = (Vector3.DOWN - ground_normal * Vector3.DOWN.dot(ground_normal))
+		if downhill_dir.length() > 0.001:
+			downhill_dir = downhill_dir.normalized()
+		else:
+			downhill_dir = slope_tangent 
 		var slope_angle: float = acos(clamp(ground_normal.dot(Vector3.UP), -1.0, 1.0))
-		var downhill_factor: float = max(slope_angle, 0.1)
-		var accel_amount: float = slope_accel * downhill_factor * delta
-		current_velocity += slope_tangent * accel_amount
+
+		var downhill_component: float = slope_tangent.dot(downhill_dir)
+		
+		# If facing has downhill component, add a small accel proportional to how downhill it is
+		if downhill_component > 0.01:
+			# scale acceleration by how strongly it points downhill and by slope steepness
+			var accel_scale: float = downhill_component * (slope_angle / (PI * 0.5))  # normalized by 90° max
+			var accel_amount: float = slope_accel * accel_scale * delta
+			current_velocity += slope_tangent * accel_amount
+		else:
+
+			current_velocity = current_velocity.move_toward(Vector3.ZERO, slope_friction * delta)
 
 		if braking:
 			current_velocity = current_velocity.move_toward(Vector3.ZERO, brake_decel * delta)
 
 		current_velocity -= ground_normal * (current_velocity.dot(ground_normal))
 		current_velocity -= ground_normal * stick_force * slope_angle * delta
+
 		current_velocity = current_velocity.limit_length(max_speed)
+
 	else:
+		# airborne behaviour
 		current_velocity += Vector3.DOWN * 9.8 * delta
 
 	# --- DRIFT & ANGLE CORRECTION ---

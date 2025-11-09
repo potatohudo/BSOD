@@ -1,5 +1,5 @@
 res://default_bus_layout.tres
-res://main_menu.tscn
+res://fractals.tscn
 res://pc/PC.tres
 res://3d/freaky.gdshader
 res://3d/datamoshing.gdshader
@@ -13,7 +13,10 @@ res://3d/mv.gdshader
 res://3d/levels/fungiparticle.gdshader
 res://3d/levels/mercHIGHLIGHT.gdshader
 res://3d/levels/spark.gdshader
-res://dialog_system/dialog_bubble.gd
+res://fractals_canvas.shader.gdshader
+res://fractals_spatial.shader.gdshader
+res://main_menu.tscn
+res://fractal_2d.gdshader
 res://3d/main.tscn
 res://3d/player.tscn
 res://bios.tscn
@@ -31,4 +34,6 @@ res://3d/levels/test.tscn
 res://3d/levels/track.tscn
 res://dialog_system/dialog_bubble_3d.tscn
 res://dialog_system/dialog_bubble.tscn
-res://3d/player.gd
+res://fractals.gd
+res://3d/levels/merc.gdshader
+res://3d/slope.gd

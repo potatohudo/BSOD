@@ -28,7 +28,7 @@ func _ready():
 
 	# Start with daytime
 	trigger_day()
-	$"../DialogBubble".start_dialog()
+	#$"../DialogBubble".start_dialog()
 
 func trigger_day():
 	if not sky_mat:

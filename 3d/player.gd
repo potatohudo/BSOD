@@ -649,7 +649,7 @@ func handle_wall_collision(direction: Vector3, wall_normal: Vector3):
 		apply_knockback(knockback_force)
 		movement_points += 1
 	else:
-		if speed >= 20:
+		if speed >= 30:
 			var damage_taken = min(speed / 2, 100)
 			apply_damage(damage_taken)
 		speed = 0
@@ -748,3 +748,6 @@ func respawn():
 	health = 100
 	global_transform.origin = Vector3(0, 1, 0)
 	is_game_over = false
+	
+	
+#communoicationsd

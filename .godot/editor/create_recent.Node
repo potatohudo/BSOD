@@ -1,3 +1,11 @@
+ColorRect
+Camera2D
+Sprite2D
+Node3D
+SubViewport
+Sprite3D
+TextureRect
+Node2D
 AnimatedSprite2D
 Panel
 Label

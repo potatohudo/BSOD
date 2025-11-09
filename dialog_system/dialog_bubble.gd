@@ -1,6 +1,5 @@
 extends Control
 
-
 signal dialog_finished
 
 @onready var label: RichTextLabel = %RichTextLabel
@@ -9,11 +8,11 @@ signal dialog_finished
 @onready var anim: AnimationPlayer = %AnimationPlayer
 
 @export_group("Dialog Content")
-@export var dialogs: Array[String] = []                # sequential dialogs
-@export var dialog_names: Array[String] = []           # optional names
-@export var dialog_styles: Array[Dictionary] = []      # per-dialog style overrides
-@export var random_dialogs: Array[String] = []         # random pool
-@export var random_dialog_names: Array[String] = []    # optional names/titles for randoms
+@export var dialogs: Array[String] = []
+@export var dialog_names: Array[String] = []
+@export var dialog_styles: Array[Dictionary] = []
+@export var random_dialogs: Array[String] = []
+@export var random_dialog_names: Array[String] = []
 @export var typing_speed := 0.03
 
 @export_group("Effects: Shake")
@@ -33,26 +32,30 @@ signal dialog_finished
 @export_range(0.0, 1.0, 0.01) var global_wave_randomness_amount := 0.2
 @export_range(0.0, 1.0, 0.01) var global_wave_amount := 1.0
 
-
 @export_group("Fade")
 @export var fade_in := true
 @export var fade_out := true
 @export_range(0.1, 5.0, 0.1) var fade_duration := 0.5
 
-
 @export_group("Styling")
 @export var label_settings: LabelSettings
 @export var bubble_style: StyleBox
 
-
+# internal state
 var _paragraphs: PackedStringArray = []
 var _current := 0
 var _dialog_index := 0
+
+var _typing_done := false        # true when the reveal finished or was skipped
+var _skip_requested := false    # set when user presses accept during typing -> finish immediately
+var _waiting_for_input := false # true when waiting for accept after finished
+var _is_running := false        # guard to prevent reentrant driver
+
 var _wave_effect
 var _shake_effect
 var _rand_effect
-var _typing_done := false
 
+# --- inline text effects (kept from your original) ---
 class WaveEffect:
 	extends RichTextEffect
 	var bbcode := "wave"
@@ -63,8 +66,8 @@ class WaveEffect:
 	func _process_custom_fx(char_fx: CharFXTransform) -> bool:
 		if enabled_amount < 1.0 and randf() > enabled_amount:
 			return true
-		var t: float = float(Time.get_ticks_msec()) / 1000.0
-		var random_phase := 0.0
+		var t = float(Time.get_ticks_msec()) / 1000.0
+		var random_phase = 0.0
 		if randomness > 0.0:
 			random_phase = (randf() - 0.5) * randomness * PI * 2.0
 		char_fx.offset.y = sin(t * speed + char_fx.relative_index * 0.3 + random_phase) * amplitude
@@ -86,64 +89,45 @@ class RandScaleEffect:
 	var bbcode := "rand"
 	var scale_amount := 0.2
 	func _process_custom_fx(char_fx: CharFXTransform) -> bool:
-		var s: float = clamp(1.0 + randf_range(-scale_amount, scale_amount), 0.8, 1.2)
-		var tform := Transform2D()
-		tform = tform.scaled(Vector2(s, s))
-		char_fx.transform = tform
+		var s = clamp(1.0 + randf_range(-scale_amount, scale_amount), 0.8, 1.2)
+		char_fx.transform = Transform2D().scaled(Vector2(s, s))
 		return true
 
+# --- lifecycle ---
 func _ready() -> void:
 	await get_tree().process_frame
 	_apply_style()
-
-	if label:
-		label.bbcode_enabled = true
-		_install_inline_effects()
-
-	connect("dialog_finished", Callable(self, "_on_dialog_finished"))
-	start_dialog()
-
-func _on_dialog_finished() -> void:
-	await get_tree().create_timer(1.0).timeout
-
-	_dialog_index += 1
-	if _dialog_index < dialogs.size():
-		start_dialog()
-	else:
-		await _fade_out()
-		hide()
+	_install_inline_effects()
+	# Start the single sequential dialog driver
+	if not _is_running:
+		_is_running = true
+		await _run_dialog_sequence()
+		_is_running = false
 
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_accept"):
+		# If typing is in progress -> request skip to full text
 		if not _typing_done:
-			_typing_done = true
+			_skip_requested = true
+		# If typing is done and we're waiting to advance -> advance immediately
+		elif _waiting_for_input:
+			_waiting_for_input = false
 
-
-
-func _rescale_to_viewport() -> void:
-	# Keep scale proportional to viewport, relative to design width 1920px
-	var viewport_size: Vector2 = get_viewport_rect().size
-	var scale_factor: float = viewport_size.x / 1920.0
-	scale = Vector2(scale_factor, scale_factor)
-
-
-
+# --- style and effects setup ---
 func _apply_style() -> void:
 	if panel and bubble_style:
 		panel.add_theme_stylebox_override("panel", bubble_style)
 	if label and label_settings:
 		label.label_settings = label_settings
 
-
 func _install_inline_effects() -> void:
 	_wave_effect = WaveEffect.new()
 	_shake_effect = ShakeEffect.new()
 	_rand_effect = RandScaleEffect.new()
-	_update_effect_params()
 	label.install_effect(_wave_effect)
 	label.install_effect(_shake_effect)
 	label.install_effect(_rand_effect)
-
+	_update_effect_params()
 
 func _update_effect_params() -> void:
 	if _wave_effect:
@@ -157,106 +141,122 @@ func _update_effect_params() -> void:
 	if _rand_effect:
 		_rand_effect.scale_amount = global_random_scale_amount
 
-func start_dialog(random: bool = false) -> void:
-	if random and random_dialogs.size() > 0:
-		var idx: int = randi() % random_dialogs.size()
-		var text := random_dialogs[idx]
-		var name := ""
-		if idx < random_dialog_names.size():
-			name = random_dialog_names[idx]
-		_show_dialog(name, text, {})
-		return
+# --- top-level sequential driver (single source of truth) ---
+func _run_dialog_sequence() -> void:
+	# If no dialogs but random pool exists, start with random
+	if dialogs.is_empty() and random_dialogs.size() > 0:
+		_dialog_index = -1 # marker for random usage below
 
-	if dialogs.is_empty():
-		if random_dialogs.size() > 0:
-			start_dialog(true)
-		return
+	while true:
+		# pick next text
+		var text: String
+		var name: String = ""
+		var style: Dictionary = {}
+		if _dialog_index == -1:
+			# random mode
+			if random_dialogs.size() == 0:
+				break
+			var idx = randi() % random_dialogs.size()
+			text = random_dialogs[idx]
+			if idx < random_dialog_names.size():
+				name = random_dialog_names[idx]
+		else:
+			if _dialog_index >= dialogs.size():
+				break
+			text = dialogs[_dialog_index]
+			if _dialog_index < dialog_names.size():
+				name = dialog_names[_dialog_index]
+			if _dialog_index < dialog_styles.size():
+				style = dialog_styles[_dialog_index]
 
-	if _dialog_index >= dialogs.size():
-		emit_signal("dialog_finished")
-		return
+		await _show_dialog(name, text, style)
 
-	var idx := _dialog_index
-	var text := dialogs[idx]
+		# advance index in sequential mode
+		if _dialog_index >= 0:
+			_dialog_index += 1
 
-	var name := ""
-	if idx < dialog_names.size():
-		name = dialog_names[idx]
+		# if we were in random mode only show one random and stop
+		if _dialog_index == -1:
+			break
 
-	var style := {}
-	if idx < dialog_styles.size():
-		style = dialog_styles[idx]
+	# finished all dialogs
+	if fade_out:
+		await _fade_out()
+	hide()
+	emit_signal("dialog_finished")
 
-	_show_dialog(name, text, style)
-
+# --- show one dialog (awaits all paragraphs) ---
 func _show_dialog(name: String, full_text: String, style: Dictionary) -> void:
 	if name_label:
 		name_label.visible = name != ""
 		name_label.text = name
 
-	if style.has("label_color") and label:
+	if style and style.has("label_color"):
 		label.add_theme_color_override("default_color", style["label_color"])
-	if style.has("bubble_style") and panel:
+	if style and style.has("bubble_style") and panel:
 		panel.add_theme_stylebox_override("panel", style["bubble_style"])
-	if style.has("font_size") and label_settings:
+	if style and style.has("font_size") and label_settings:
 		label_settings.font_size = style["font_size"]
 
-	_show_dialogs(full_text)
-
+	await _show_dialogs(full_text)
 
 func _show_dialogs(full_text: String) -> void:
+	# Split paragraphs by double newline (your original)
 	_paragraphs = full_text.split("\n\n", false)
 	_current = 0
-	await _display_next()
+	while _current < _paragraphs.size():
+		await _display_one(_paragraphs[_current])
+		_current += 1
 
-
-func _display_next() -> void:
-	await get_tree().process_frame
-	if _typing_done == false and _current > 0 and _current >= _paragraphs.size():
-		return
-	if _current >= _paragraphs.size():
-		emit_signal("dialog_finished")
-		return
+# --- display a single paragraph, wait for player/timer to continue ---
+func _display_one(text: String) -> void:
+	_update_effect_params()
 
 	if fade_in:
 		await _fade_in()
 
 	_typing_done = false
+	_skip_requested = false
+	_waiting_for_input = false
+
+	label.clear()
 	label.bbcode_enabled = true
 	label.text = ""
 
-
-	await _reveal_text(_paragraphs[_current])
+	await _reveal_text(text)
 	_typing_done = true
 
-	await get_tree().create_timer(1.0).timeout
+	# Wait up to 1.0s or until player presses accept (handled in _unhandled_input)
+	_waiting_for_input = true
+	var timer = get_tree().create_timer(1.0)
+	while _waiting_for_input and timer.time_left > 0.0:
+		await get_tree().process_frame
+	# ensure waiting flag cleared
+	_waiting_for_input = false
 
-	_current += 1
-	await _display_next()
-
-
+# --- reveal typing with skip handling ---
 func _reveal_text(t: String) -> void:
 	_update_effect_params()
-	label.bbcode_enabled = true
-	label.clear()
-
 	label.parse_bbcode(t)
 	label.visible_characters = 0
-
-	var total_chars := label.get_total_character_count()
+	var total_chars = label.get_total_character_count()
 
 	for i in range(total_chars + 1):
-		if _typing_done:
+		if _skip_requested:
+			# show full immediately
+			label.visible_characters = -1
+			_skip_requested = false
 			break
-
 		label.visible_characters = i
+		# A small await per char — using timer allows consistent spacing
 		await get_tree().create_timer(typing_speed).timeout
 
-	# When finished (naturally or skipped)
+	# mark done
 	label.visible_characters = -1
 	_typing_done = true
+	_skip_requested = false
 
-# === Fades ===
+# --- fades (unchanged behavior) ---
 func _fade_in() -> void:
 	if anim and anim.has_animation("fade_in"):
 		anim.play("fade_in")
@@ -265,29 +265,23 @@ func _fade_in() -> void:
 		await _simple_fade(0.0, 1.0)
 
 func _fade_out() -> void:
-	# Only start fading once text is done typing
 	if not _typing_done:
-		await wait_for_typing_done()
-	# (rest of your flicker/fade code below)
-
-	# Add a brief controlled flicker effect
+		# wait until current typing finishes/skip
+		while not _typing_done:
+			await get_tree().process_frame
+	# brief flicker (optional)
 	if label:
-		for i in range(3):
+		for i in range(2):
 			label.visible = false
-			await get_tree().create_timer(0.05).timeout
+			await get_tree().create_timer(0.04).timeout
 			label.visible = true
-			await get_tree().create_timer(0.05).timeout
+			await get_tree().create_timer(0.04).timeout
 
 	if anim and anim.has_animation("fade_out"):
 		anim.play("fade_out")
 		await anim.animation_finished
 	else:
 		await _simple_fade(1.0, 0.0)
-
-func wait_for_typing_done() -> void:
-	while not _typing_done:
-		await get_tree().process_frame
-
 
 func _simple_fade(from_alpha: float, to_alpha: float) -> void:
 	var tw := create_tween()
@@ -302,10 +296,7 @@ func _simple_fade(from_alpha: float, to_alpha: float) -> void:
 		tw.parallel().tween_property(name_label, "modulate:a", to_alpha, fade_duration)
 	await tw.finished
 
-
-# === Public helpers ===
+# --- public helper to instantly finish typing of current paragraph ---
 func finish_now() -> void:
 	if not _typing_done:
-		label.visible_characters = -1
-		_typing_done = true
-		emit_signal("dialog_finished")
+		_skip_requested = true

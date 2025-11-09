@@ -491,6 +491,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 dialogs = Array[String](["heyyy look i can make the text [shake]shake[/shake] or [wave]wave[/wave].", "it skips every second dialog fml", "F to switch modes. [wave] you can do some sick tricks when pressing buttons,, heh,,, [/wave]by pressing CTRL you can [shake]SLIDE!![/shake] be careful not to hit a wall though. by pressing SHIFT you [shake]DASH.[/shake] ..thats pretty much all", "dgfdg", ".. also no YA3 this update, sorry caked", "[END]"])
 dialog_names = Array[String](["chuchu", "h", "mieow", "h", "i hate godot sm", "[END]"])
+dialog_styles = Array[Dictionary]([{}])
+random_dialogs = Array[String](["hggghhhhhhhhhhhhh"])
 fade_in = false
 fade_out = false
 

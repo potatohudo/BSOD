@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://bj2r50s0df7p0"]
+[gd_scene load_steps=44 format=3 uid="uid://bj2r50s0df7p0"]
 
 [ext_resource type="Script" path="res://3d/levels/day_night.gd" id="1_7pq6i"]
 [ext_resource type="AudioStream" uid="uid://byukdv1if67mn" path="res://3d/sounds/ambient-w6.mp3" id="2_ppqim"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://addons/raytraced_audio/raytraced_audio_player_3d.gd" id="3_qmyru"]
 [ext_resource type="AudioStream" uid="uid://ciovs1ekk0doe" path="res://3d/junk/ahhhh-37191.mp3" id="4_d46u0"]
 [ext_resource type="PackedScene" uid="uid://b8i2y52nvs1kh" path="res://dialog_system/dialog_bubble.tscn" id="6_0q3lm"]
+[ext_resource type="PackedScene" uid="uid://c2tfptl7shi44" path="res://fractals.tscn" id="7_t835q"]
+[ext_resource type="Shader" path="res://fractal_3d.gdshader" id="8_yiew7"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_nvnlc"]
 
@@ -109,6 +111,142 @@ volumetric_fog_density = 0.0399
 volumetric_fog_length = 206.87
 volumetric_fog_detail_spread = 0.5
 adjustment_enabled = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gwhbb"]
+render_priority = 0
+shader = ExtResource("8_yiew7")
+shader_parameter/u_instance_count = 40
+shader_parameter/u_field_radius = 5.0
+shader_parameter/u_slice_scale = 1.0
+shader_parameter/u_global_rot = 0.0
+shader_parameter/u_slice_param_sel = 2
+shader_parameter/u_slice_param_min = -1.0
+shader_parameter/u_slice_param_max = 1.0
+shader_parameter/u_res = Vector2(1024, 768)
+shader_parameter/u_time = 0.0
+shader_parameter/u_zoom = 4000.0
+shader_parameter/u_iter = 512
+shader_parameter/u_offset = Vector2(0, 0)
+shader_parameter/u_rot = 0.0
+shader_parameter/u_zrot = 7.96
+shader_parameter/u_krot = 6.205
+shader_parameter/u_dist = 0.0
+shader_parameter/u_hue = 0.695
+shader_parameter/u_blend = 0.05
+shader_parameter/u_smooth = true
+shader_parameter/u_parallax = true
+shader_parameter/u_invert = false
+shader_parameter/u_parallax_softness = 0.471
+shader_parameter/u_parallax_glow = false
+shader_parameter/u_mode = 1
+shader_parameter/u_mexp = 2.0
+shader_parameter/u_jmix = 0.0
+shader_parameter/u_jre = -0.8
+shader_parameter/u_jim = 0.156
+shader_parameter/u_bonusM = 0.0
+shader_parameter/u_starOff = 0.5
+shader_parameter/u_starScale = 1.0
+shader_parameter/u_bonusStar = 0.0
+shader_parameter/u_novaR = 1.0
+shader_parameter/u_novaP = 2.0
+shader_parameter/u_bonusNova = 0.0
+shader_parameter/u_burnBonus = 0.0
+shader_parameter/u_lyA = 3.5
+shader_parameter/u_lyB = 2.8
+shader_parameter/u_lyMask = 3.0
+shader_parameter/u_lyLen = 20
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wmfnh"]
+render_priority = 0
+shader = ExtResource("8_yiew7")
+shader_parameter/u_instance_count = 40
+shader_parameter/u_field_radius = 5.0
+shader_parameter/u_slice_scale = 1.0
+shader_parameter/u_global_rot = 0.0
+shader_parameter/u_slice_param_sel = 2
+shader_parameter/u_slice_param_min = -1.0
+shader_parameter/u_slice_param_max = 1.0
+shader_parameter/u_res = Vector2(1024, 768)
+shader_parameter/u_time = 0.0
+shader_parameter/u_zoom = 4000.0
+shader_parameter/u_iter = 512
+shader_parameter/u_offset = Vector2(0, 0)
+shader_parameter/u_rot = 0.0
+shader_parameter/u_zrot = -0.01
+shader_parameter/u_krot = 0.01
+shader_parameter/u_dist = 0.0
+shader_parameter/u_hue = 0.695
+shader_parameter/u_blend = 0.05
+shader_parameter/u_smooth = true
+shader_parameter/u_parallax = true
+shader_parameter/u_invert = false
+shader_parameter/u_parallax_softness = 0.471
+shader_parameter/u_parallax_glow = false
+shader_parameter/u_mode = 1
+shader_parameter/u_mexp = 2.0
+shader_parameter/u_jmix = 0.0
+shader_parameter/u_jre = -0.8
+shader_parameter/u_jim = 0.156
+shader_parameter/u_bonusM = 0.0
+shader_parameter/u_starOff = 0.5
+shader_parameter/u_starScale = 1.0
+shader_parameter/u_bonusStar = 0.0
+shader_parameter/u_novaR = 1.0
+shader_parameter/u_novaP = 2.0
+shader_parameter/u_bonusNova = 0.0
+shader_parameter/u_burnBonus = 0.0
+shader_parameter/u_lyA = 3.5
+shader_parameter/u_lyB = 2.8
+shader_parameter/u_lyMask = 3.0
+shader_parameter/u_lyLen = 20
+
+[sub_resource type="QuadMesh" id="QuadMesh_p6gaf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ikdyx"]
+render_priority = 0
+shader = ExtResource("8_yiew7")
+shader_parameter/u_instance_count = 40
+shader_parameter/u_field_radius = 5.0
+shader_parameter/u_slice_scale = 1.0
+shader_parameter/u_global_rot = 0.0
+shader_parameter/u_slice_param_sel = 2
+shader_parameter/u_slice_param_min = -1.0
+shader_parameter/u_slice_param_max = 1.0
+shader_parameter/u_res = Vector2(1024, 768)
+shader_parameter/u_time = 0.0
+shader_parameter/u_zoom = 4000.0
+shader_parameter/u_iter = 512
+shader_parameter/u_offset = Vector2(0, 0)
+shader_parameter/u_rot = 0.0
+shader_parameter/u_zrot = 0.01
+shader_parameter/u_krot = 0.01
+shader_parameter/u_dist = 0.0
+shader_parameter/u_hue = 0.695
+shader_parameter/u_blend = 0.05
+shader_parameter/u_smooth = true
+shader_parameter/u_parallax = true
+shader_parameter/u_invert = false
+shader_parameter/u_parallax_softness = 0.471
+shader_parameter/u_parallax_glow = false
+shader_parameter/u_mode = 1
+shader_parameter/u_mexp = 2.0
+shader_parameter/u_jmix = 0.0
+shader_parameter/u_jre = -0.8
+shader_parameter/u_jim = 0.156
+shader_parameter/u_bonusM = 0.0
+shader_parameter/u_starOff = 0.5
+shader_parameter/u_starScale = 1.0
+shader_parameter/u_bonusStar = 0.0
+shader_parameter/u_novaR = 1.0
+shader_parameter/u_novaP = 2.0
+shader_parameter/u_bonusNova = 0.0
+shader_parameter/u_burnBonus = 0.0
+shader_parameter/u_lyA = 3.5
+shader_parameter/u_lyB = 2.8
+shader_parameter/u_lyMask = 3.0
+shader_parameter/u_lyLen = 20
+
+[sub_resource type="QuadMesh" id="QuadMesh_fppue"]
 
 [node name="Node3D" type="Node3D"]
 process_mode = 1
@@ -489,11 +627,29 @@ offset_top = 0.199982
 offset_bottom = -5.80005
 size_flags_horizontal = 3
 size_flags_vertical = 3
-dialogs = Array[String](["heyyy look i can make the text [shake]shake[/shake] or [wave]wave[/wave].", "it skips every second dialog fml", "F to switch modes. [wave] you can do some sick tricks when pressing buttons,, heh,,, [/wave]by pressing CTRL you can [shake]SLIDE!![/shake] be careful not to hit a wall though. by pressing SHIFT you [shake]DASH.[/shake] ..thats pretty much all", "dgfdg", ".. also no YA3 this update, sorry caked", "[END]"])
-dialog_names = Array[String](["chuchu", "h", "mieow", "h", "i hate godot sm", "[END]"])
+dialogs = Array[String](["heyyy look i can make the text [shake]shake[/shake] or [wave]wave[/wave].", "F to switch modes. [wave] you can do some sick tricks when pressing buttons,, heh,,, [/wave]by pressing CTRL you can [shake]SLIDE!![/shake] be careful not to hit a wall though. by pressing SHIFT you [shake]DASH.[/shake] ..thats pretty much all", "[END]"])
+dialog_names = Array[String](["chuchu", "mieow", "[END]"])
 dialog_styles = Array[Dictionary]([{}])
 random_dialogs = Array[String](["hggghhhhhhhhhhhhh"])
 fade_in = false
 fade_out = false
+
+[node name="FractalField3D" parent="." instance=ExtResource("7_t835q")]
+transform = Transform3D(5.00025, 0, 0, 0, 5, 0, 0, 0, 5.00025, 0, 5.03892, 1.10819)
+base_material = SubResource("ShaderMaterial_gwhbb")
+quad_count = 2
+field_radius = 0.1
+slice_scale = 0.01
+rotation_speed_deg = 1.0
+
+[node name="@MeshInstance3D@18479" type="MeshInstance3D" parent="FractalField3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+material_override = SubResource("ShaderMaterial_wmfnh")
+mesh = SubResource("QuadMesh_p6gaf")
+
+[node name="@MeshInstance3D@18480" type="MeshInstance3D" parent="FractalField3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.1)
+material_override = SubResource("ShaderMaterial_ikdyx")
+mesh = SubResource("QuadMesh_fppue")
 
 [editable path="DialogBubble"]

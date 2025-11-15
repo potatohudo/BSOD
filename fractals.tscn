@@ -1,59 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://c2tfptl7shi44"]
+[gd_scene load_steps=2 format=3 uid="uid://c2tfptl7shi44"]
 
 [ext_resource type="Script" path="res://fractals.gd" id="1_bwnv1"]
-[ext_resource type="Shader" path="res://fractal_2d.gdshader" id="2_7rb84"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_41t0w"]
-shader = ExtResource("2_7rb84")
-shader_parameter/u_res = Vector2(1024, 768)
-shader_parameter/u_time = 0.0
-shader_parameter/u_zoom = 1000.0
-shader_parameter/u_iter = 512
-shader_parameter/u_offset = Vector2(0, 0)
-shader_parameter/u_rot = 0.0
-shader_parameter/u_zrot = 3.96
-shader_parameter/u_krot = 0.091
-shader_parameter/u_dist = 0.0
-shader_parameter/u_hue = 0.0
-shader_parameter/u_blend = 0.101
-shader_parameter/u_smooth = 1
-shader_parameter/u_parallax = true
-shader_parameter/u_parallax_glow = false
-shader_parameter/u_parallax_softness = 0.512
-shader_parameter/u_invert = false
-shader_parameter/u_mode = 1
-shader_parameter/u_mexp = 2.0
-shader_parameter/u_jmix = 0.0
-shader_parameter/u_jre = -0.8
-shader_parameter/u_jim = 0.156
-shader_parameter/u_bonusM = 0.0
-shader_parameter/u_starOff = 0.5
-shader_parameter/u_starScale = 1.0
-shader_parameter/u_bonusStar = 0.0
-shader_parameter/u_novaR = 1.0
-shader_parameter/u_novaP = 2.0
-shader_parameter/u_bonusNova = 0.0
-shader_parameter/u_burnBonus = 0.0
-shader_parameter/u_lyA = 3.5
-shader_parameter/u_lyB = 2.8
-shader_parameter/u_lyMask = 3.0
-shader_parameter/u_lyLen = 20
-
-[node name="Node2D" type="Node2D"]
+[node name="FractalField3D" type="Node3D"]
 script = ExtResource("1_bwnv1")
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-
-[node name="ColorRect" type="ColorRect" parent="."]
-material = SubResource("ShaderMaterial_41t0w")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 3.0
-offset_top = -1.0
-offset_right = 1202.0
-offset_bottom = 802.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+field_radius = 5.0
+rotation_speed_deg = 0.0
+camera_path = NodePath("SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D")

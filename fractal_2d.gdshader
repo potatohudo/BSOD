@@ -17,14 +17,14 @@ uniform float u_krot : hint_range(0.0, 6.2831853) = 0.0; // 4D rotation angle (r
 uniform float u_dist : hint_range(0.0, 1.0) = 0.0;   // small noise/distortion
 uniform float u_hue : hint_range(0.0, 1.0) = 0.4;
 uniform float u_blend : hint_range(0.0, 1.0) = 0.05;
-uniform int u_smooth = 1; // 1 = smooth blending 
-uniform bool u_parallax = false; 
+uniform int u_smooth = 1; // 1 = smooth blending
+uniform bool u_parallax = false;
 uniform bool u_parallax_glow = true; // adds soft colored halo around black zones
 
 
 uniform float u_parallax_softness : hint_range(0.0, 1.0) = 0.25;
 
-uniform bool u_invert = false;   // parallax invert 
+uniform bool u_invert = false;   // parallax invert
 
 // ---------- mode / hybrid params (all exposed) ----------
 uniform int u_mode = 0; // 0=mandel,1=star,2=nova,3=burn,4=lyap(STILL not working :sob:)
@@ -113,7 +113,7 @@ void fragment(){
     for (int i = 0; i < MAX_STEPS; i++){
         if (i >= u_iter) break;
 
-        // rotate in 4D around k axis 
+        // rotate in 4D around k axis
         if (abs(u_krot) > 0.000001) {
             state = rot4D(state, u_krot);
         }

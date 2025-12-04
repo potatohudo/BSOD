@@ -1,7 +1,7 @@
 [gd_scene load_steps=79 format=3 uid="uid://b8i2y52nvs1kh"]
 
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_31lf0"]
-[ext_resource type="Script" path="res://dialog_system/dialog_bubble.gd" id="1_s8mbf"]
+[ext_resource type="Script" uid="uid://dot6n57v40614" path="res://dialog_system/dialog_bubble.gd" id="1_s8mbf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ax4k3"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -215,6 +215,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_31lf0")
 script = ExtResource("1_s8mbf")
+fade_in = false
+fade_out = false
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1

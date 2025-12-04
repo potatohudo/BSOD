@@ -1,19 +1,19 @@
-[gd_scene load_steps=36 format=3 uid="uid://bk0lfgelpyem5"]
+[gd_scene load_steps=37 format=3 uid="uid://bk0lfgelpyem5"]
 
 [ext_resource type="ArrayMesh" uid="uid://x220c17lw2np" path="res://3d/models/mercury.obj" id="1_f1s6p"]
-[ext_resource type="Script" path="res://3d/levels/1.gd" id="1_y56ar"]
-[ext_resource type="Shader" path="res://3d/levels/merc.gdshader" id="2_84dkk"]
+[ext_resource type="Script" uid="uid://b7uy4nwthtrh4" path="res://3d/levels/1.gd" id="1_y56ar"]
+[ext_resource type="Shader" uid="uid://8pjeammggl1t" path="res://3d/levels/merc.gdshader" id="2_84dkk"]
 [ext_resource type="ArrayMesh" uid="uid://c8kt2upprxj2s" path="res://3d/models/fountain.obj" id="4_2s70x"]
-[ext_resource type="Script" path="res://3d/levels/fountain.gd" id="5_eccr1"]
+[ext_resource type="Script" uid="uid://7s3mlqdwsb5g" path="res://3d/levels/fountain.gd" id="5_eccr1"]
 [ext_resource type="PackedScene" uid="uid://b1xqiy3ueimpa" path="res://3d/models/LES/les.tscn" id="5_mr57n"]
-[ext_resource type="Shader" path="res://3d/sphere.gdshader" id="5_wtsxy"]
-[ext_resource type="Shader" path="res://3d/levels/merc1.gdshader" id="6_ehhad"]
+[ext_resource type="Shader" uid="uid://clkg0dca60b5o" path="res://3d/sphere.gdshader" id="5_wtsxy"]
+[ext_resource type="Shader" uid="uid://bpgawdqbr0vx3" path="res://3d/levels/merc1.gdshader" id="6_ehhad"]
 [ext_resource type="AudioStream" uid="uid://dttm33p0j5vn4" path="res://3d/sounds/fountain.wav" id="7_2uva8"]
 [ext_resource type="AudioStream" uid="uid://byirhoddja5vr" path="res://3d/sounds/merc1.wav" id="9_hqqoi"]
-[ext_resource type="Environment" uid="uid://cspjqdo4lt0xq" path="res://3d/levels/merc.tres" id="9_l6oh8"]
 [ext_resource type="AudioStream" uid="uid://b47cj1xhk3ilt" path="res://3d/sounds/merc.wav" id="9_q0gmu"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_ig8gc"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_f0idb"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_78xl2"]
 resource_local_to_scene = true
@@ -25,6 +25,7 @@ shader_parameter/wave_speed = 0.05
 shader_parameter/wave_scale = 10.0
 shader_parameter/shimmer_speed = 1.2
 shader_parameter/shimmer_strength = 0.08
+shader_parameter/matcap = SubResource("ViewportTexture_f0idb")
 shader_parameter/flip_horizontal = false
 shader_parameter/uv_offset = Vector2(0, 0)
 shader_parameter/uv_scale = Vector2(1, 1)
@@ -32,10 +33,9 @@ shader_parameter/refraction_split = 2.0
 shader_parameter/refraction_split_power = 1.0
 shader_parameter/refraction_affect = 0.6
 shader_parameter/gradient_basis = Vector3(3, 3, 3)
-shader_parameter/min_energy_multiplier = 5.0
-shader_parameter/max_energy_multiplier = 10.0
+shader_parameter/min_energy_multiplier = 1.0
+shader_parameter/max_energy_multiplier = 5.0
 shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
-shader_parameter/matcap = SubResource("ViewportTexture_ig8gc")
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_0isyb"]
 
@@ -205,6 +205,13 @@ shader_parameter/uv1_offset = Vector3(0, 0, 0)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_0khan"]
 
+[sub_resource type="Sky" id="Sky_0orsd"]
+
+[sub_resource type="Environment" id="Environment_0orsd"]
+resource_local_to_scene = true
+background_mode = 2
+sky = SubResource("Sky_0orsd")
+
 [node name="Node3D" type="Node3D" node_paths=PackedStringArray("mesh_instance")]
 process_priority = 1
 script = ExtResource("1_y56ar")
@@ -369,9 +376,6 @@ shadow_enabled = true
 shadow_blur = 0.0
 directional_shadow_max_distance = 8192.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Pivot"]
-environment = ExtResource("9_l6oh8")
-
 [node name="Area3D" type="Area3D" parent="Pivot" groups=["0g"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -296.974, 0)
 
@@ -402,6 +406,9 @@ stream = ExtResource("9_q0gmu")
 volume_db = -2.811
 pitch_scale = 0.24
 autoplay = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0orsd")
 
 [connection signal="area_shape_entered" from="Pivot/Area3D" to="." method="_on_area_3d_area_shape_entered"]
 [connection signal="area_shape_exited" from="Pivot/Area3D" to="." method="_on_area_3d_area_shape_exited"]

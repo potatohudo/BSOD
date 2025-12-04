@@ -1,4 +1,4 @@
-extends Node2D
+extends Node3D
 
 @onready var por_icon = $POR
 @onready var sword_idle = $POR_Sword/Idle

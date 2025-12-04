@@ -1,17 +1,9 @@
-[gd_resource type="Environment" load_steps=3 format=3 uid="uid://cspjqdo4lt0xq"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3ywpx"]
-
-[sub_resource type="Sky" id="Sky_yaebk"]
-sky_material = SubResource("ProceduralSkyMaterial_3ywpx")
+[gd_resource type="Environment" format=3 uid="uid://cspjqdo4lt0xq"]
 
 [resource]
+resource_local_to_scene = true
 background_mode = 2
-background_energy_multiplier = 0.05
-sky = SubResource("Sky_yaebk")
-ambient_light_source = 2
-ambient_light_energy = 11.57
-tonemap_mode = 1
+ambient_light_color = Color(0.90359825, 0.90359825, 0.9035982, 1)
 ssr_fade_in = 2.48464
 ssr_depth_tolerance = 42.91
 glow_enabled = true

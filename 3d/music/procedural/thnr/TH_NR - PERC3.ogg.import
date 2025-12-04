@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://be4531vh4qy4f"
+path="res://.godot/imported/TH_NR - PERC3.ogg-4b1783bbd6c16d35c06facfe376c9bf7.oggvorbisstr"
+
+[deps]
+
+source_file="res://3d/music/procedural/thnr/TH_NR - PERC3.ogg"
+dest_files=["res://.godot/imported/TH_NR - PERC3.ogg-4b1783bbd6c16d35c06facfe376c9bf7.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

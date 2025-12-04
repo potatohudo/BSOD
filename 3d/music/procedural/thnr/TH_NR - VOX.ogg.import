@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://5sg4qdt5eue8"
+path="res://.godot/imported/TH_NR - VOX.ogg-e61a596c620b4a70964db2ad55c43a51.oggvorbisstr"
+
+[deps]
+
+source_file="res://3d/music/procedural/thnr/TH_NR - VOX.ogg"
+dest_files=["res://.godot/imported/TH_NR - VOX.ogg-e61a596c620b4a70964db2ad55c43a51.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

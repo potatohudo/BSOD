@@ -19,8 +19,8 @@ uniform float refraction_split_power : hint_range(0.01, 10.0) = 1.0;
 uniform float refraction_affect = 0.6;
 uniform vec3 gradient_basis = vec3(3.0, 3.0, 3.0);
 
-uniform float min_energy_multiplier : hint_range(0.0, 5.0) = 1.0;
-uniform float max_energy_multiplier : hint_range(0.0, 10.0) = 5.0;
+uniform float min_energy_multiplier : hint_range(0.0, 50.0) = 1.0;
+uniform float max_energy_multiplier : hint_range(0.0, 100.0) = 5.0;
 uniform vec3 fake_light_dir = vec3(0.3, 1.0, 0.2);
 
 varying vec2 matcap_uv;

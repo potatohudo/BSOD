@@ -19,16 +19,13 @@ func _ready():
 		push_error("No ProceduralSkyMaterial found in WorldEnvironment!")
 		return
 
-	# Create a timer for sun flickering (only works during the day)
 	flicker_timer = Timer.new()
 	flicker_timer.wait_time = 0.1
 	flicker_timer.autostart = true
 	flicker_timer.timeout.connect(_flicker_sun)
 	add_child(flicker_timer)
 
-	# Start with daytime
 	trigger_day()
-	#$"../DialogBubble".start_dialog()
 
 func trigger_day():
 	if not sky_mat:
@@ -36,11 +33,9 @@ func trigger_day():
 	ambient.play()
 	pulsar.play()
 	
-	# Play all effects first
 	sky_mat.set_sun_angle_max(360)
 	environment.environment.set_tonemap_exposure(3)
 
-	# Play all effects first
 	var tween = get_tree().create_tween()
 	tween.tween_property(sky_mat, "sun_angle_max", 30.0, 1.0).set_trans(Tween.TRANS_SINE)
 	var tween1 = get_tree().create_tween()
@@ -48,7 +43,6 @@ func trigger_day():
 	var tween2 = get_tree().create_tween()
 	tween2.tween_property(pulsar,"volume_db", -100, day_duration * 2).set_trans(Tween.TRANS_LINEAR)
 	
-	# Adjust brightness & contrast for day
 	environment.environment.adjustment_brightness = 1.0
 	environment.environment.adjustment_contrast = 1.0
 	
@@ -57,7 +51,6 @@ func trigger_day():
 	
 	is_day = true  
 
-	# Wait until the day duration ends, then switch to night
 	await get_tree().create_timer(day_duration).timeout
 	trigger_night()
 
@@ -77,7 +70,6 @@ func trigger_night():
 
 	is_day = false
 
-	# Wait until the night duration ends, then switch to day
 	await get_tree().create_timer(night_duration).timeout
 	trigger_day()
 

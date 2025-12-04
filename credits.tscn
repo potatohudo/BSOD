@@ -1,0 +1,414 @@
+[gd_scene load_steps=3 format=3 uid="uid://bsny0sc512iqd"]
+
+[ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_nm7lk"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_nm7lk"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_nm7lk")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_nm7lk")
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 166.0
+offset_top = 47.0
+offset_right = 1084.0
+offset_bottom = 762.0
+
+[node name="title3" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "CHUDO_YUUDO"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit3" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "the main one
+coder
+like everything in the game at least a bit"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit22" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit6" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "JoksieArt"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit4" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "concept artist
+character creator
+SFX
+music artist
+writer
+2d artist"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit23" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit7" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "CakedPie"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit21" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "concept artist
+character creator
+3d modeller 
+SFX
+music artist
+2d artist
+2d animator
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit5" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "s0lst1cx"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit24" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "concept artist
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit11" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "birdL"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit26" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit9" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "Scribl"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit25" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit10" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "Sylvari!"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit27" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit8" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "parf"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit28" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit12" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "handmadecup"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit29" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit13" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "Stardust"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit30" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit14" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "DeBogged"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit31" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit15" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "DmanX"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit32" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit16" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "parf"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit33" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit17" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "B2047"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit34" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit18" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "Raph"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit35" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit19" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "max"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit36" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit20" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "Zenith"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="empty5" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 452.0
+offset_top = 47.0
+offset_right = 1084.0
+offset_bottom = 762.0
+
+[node name="title3" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "CONCEPT ARTISTS"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit3" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      chudo_yuudo"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit6" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      JoksieArt"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit7" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      CakedPie"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit5" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      s0lst1cx"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit11" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      birdL"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit9" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      Scribl"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit10" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      Sylvari!"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit8" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      parf"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit12" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      handmadecup"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit13" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      Stardust"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="empty5" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="title4" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "WRITERS"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit4" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      chudo_yuudo"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit14" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "      JoksieArt"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 159.0
+offset_top = 47.0
+offset_right = 1084.0
+offset_bottom = 762.0
+
+[node name="Label" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "THE MAIN ONE (arbeiter)"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="Label2" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "     chudo_yuudo"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="empty" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="title2" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "CODER"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit2" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "     chudo_yuudo"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="empty7" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="title6" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "MODELLERS"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit5" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "      CakedPie"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit17" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "      chudo_yuudo"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit19" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "      Sorper11"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="empty5" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="title5" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "3D ANIMATORS"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit16" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "      chudo_yuudo"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="empty6" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="title7" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "TESTERS"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit18" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "      HAVEN"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit20" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "      Scribl"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit21" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "      Sylvari!"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit22" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "      Zenith"
+label_settings = SubResource("LabelSettings_nm7lk")

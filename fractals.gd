@@ -1,109 +1,121 @@
-@tool
 extends Node3D
 
 @export var base_material: ShaderMaterial
-@export var quad_count: int = 5
+@export var core_slice_count: int = 3
 @export var field_radius: float = 3.0
 @export var slice_scale: float = 1.0
 @export var rotation_speed_deg: float = 10.0
+@export var shrink_amount: float = 1.0
 @export var face_camera := true
-
-@export_enum("Stack","Grid","Sphere","Cube")
-var layout_mode := "Stack"
-
+@export var u_zturn := true
 @export var camera_path: NodePath
 
-var camera: Camera3D
+var camera: Camera3D = null
 
 
-func _ready():
+func _ready() -> void:
 	_resolve_camera()
-	_build_quads()
+	_build_slices()
 	set_process(true)
 
 
-func _resolve_camera():
-	if camera_path:
-		camera = get_node_or_null(camera_path)
+# -----------------------------------------------------
+# Camera
+# -----------------------------------------------------
+func _resolve_camera() -> void:
+	if camera_path != NodePath(""):
+		camera = get_node_or_null(camera_path) as Camera3D
 	if camera == null:
 		camera = get_viewport().get_camera_3d()
 
 
-var rot_acc := 0.0
+func _face_camera() -> void:
+	if camera == null:
+		_resolve_camera()
+	if camera == null:
+		return
+	look_at(camera.global_transform.origin, Vector3.UP)
 
-func _process(delta):
-	if rotation_speed_deg != 0.0:
-		rot_acc += deg_to_rad(rotation_speed_deg) * delta
 
-		# apply to each quad's material
-		for q in get_children():
-			if q is MeshInstance3D:
-				var mat = q.material_override
-				if mat:
-					mat.set_shader_parameter("u_global_rot", rot_acc)
+func _process(delta: float) -> void:
+	_update_zrot()
 
 	if face_camera:
 		_face_camera()
 
-func _build_quads():
-	# remove old
+
+# -----------------------------------------------------
+# Update u_zrot
+# -----------------------------------------------------
+func _update_zrot() -> void:
+	var rot_y: float = global_transform.basis.get_euler().y
+
 	for c in get_children():
-		c.queue_free()
+		if not (c is MeshInstance3D):
+			continue
+
+		var q := c as MeshInstance3D
+		var mat := q.material_override as ShaderMaterial
+		if mat == null:
+			continue
+
+		var rot_val: float = rot_y
+
+		if not face_camera and u_zturn:
+			if camera == null:
+				_resolve_camera()
+			if camera != null:
+				var p: Vector3 = global_transform.origin
+				var cam_pos: Vector3 = camera.global_transform.origin
+				rot_val = atan2(cam_pos.x - p.x, cam_pos.z - p.z)
+
+		mat.set_shader_parameter("u_zrot", rot_val * rotation_speed_deg)
+
+
+# -----------------------------------------------------
+# Build slices
+# -----------------------------------------------------
+func _build_slices() -> void:
+	for c in get_children():
+		if c is MeshInstance3D:
+			c.queue_free()
 
 	if base_material == null:
 		return
 
-	for i in range(quad_count):
-		var q = MeshInstance3D.new()
-		var mesh = QuadMesh.new()
-		mesh.size = Vector2(1,1)
-		q.mesh = mesh
+	var total: int = core_slice_count
 
-		var mat = base_material.duplicate()
-		q.material_override = mat
-
-		add_child(q)
-		if Engine.is_editor_hint():
-			q.owner = get_tree().edited_scene_root
-
-		_set_quad_transform(i, q)
-		_set_quad_params(i, mat)
+	for i in range(total):
+		var t: float = float(i) / float(max(1, total - 1))
+		_create_slice(t)
 
 
-func _set_quad_transform(i: int, q: MeshInstance3D):
-	var t = float(i) / max(1, quad_count - 1)   # 0..1
+# -----------------------------------------------------
+# Create a single slice
+# -----------------------------------------------------
+func _create_slice(t: float) -> void:
+	var q := MeshInstance3D.new()
+	var mesh := QuadMesh.new()
+	mesh.size = Vector2(1, 1)
+	q.mesh = mesh
 
-	if layout_mode == "Stack":
-		var offset = (t - 0.5) * 2.0 * field_radius
-		q.transform.origin = Vector3(0, 0, offset)
+	var mat := base_material.duplicate() as ShaderMaterial
+	q.material_override = mat
 
-	elif layout_mode == "Grid":
-		q.transform.origin = Vector3((i%2 - 0.5)*2, (i/2 - 0.5)*2, 0) * field_radius
+	add_child(q)
+	if Engine.is_editor_hint():
+		q.owner = get_tree().edited_scene_root
 
-	elif layout_mode == "Sphere":
-		q.transform.origin = Vector3(randf()*2-1, randf()*2-1, randf()*2-1).normalized() * field_radius
+	q.rotate_x(-PI/2)
+	q.rotation_degrees = Vector3(180, 0, 0)
 
-	elif layout_mode == "Cube":
-		q.transform.origin = Vector3(randf()*2-1, randf()*2-1, randf()*2-1) * field_radius
+	var z: float = (t - 0.5) * 2.0 * field_radius
+	q.transform.origin = Vector3(0, 0, z)
 
+	var overlap: float = 1.25
+	var edge: float = abs(t - 0.5) * 2.0
+	var s: float = max(1.0 - edge * shrink_amount, 0.001) * overlap
+	q.scale = Vector3(s, s, s)
 
-func _set_quad_params(i: int, mat: ShaderMaterial):
-	var t = float(i) / max(1, quad_count - 1)
-	var z = (t - 0.5) * 2.0
-
-	mat.set_shader_parameter("u_zrot", z * slice_scale)
-	mat.set_shader_parameter("u_krot", abs(z) * slice_scale)
-	#mat.set_shader_parameter("u_bonusStar", 0.3 * z)
-	#mat.set_shader_parameter("u_bonusM", 0.2 * z)
-
-
-func _face_camera():
-	if camera == null:
-		_resolve_camera()
-		if camera == null:
-			return
-
-	for q in get_children():
-		if not (q is MeshInstance3D):
-			continue
-		self.look_at(-camera.global_transform.origin, Vector3.UP)
+	mat.set_shader_parameter("u_slice_t", t)
+	mat.set_shader_parameter("u_field_radius", field_radius)

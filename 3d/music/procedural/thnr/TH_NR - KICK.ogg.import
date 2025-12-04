@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cvbpook32bgce"
+path="res://.godot/imported/TH_NR - KICK.ogg-3611a7ca3ed0feea88483e1e894dc1dc.oggvorbisstr"
+
+[deps]
+
+source_file="res://3d/music/procedural/thnr/TH_NR - KICK.ogg"
+dest_files=["res://.godot/imported/TH_NR - KICK.ogg-3611a7ca3ed0feea88483e1e894dc1dc.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

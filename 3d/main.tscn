@@ -1,46 +1,34 @@
-[gd_scene load_steps=129 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=125 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
-[ext_resource type="Script" path="res://3d/main3d.gd" id="1_h31h8"]
-[ext_resource type="Script" path="res://3d/camera_3d.gd" id="2_e55b0"]
-[ext_resource type="Shader" path="res://3d/glitch.gdshader" id="3_ktawk"]
-[ext_resource type="Shader" path="res://3d/levels/merc.gdshader" id="4_36mum"]
-[ext_resource type="PackedScene" uid="uid://4dt17fvq83sv" path="res://3d/models/whale/whale.tscn" id="4_h41uw"]
-[ext_resource type="Script" path="res://addons/raytraced_audio/raytraced_audio_listener.gd" id="4_v7286"]
+[ext_resource type="Script" uid="uid://btd68ay3n2lrg" path="res://3d/main3d.gd" id="1_h31h8"]
+[ext_resource type="Script" uid="uid://scmx6nxgvl62" path="res://3d/camera_3d.gd" id="2_e55b0"]
+[ext_resource type="Shader" uid="uid://jrqafnutuaex" path="res://3d/glitch.gdshader" id="3_ktawk"]
+[ext_resource type="Shader" uid="uid://8pjeammggl1t" path="res://3d/levels/merc.gdshader" id="4_36mum"]
+[ext_resource type="Script" uid="uid://bjpmu5sklv5h8" path="res://addons/raytraced_audio/raytraced_audio_listener.gd" id="4_v7286"]
 [ext_resource type="Texture2D" uid="uid://c6awahg47ubah" path="res://3d/sprites/por/slide.png" id="5_81jb4"]
-[ext_resource type="Script" path="res://3d/slope.gd" id="5_087wm"]
-[ext_resource type="Script" path="res://3d/p_console.gd" id="5_uhvg7"]
-[ext_resource type="Script" path="res://3d/settings.gd" id="7_4qtkp"]
-[ext_resource type="Shader" path="res://3d/freaky.gdshader" id="7_6cqs6"]
+[ext_resource type="Script" uid="uid://cv44kxiyjtgl0" path="res://3d/slope.gd" id="5_087wm"]
+[ext_resource type="Script" uid="uid://dpimfoycynwov" path="res://3d/p_console.gd" id="5_uhvg7"]
+[ext_resource type="Script" uid="uid://dmqencd36j1g8" path="res://3d/settings.gd" id="7_4qtkp"]
+[ext_resource type="Shader" uid="uid://ckwv2lo1vnbxh" path="res://3d/freaky.gdshader" id="7_6cqs6"]
 [ext_resource type="AudioStream" uid="uid://cyas5gyubatuc" path="res://3d/sounds/slide_fail.mp3" id="7_fuas2"]
 [ext_resource type="Texture2D" uid="uid://dk30ciya5qldy" path="res://3d/sprites/catexp/Untitled-3.png" id="7_jkdwh"]
-[ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="7_y4vo8"]
+[ext_resource type="Shader" uid="uid://bv5p83ewet33l" path="res://3d/datamoshing.gdshader" id="7_y4vo8"]
 [ext_resource type="Texture2D" uid="uid://gc66jmxju5g5" path="res://3d/sprites/por/star_sprite.png" id="8_54vq2"]
-[ext_resource type="Script" path="res://3d/sprites.gd" id="9_m56cn"]
-[ext_resource type="Script" path="res://3d/level_manager.gd" id="9_rlvy5"]
-[ext_resource type="Shader" path="res://3d/low_health.gdshader" id="9_vf5oh"]
+[ext_resource type="Script" uid="uid://tnb1cbtsjnik" path="res://3d/sprites.gd" id="9_m56cn"]
+[ext_resource type="Script" uid="uid://dxcngl7co3js4" path="res://3d/level_manager.gd" id="9_rlvy5"]
+[ext_resource type="Shader" uid="uid://fj2uc0wdyytq" path="res://3d/low_health.gdshader" id="9_vf5oh"]
 [ext_resource type="AudioStream" uid="uid://cfyc0gmsnnx4r" path="res://3d/sounds/hurt_test.mp3" id="13_drwl6"]
 [ext_resource type="Texture2D" uid="uid://cb8d6ayiynkjv" path="res://3d/sprites/attack_hands.png" id="13_j0ygm"]
 [ext_resource type="Texture2D" uid="uid://p7g5csfulnmq" path="res://3d/sprites/por/porsword.png" id="13_p61ww"]
 [ext_resource type="AudioStream" uid="uid://dp116jp7otldi" path="res://3d/sounds/Track3_VoiceAudio.wav" id="14_em0p2"]
 [ext_resource type="Texture2D" uid="uid://kej5iqewk8fj" path="res://3d/sprites/por/rovpor.png" id="14_tf4kn"]
-[ext_resource type="Script" path="res://3d/texture_rect.gd" id="17_ocwrj"]
+[ext_resource type="Script" uid="uid://exatvhmch4" path="res://3d/texture_rect.gd" id="17_ocwrj"]
 [ext_resource type="AudioStream" uid="uid://cx0nx5fojogdv" path="res://3d/sounds/lobotomy.mp3" id="19_gqa5e"]
 [ext_resource type="Texture2D" uid="uid://dim6f2dw8kyf" path="res://3d/sprites/por/slash.png" id="19_rucir"]
 [ext_resource type="Material" uid="uid://dg1dkawqqqtwb" path="res://3d/main.tres" id="19_vs7pb"]
-[ext_resource type="Script" path="res://3d/label.gd" id="20_iqmpm"]
+[ext_resource type="Script" uid="uid://b4042cbjuk71h" path="res://3d/label.gd" id="20_iqmpm"]
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="20_xlvs1"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_ddcy3"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("5_81jb4")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rmvd8"]
 size = Vector3(10, 1, 10)
@@ -60,6 +48,7 @@ shader_parameter/wave_speed = 2.0
 shader_parameter/wave_scale = 10.0
 shader_parameter/shimmer_speed = 1.5
 shader_parameter/shimmer_strength = 0.08
+shader_parameter/matcap = SubResource("ViewportTexture_26mjl")
 shader_parameter/flip_horizontal = false
 shader_parameter/uv_offset = Vector2(0, 0)
 shader_parameter/uv_scale = Vector2(1, 1)
@@ -70,64 +59,8 @@ shader_parameter/gradient_basis = Vector3(3, 3, 3)
 shader_parameter/min_energy_multiplier = 1.0
 shader_parameter/max_energy_multiplier = 5.0
 shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
-shader_parameter/matcap = SubResource("ViewportTexture_26mjl")
 
 [sub_resource type="SphereMesh" id="SphereMesh_entm2"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_oxn7q"]
-
-[sub_resource type="Sky" id="Sky_e7re3"]
-resource_local_to_scene = true
-sky_material = SubResource("ProceduralSkyMaterial_oxn7q")
-
-[sub_resource type="Environment" id="Environment_s05st"]
-background_mode = 2
-sky = SubResource("Sky_e7re3")
-ambient_light_color = Color(1, 1, 1, 1)
-ambient_light_energy = 5.48
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_mk1hg"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_15u6t"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sv75o"]
-resource_local_to_scene = true
-shader = ExtResource("7_6cqs6")
-shader_parameter/strength = 0.0
-shader_parameter/triggered = true
-shader_parameter/screen_texture = SubResource("ViewportTexture_15u6t")
-shader_parameter/motion_vectors = SubResource("ViewportTexture_mk1hg")
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_ih1cd"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_84lxs"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_k5hur"]
-resource_local_to_scene = true
-shader = ExtResource("7_y4vo8")
-shader_parameter/datamosh_strength = 0.0
-shader_parameter/strength = 0.0
-shader_parameter/block_size = 1.0
-shader_parameter/motion_vectors = SubResource("ViewportTexture_84lxs")
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_nijhe"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xtxmy"]
-resource_local_to_scene = true
-shader = ExtResource("9_vf5oh")
-shader_parameter/strength = 1.0
-shader_parameter/triggered = false
-shader_parameter/noise_intensity = 0.129
-shader_parameter/heartbeat_speed = 3.8
-shader_parameter/warp_intensity = 0.005
-shader_parameter/dissolve_intensity = 0.5
-shader_parameter/dissolve_threshold = 0.6
-shader_parameter/motion_vectors = SubResource("ViewportTexture_nijhe")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v7tut"]
 atlas = ExtResource("7_jkdwh")
@@ -615,10 +548,10 @@ tracks/0/path = NodePath("Idle:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
-"values": [0.261799, 0.352557, 0.205949, -0.0235204, -0.000594807, 0.0, 0.0, 0.0, 0.0]
+"values": [0.261799, 0.352557, 0.205949, -0.0235204, -0.000594807]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -627,10 +560,10 @@ tracks/1/path = NodePath("Idle:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
-"values": [Vector2(1100, 800), Vector2(950, 550), Vector2(861.683, 577.418), Vector2(861.758, 566.281), Vector2(861.765, 565.162), Vector2(861.765, 565.155), Vector2(861.765, 565.155), Vector2(861.765, 565.155), Vector2(861.765, 565.155)]
+"values": [Vector2(400, 350), Vector2(400, 281.935), Vector2(360.77, 200), Vector2(308, 189), Vector2(308, 189)]
 }
 
 [sub_resource type="Animation" id="Animation_bsq1f"]
@@ -674,22 +607,26 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_al43o"]
 _data = {
-"POR_hand_transition": SubResource("Animation_mmgan"),
-"POR_sword_transition": SubResource("Animation_a2npg"),
-"RESET": SubResource("Animation_bsq1f")
+&"POR_hand_transition": SubResource("Animation_mmgan"),
+&"POR_sword_transition": SubResource("Animation_a2npg"),
+&"RESET": SubResource("Animation_bsq1f")
 }
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4qxdx"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_4u02j"]
 atlas = ExtResource("19_rucir")
-region = Rect2(0, 0, 1923, 1077)
+region = Rect2(1923, 1077, 1923, 1077)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_le8s2"]
+atlas = ExtResource("19_rucir")
+region = Rect2(3846, 0, 1923, 1077)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8f61r"]
 atlas = ExtResource("19_rucir")
 region = Rect2(1923, 0, 1923, 1077)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_le8s2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_4qxdx"]
 atlas = ExtResource("19_rucir")
-region = Rect2(3846, 0, 1923, 1077)
+region = Rect2(0, 0, 1923, 1077)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ir3ky"]
 atlas = ExtResource("19_rucir")
@@ -699,35 +636,91 @@ region = Rect2(5769, 0, 1923, 1077)
 atlas = ExtResource("19_rucir")
 region = Rect2(0, 1077, 1923, 1077)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4u02j"]
-atlas = ExtResource("19_rucir")
-region = Rect2(1923, 1077, 1923, 1077)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_wr0ba"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_4qxdx")
+"texture": SubResource("AtlasTexture_4u02j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_le8s2")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_8f61r")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_le8s2")
+"texture": SubResource("AtlasTexture_4qxdx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4qxdx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ir3ky")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ir3ky")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6oclv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4u02j")
 }],
 "loop": false,
 "name": &"default",
 "speed": 24.0
 }]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ddcy3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_81jb4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_mk1hg"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_15u6t"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sv75o"]
+resource_local_to_scene = true
+shader = ExtResource("7_6cqs6")
+shader_parameter/screen_texture = SubResource("ViewportTexture_15u6t")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_mk1hg")
+shader_parameter/strength = 0.0
+shader_parameter/triggered = true
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ih1cd"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_84lxs"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k5hur"]
+resource_local_to_scene = true
+shader = ExtResource("7_y4vo8")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_84lxs")
+shader_parameter/datamosh_strength = 0.0
+shader_parameter/strength = 0.0
+shader_parameter/block_size = 1.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_nijhe"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xtxmy"]
+resource_local_to_scene = true
+shader = ExtResource("9_vf5oh")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_nijhe")
+shader_parameter/strength = 1.0
+shader_parameter/triggered = false
+shader_parameter/noise_intensity = 0.129
+shader_parameter/heartbeat_speed = 3.8
+shader_parameter/warp_intensity = 0.005
+shader_parameter/dissolve_intensity = 0.5
+shader_parameter/dissolve_threshold = 0.6
 
 [sub_resource type="Theme" id="Theme_jpke2"]
 resource_local_to_scene = true
@@ -779,7 +772,28 @@ render_target_update_mode = 4
 [node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.76837e-07, 5.91055, 1.78135)
 
-[node name="CharacterBody3D" parent="SubViewportContainer/SubViewport/Node3D" instance=ExtResource("1_arn5h")]
+[node name="floor" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
+shape = SubResource("BoxShape3D_rmvd8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
+mesh = SubResource("BoxMesh_xu3bg")
+
+[node name="PlayerSpawn" type="Marker3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D"]
+transform = Transform3D(1.9, 0, 0, 0, 1.9, 0, 0, 0, 1.9, 0, 1.90665, 3.97217)
+visible = false
+material_override = SubResource("ShaderMaterial_cfp0m")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_entm2")
+skeleton = NodePath("../LevelHolder")
+
+[node name="CharacterBody3D" parent="SubViewportContainer/SubViewport/Node3D" groups=["player"] instance=ExtResource("1_arn5h")]
 process_mode = 1
 
 [node name="Marker3D" type="Marker3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D"]
@@ -804,6 +818,68 @@ script = ExtResource("4_v7286")
 max_raycast_dist = 1000.0
 max_bounces = 7
 
+[node name="Sprites" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
+process_priority = -1
+process_physics_priority = -1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2958846, -2.2290213, -0.792174)
+script = ExtResource("9_m56cn")
+
+[node name="cat" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
+visible = false
+position = Vector2(218.66666, 131)
+scale = Vector2(1.2597224, 0.6319759)
+sprite_frames = SubResource("SpriteFrames_6s88e")
+
+[node name="DashSprite" type="Sprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
+transform = Transform3D(1, 0, 0, 0, 0.742871, 0, 0, 0, 0, 600, 512, 0)
+visible = false
+texture = ExtResource("13_j0ygm")
+
+[node name="POR" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
+
+[node name="POR_Full" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR"]
+visible = false
+position = Vector2(200, 0)
+scale = Vector2(0.244, 0.244)
+sprite_frames = SubResource("SpriteFrames_vmomf")
+autoplay = "default"
+
+[node name="POR_Idle" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR"]
+top_level = true
+position = Vector2(200, 0.46)
+scale = Vector2(0.244, 0.244)
+sprite_frames = SubResource("SpriteFrames_mtpr1")
+autoplay = "default"
+
+[node name="POR_Sword" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
+
+[node name="Idle" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword"]
+top_level = true
+position = Vector2(861.765, 565.155)
+scale = Vector2(0.3262569, 0.31392917)
+sprite_frames = SubResource("SpriteFrames_4n16f")
+frame_progress = 0.282052
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword"]
+libraries = {
+&"": SubResource("AnimationLibrary_al43o")
+}
+movie_quit_on_finish = true
+
+[node name="Slash" type="AnimatedSprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword"]
+transform = Transform3D(0.13298967, 0.097444385, -0.10413134, 0, 0.14238164, 0.13323839, 0.14261396, -0.09086836, 0.09710404, 0.468, 2.198, -0.775)
+visible = false
+flip_h = true
+sprite_frames = SubResource("SpriteFrames_wr0ba")
+
+[node name="POR_Transition" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
+visible = false
+position = Vector2(199.04199, 132.5)
+scale = Vector2(0.5520834, 0.5520834)
+sprite_frames = SubResource("SpriteFrames_xdad6")
+frame = 21
+frame_progress = 1.0
+
 [node name="slope" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D"]
 visible = false
 script = ExtResource("5_087wm")
@@ -822,19 +898,7 @@ sprite_frames = SubResource("SpriteFrames_ddcy3")
 
 [node name="Fail" type="AudioStreamPlayer3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
 stream = ExtResource("7_fuas2")
-
-[node name="floor" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
-shape = SubResource("BoxShape3D_rmvd8")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
-mesh = SubResource("BoxMesh_xu3bg")
-
-[node name="PlayerSpawn" type="Marker3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
+volume_db = -5.517
 
 [node name="LevelHolder" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D"]
 process_mode = 1
@@ -849,20 +913,6 @@ offset_top = 4.0
 offset_right = 289.4
 offset_bottom = -33.22
 scale = Vector2(0.425, 0.425)
-
-[node name="Node3D" parent="SubViewportContainer/SubViewport/Node3D/LevelHolder" instance=ExtResource("4_h41uw")]
-transform = Transform3D(-2.33851, 0, 1.8792, 0, 3, 0, -1.8792, 0, -2.33851, 21.5226, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D"]
-transform = Transform3D(1.9, 0, 0, 0, 1.9, 0, 0, 0, 1.9, 0, 1.90665, 3.97217)
-visible = false
-material_override = SubResource("ShaderMaterial_cfp0m")
-cast_shadow = 0
-mesh = SubResource("SphereMesh_entm2")
-skeleton = NodePath("../LevelHolder")
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport/Node3D"]
-environment = SubResource("Environment_s05st")
 
 [node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
 visible = false
@@ -914,76 +964,6 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Control"]
-visible = false
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Sprites" type="Node2D" parent="."]
-script = ExtResource("9_m56cn")
-
-[node name="cat" type="AnimatedSprite2D" parent="Sprites"]
-visible = false
-position = Vector2(948, 448.5)
-scale = Vector2(3.96667, 2.12018)
-sprite_frames = SubResource("SpriteFrames_6s88e")
-
-[node name="DashSprite" type="Sprite2D" parent="Sprites"]
-visible = false
-position = Vector2(600, 512)
-scale = Vector2(1, 0.742871)
-texture = ExtResource("13_j0ygm")
-
-[node name="POR" type="Node2D" parent="Sprites"]
-
-[node name="POR_Full" type="AnimatedSprite2D" parent="Sprites/POR"]
-visible = false
-position = Vector2(600, 100)
-scale = Vector2(0.434, 0.434)
-sprite_frames = SubResource("SpriteFrames_vmomf")
-
-[node name="POR_Idle" type="AnimatedSprite2D" parent="Sprites/POR"]
-top_level = true
-position = Vector2(600, 100)
-scale = Vector2(0.434, 0.434)
-sprite_frames = SubResource("SpriteFrames_mtpr1")
-
-[node name="POR_Sword" type="Node2D" parent="Sprites"]
-
-[node name="Idle" type="AnimatedSprite2D" parent="Sprites/POR_Sword"]
-visible = false
-position = Vector2(861.765, 565.155)
-scale = Vector2(0.915, 0.915)
-sprite_frames = SubResource("SpriteFrames_4n16f")
-frame_progress = 0.282052
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprites/POR_Sword"]
-libraries = {
-"": SubResource("AnimationLibrary_al43o")
-}
-movie_quit_on_finish = true
-
-[node name="Slash" type="AnimatedSprite2D" parent="Sprites/POR_Sword"]
-visible = false
-position = Vector2(623, 386)
-scale = Vector2(0.756732, 0.756732)
-sprite_frames = SubResource("SpriteFrames_wr0ba")
-
-[node name="POR_Transition" type="AnimatedSprite2D" parent="Sprites"]
-visible = false
-position = Vector2(601.042, 400.5)
-scale = Vector2(1.66875, 1.66875)
-sprite_frames = SubResource("SpriteFrames_xdad6")
-frame = 21
-frame_progress = 1.0
 
 [node name="PauseMenu" type="Panel" parent="."]
 process_mode = 3
@@ -1038,8 +1018,8 @@ offset_top = -11.242
 offset_right = 688.936
 offset_bottom = 31.758
 theme = SubResource("Theme_xda12")
-theme_override_colors/background_color = Color(0, 0, 0, 1)
 theme_override_colors/selection_color = Color(2.5028e-06, 0, 0.695364, 1)
+theme_override_colors/background_color = Color(0, 0, 0, 1)
 theme_override_constants/caret_width = 6
 theme_override_fonts/font = SubResource("FontVariation_futfl")
 caret_blink = true
@@ -1070,9 +1050,11 @@ editable = false
 
 [node name="Hurt0" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_drwl6")
+volume_db = -11.954
 
 [node name="Hurt1" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("19_gqa5e")
+volume_db = -15.54
 
 [node name="Hurt2" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("14_em0p2")
@@ -1165,6 +1147,6 @@ offset_right = 1193.0
 offset_bottom = 796.0
 text = "SPEED"
 
-[connection signal="animation_finished" from="Sprites/POR_Sword/AnimationPlayer" to="Sprites" method="_on_animation_player_animation_finished"]
-[connection signal="animation_finished" from="Sprites/POR_Sword/Slash" to="Sprites" method="_on_slash_animation_finished"]
-[connection signal="animation_finished" from="Sprites/POR_Transition" to="Sprites" method="_on_por_transition_animation_finished"]
+[connection signal="animation_finished" from="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword/AnimationPlayer" to="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites" method="_on_animation_player_animation_finished"]
+[connection signal="animation_finished" from="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword/Slash" to="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites" method="_on_slash_animation_finished"]
+[connection signal="animation_finished" from="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Transition" to="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites" method="_on_por_transition_animation_finished"]

@@ -1,5 +1,6 @@
 shader_type spatial;
-render_mode unshaded, blend_mix, depth_draw_always;
+render_mode unshaded, blend_mix, depth_draw_always, cull_disabled;
+
 
 // per-instance + global control
 uniform int u_instance_count : hint_range(1,4096) = 128;
@@ -17,7 +18,7 @@ uniform float u_time = 0.0;
 uniform float u_zoom : hint_range(0.000001, 1e6) = 1.0;
 uniform int u_iter : hint_range(1, 4096) = 512;
 uniform vec2 u_offset = vec2(0.0, 0.0);
-
+varying float v_krot;
 // base fractal params
 uniform float u_rot = 0.0;
 uniform float u_zrot = 1.3;
@@ -29,7 +30,7 @@ uniform float u_blend = 0.05;
 uniform bool u_smooth = true;
 uniform bool u_parallax = false;
 uniform bool u_invert = false;
-uniform float u_parallax_softness : hint_range(0.0,1.0) = 0.25;
+uniform float u_parallax_softness : hint_range(0.0,10.0) = 0.25;
 uniform bool u_parallax_glow = true;
 
 uniform int u_mode = 0;
@@ -82,6 +83,7 @@ vec2 c_div(vec2 a, vec2 b){
 }
 vec3 paletteL(float t,float h){ return 0.5 + 0.5*cos(6.28318*(vec3(h,h+0.33,h+0.67)+t)); }
 
+
 // per-instance normalized index
 varying float v_inst_norm;
 void vertex(){
@@ -89,6 +91,8 @@ void vertex(){
 }
 
 void fragment(){
+    float inst_krot = v_krot;
+    float local_krot = u_krot + inst_krot * u_slice_scale;
     // normalized slice index t in [0,1]
     float t = v_inst_norm;
     // map to -1..1 then angle
@@ -114,7 +118,7 @@ void fragment(){
     float param_value = mix(u_slice_param_min, u_slice_param_max, mapped);
 
     // start with base values
-    float local_krot = u_krot + slice_k * u_slice_scale;
+    //float local_krot = u_krot + inst_krot;
     float local_zrot = u_zrot + slice_z * u_slice_scale;
     float local_bonusStar = u_bonusStar;
     float local_bonusM = u_bonusM;
@@ -224,7 +228,11 @@ void fragment(){
     float edge = smoothstep(0.0, 0.2, UV.x) * smoothstep(0.0, 0.2, 1.0 - UV.x)
                * smoothstep(0.0, 0.2, UV.y) * smoothstep(0.0, 0.2, 1.0 - UV.y);
     alpha *= edge;
-
+	if (alpha < 0.2) {
+	    discard;
+	}
+	//float hashed = fract(sin(dot(UV, vec2(12.9898,78.233))) * 43758.5453123);
+	//if (hashed > alpha) discard;
     ALBEDO = pow(finalCol, vec3(1.2));
     ALPHA  = alpha;
 }

@@ -48,6 +48,10 @@ var file_system: Dictionary = {
 				"image.png": {
 					"filecontent": "res://pc/programs/explorer/image.png",
 					"editable": false
+				},
+				"EVIL.png": {
+					"filecontent": "res://pc/programs/explorer/red_evil_chair.jpg",
+					"editable": false
 				}
 			}
 		},

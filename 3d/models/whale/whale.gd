@@ -117,9 +117,8 @@ func _play_random_sound() -> void:
 func _set_next_interval() -> void:
 	next_interval = base_interval + rng.randf_range(extra_pause_min, extra_pause_max)
 
-# -------------------
+
 # Rest/move/stop cycle
-# -------------------
 func _update_mode(delta: float) -> void:
 	rest_timer -= delta
 	if rest_timer <= 0.0:

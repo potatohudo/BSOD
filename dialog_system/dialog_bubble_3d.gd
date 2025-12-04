@@ -1,4 +1,3 @@
-@tool
 extends Node3D
 class_name DialogBubble3D
 

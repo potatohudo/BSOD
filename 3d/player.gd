@@ -58,6 +58,19 @@ var slash_chain_timer: float = 0.0
 var combo_stage: int = 0
 var combo_buffered: bool = false
 
+# Slash / stored-dash state
+var attack_hold_time: float = 0.0
+const ATTACK_HOLD_THRESHOLD: float = 1.0  # how long you must hold to consider "stored"
+const LONG_DASH_DURATION: float = 0.5
+const LONG_DASH_SPEED_MULT: float = 1.6  # how much stronger the stored dash speed is
+const LONG_DASH_DAMAGE_MULT: float = 2.0  # stored dash deals more damage
+
+var slash_buffered: bool = false        # player is holding attack (buffered)
+var in_long_dash: bool = false
+var long_dash_time_left: float = 0.0
+var long_dash_direction: Vector3 = Vector3.ZERO
+var long_dash_speed: float = 0.0
+
 
 var crouch_parent: Node3D = null
 var crouch_offset: Vector3 = Vector3.ZERO
@@ -66,7 +79,7 @@ var crouch_offset: Vector3 = Vector3.ZERO
 @onready var camera: Camera3D = $Marker3D/Camera3D  
 @onready var main_node = get_node("/root/Main")  
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D 
-@onready var dash_sprite = get_node("/root/Main/Sprites/DashSprite") 
+@onready var dash_sprite = $Marker3D/Camera3D/Sprites/DashSprite
 @onready var health_bar: Slider = get_node("/root/Main/health")  
 @onready var freaky = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky") 
 @onready var freaky2 = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky/Freaky2")
@@ -75,18 +88,20 @@ var crouch_offset: Vector3 = Vector3.ZERO
 @onready var hurt_sound_0: AudioStreamPlayer = get_node("/root/Main/Hurt0")
 @onready var hurt_sound_1: AudioStreamPlayer = get_node("/root/Main/Hurt1")
 @onready var hurt_sound_2: AudioStreamPlayer = get_node("/root/Main/Hurt2")
-@onready var por = get_node("/root/Main/Sprites/POR")
+@onready var por = $Marker3D/Camera3D/Sprites/POR
 #@onready var sword = get_node("/root/Main/Sprites/POR_Transition")
 #@onready var sword1 = get_node("/root/Main/Sprites/POR_Sword/Idle")
 @onready var flashlight = $Marker3D/Camera3D/SpotLight3D
 @onready var slope_node: Node3D = $slope
 
 
+
 var is_game_over = false  
 var crouching = false
 var camera_locked = false 
+var invincible = false
 
-@onready var sprite_handler = get_node("/root/Main/Sprites") 
+@onready var sprite_handler = $Marker3D/Camera3D/Sprites
 
 func _ready() -> void:
 	sprite_handler.mode_toggled.connect(_on_mode_toggled)
@@ -122,10 +137,11 @@ func update_camera():
 	#it does not work any other way :(
 
 func update_dash_sprite():
-	if is_grabbing == true:
-		dash_sprite.visible = true
-	else:
-		dash_sprite.visible = false
+	#if is_grabbing == true:
+		#dash_sprite.visible = true
+	#else:
+		#dash_sprite.visible = false
+	pass
 
 func _physics_process(delta: float) -> void:
 	if is_game_over:
@@ -138,12 +154,11 @@ func _physics_process(delta: float) -> void:
 			var target_pos = grabbed_body.to_global(grab_offset)
 			
 			if grab_timer > 0.0:
-				# fully locked: stick in place
 				global_transform.origin = target_pos
 				velocity = Vector3.ZERO
 				momentum = Vector3.ZERO
 				grab_timer -= delta
-				# allow jump while locked
+
 				if Input.is_action_just_pressed("jump"):
 					_perform_grab_jump()
 				return
@@ -161,6 +176,19 @@ func _physics_process(delta: float) -> void:
 				return
 	var up := _up()
 	up_direction = up
+	
+	if in_long_dash:
+		long_dash_time_left -= delta
+		if long_dash_time_left <= 0.0:
+			in_long_dash = false
+		else:
+			# Player can steer with movement input
+			var steer := get_movement_direction()
+			if steer.length() > 0.1:
+				long_dash_direction = long_dash_direction.lerp(steer, delta * 6.0).normalized()
+
+			velocity = long_dash_direction * long_dash_speed
+
 
 	_update_momentum(delta)
 	var direction := Vector3.ZERO
@@ -259,22 +287,36 @@ func _idle_on_floor_reset(delta: float, is_sprinting: bool, direction: Vector3) 
 			speed = BASE_SPEED
 			movement_points = 0
 
+var slash_airdash_used := false
+
+
+var attack_was_pressed: bool = false
 
 func _handle_attack_and_jump(up: Vector3) -> void:
-	var attack_pressed := Input.is_action_just_pressed("attack")
 	var dash_pressed := Input.is_action_just_pressed("sprint")
-	if attack_pressed and dash_pressed and current_mode == PlayerMode.FIGHTING and can_dash:
-		perform_superdash()
-		return
+# Track attack hold
+	if Input.is_action_just_pressed("attack"):
+		attack_was_pressed = true
+		slash_buffered = false
+		attack_hold_time = 0.0
 
-	if attack_pressed:
-		if current_mode == PlayerMode.FIGHTING:
-			if can_slash:
-				perform_slash()
-			elif slash_chain_timer > 0.0:
-				combo_buffered = true
-		else:
-			perform_grab()
+	# Holding
+	if attack_was_pressed and Input.is_action_pressed("attack"):
+		attack_hold_time += get_physics_process_delta_time()
+		slash_buffered = true
+		#return
+
+	# On release → fire slash
+	if attack_was_pressed and Input.is_action_just_released("attack"):
+		attack_was_pressed = false
+
+		if current_mode == PlayerMode.FIGHTING and can_slash:
+			var is_long := attack_hold_time >= ATTACK_HOLD_THRESHOLD
+			perform_slash(is_long)
+			slash_buffered = false
+		return
+	if Input.is_action_just_pressed("grab"):
+		perform_grab()
 
 	if Input.is_action_just_pressed("jump"):
 		if is_sliding and is_on_floor():
@@ -316,8 +358,8 @@ func perform_superdash() -> void:
 		# var normal := result.normal
 		var dmg = BASE_DAMAGE * 2.5 + speed * 0.8
 		print("Superdash hit for ", dmg, " dmg!")
-		# if collider.is_in_group("enemy"):
-		#	collider.apply_damage(dmg)
+		if collider.is_in_group("enemy"):
+			collider.apply_damage(dmg)
 
 	get_tree().create_timer(0.25).timeout.connect(func(): dash_efx = false)
 
@@ -330,59 +372,75 @@ var combo_count: int = 0
 var combo_reset_timer: float = 0.0
 const COMBO_RESET_TIME: float = 5.0
 
+signal hit(target, damage)
 
-func perform_slash() -> void:
+func perform_slash(is_long: bool) -> void:
+	if not can_slash:
+		return
+
 	can_slash = false
-	combo_buffered = false
-	slash_chain_timer = COMBO_WINDOW
-
 	sprite_handler.slash_play()
 
-	var space_state = get_world_3d().direct_space_state
-	var origin: Vector3 = camera.global_transform.origin
-	var dir: Vector3 = -camera.global_transform.basis.z.normalized()
-	var slash_range: float = 10.0
+	var dash_force := DASH_FORCE * (LONG_DASH_SPEED_MULT if is_long else 0.8)
 
-	var query := PhysicsRayQueryParameters3D.create(origin, origin + dir * slash_range)
+	# --- Direction ---
+	# Camera forward for long dash. No axis-locking.
+	var cam_forward := -camera.global_transform.basis.z
+	cam_forward.y = clamp(cam_forward.y, -1.0, 0.3) # prevent upward yeet
+	cam_forward = cam_forward.normalized()
+
+	var slash_dir := cam_forward
+
+	if is_on_floor():
+		dash_force *= 1.5
+
+	if is_long:
+		# LONG SLASH — uses pure camera direction
+		invincible = true
+		
+		if not is_on_floor():
+			movement_points += 1
+
+		momentum = cam_forward * dash_force
+		velocity += momentum
+		speed = max(speed, speed + dash_force * 0.5)
+
+		get_tree().create_timer(0.5).timeout.connect(func():
+			invincible = false
+		)
+	else:
+		# SHORT SLASH — keeps your existing momentum behavior
+		velocity += momentum
+		speed = max(speed, speed + dash_force * 0.3)
+
+	# --- Damage Raycast ---
+	var origin := camera.global_transform.origin
+	var query := PhysicsRayQueryParameters3D.create(origin, origin + slash_dir * 10.0)
 	query.exclude = [self]
-	query.collide_with_areas = false
 	query.collide_with_bodies = true
 
-	var result := space_state.intersect_ray(query)
+	var result := get_world_3d().direct_space_state.intersect_ray(query)
 	if result:
-		var collider = result.collider
-		var normal: Vector3 = result.normal.normalized()
+		var hit_node := result.collider as Node
+		while hit_node and not hit_node.is_in_group("enemy"):
+			hit_node = hit_node.get_parent()
 
-		if collider.is_in_group("hittable"):
-			var damage = BASE_DAMAGE + speed * 0.6
-			if collider.has_method("apply_damage"):
-				collider.apply_damage(damage)
-			print("Hit for ", damage, " dmg!")
+		if hit_node:
+			var dmg := BASE_DAMAGE
+			if is_long:
+				dmg *= LONG_DASH_DAMAGE_MULT
+			dmg += speed * 0.6
 
-			combo_count += 1
-			combo_reset_timer = COMBO_RESET_TIME
+			if hit_node.has_method("apply_damage"):
+				hit_node.apply_damage(dmg)
 
-		var bounce_dir: Vector3 = (normal + Vector3.UP * 0.3).normalized()
-		var bounce_force: float
+			emit_signal("hit", hit_node, dmg)
+			print(is_long, hit_node, dmg)
 
-		if normal.dot(Vector3.UP) > 0.7:
-			velocity.y = 0.0 
-			bounce_force = 6.0
-			speed *= 1.25
-		else:
-			bounce_force = 12.0
-
-		apply_knockback(bounce_dir * bounce_force)
-		
-
+	# --- Cooldown ---
 	await get_tree().create_timer(SLASH_COOLDOWN).timeout
 	can_slash = true
-
-
-	if combo_buffered and slash_chain_timer > 0.0:
-		combo_buffered = false
-		perform_slash()
-
+	in_long_dash = false
 
 
 var is_grabbing = false
@@ -398,7 +456,7 @@ func perform_grab():
 	var space_state = get_world_3d().direct_space_state
 	var origin = camera.global_transform.origin
 	var dir = -camera.global_transform.basis.z.normalized()
-	var target = origin + dir * 3.0  # grab range
+	var target = origin + dir * 3.0 
 	
 	var query = PhysicsRayQueryParameters3D.create(origin, target)
 	query.exclude = [self]
@@ -458,7 +516,7 @@ func _start_slide_from_player() -> void:
 	if slope_node and slope_node.has_method("start_slide"):
 		slope_node.start_slide(initial_dir, slide_speed)
 	slope_node.visible = true
-	$"../../../../Sprites/POR_Sword".visible = false
+	$Marker3D/Camera3D/Sprites/POR_Sword.visible = false
 
 func _handle_crouch_or_slide(delta: float) -> void:
 	var crouch_pressed := Input.is_action_pressed("crouch")
@@ -504,7 +562,7 @@ func _handle_crouch_or_slide(delta: float) -> void:
 				slope_node.reset_slide_velocity()
 			if slope_node:
 				slope_node.visible = false
-				$"../../../../Sprites/POR_Sword".visible = true
+				$Marker3D/Camera3D/Sprites/POR_Sword.visible = true
 		crouching = false
 		_reset_collision_size()
 
@@ -539,38 +597,73 @@ func perform_wall_run():
 	print("perform_wall_run() called (peaceful)")
 
 
+var dash_added_velocity := Vector3.ZERO
+var dash_active := false
+var dash_added_speed := 0.0
+
 func perform_dash() -> void:
 	if not can_dash:
 		return
-
+		
 	can_dash = false
+	dash_active = true
+	invincible = true
+
+	# add fixed speed boost
+	dash_added_speed = 20.0
+	speed += dash_added_speed
+
+	# dash vfx
 	dash_efx = true
+	
+	# dash ends after 0.2 sec
+	await get_tree().create_timer(0.2).timeout
+	
+	# remove exactly the speed we added, no matter what happened meanwhile
+	speed -= dash_added_speed
+	dash_added_speed = 0.0
+	dash_active = false
+	dash_efx = false
+	invincible = false
+	
+	# cooldown
+	await get_tree().create_timer(DASH_COOLDOWN).timeout
+	can_dash = true
 
-	if not is_on_floor():
-		movement_points += 1
-
-	var up := _up()
-	var dash_direction := get_movement_direction()
-	if dash_direction.length() == 0.0:
-		var cam_fwd := -camera.global_transform.basis.z
-		dash_direction = _project_on_plane(cam_fwd, up).normalized()
-	else:
-		dash_direction = _project_on_plane(dash_direction, up).normalized()
-
-	var dash_force := DASH_FORCE
-	if not is_on_floor():
-		dash_force *= 2.0
-
-	momentum = dash_direction * dash_force
-	velocity += momentum
-	speed = max(speed, speed + dash_force * 0.5)
-
-	get_tree().create_timer(0.2).timeout.connect(func(): dash_efx = false)
-
-	# Cooldown for next dash
+	# ------- COOLDOWN -------
 	await get_tree().create_timer(DASH_COOLDOWN).timeout
 	if is_instance_valid(self):
 		can_dash = true
+
+
+
+
+# -------- Smooth Dash Loss for Long Dash --------
+func _start_smooth_dash_loss():
+	var loss_time := 0.001   # duration of smooth fade-out
+	var t := 0.0
+	var original := dash_added_velocity
+
+	while t < loss_time:
+		var alpha := t / loss_time
+		# Lerp out the velocity smoothly
+		var current := original.lerp(Vector3.ZERO, alpha)
+		velocity -= (dash_added_velocity - current)
+		dash_added_velocity = current
+
+		t += get_physics_process_delta_time()
+		await get_tree().process_frame
+
+	# Ensure no leftovers
+	velocity -= dash_added_velocity
+	dash_added_velocity = Vector3.ZERO
+
+
+	# Dash cooldown
+	await get_tree().create_timer(DASH_COOLDOWN).timeout
+	if is_instance_valid(self):
+		can_dash = true
+
 
 
 
@@ -620,7 +713,7 @@ func handle_wall_collision(direction: Vector3, wall_normal: Vector3):
 		if speed >= SLIDE_WALL_BOUNCE_SPEED:
 			# Play sound / effect
 			$slope/Fail.play()
-			$"../../../../Sprites/POR_Sword".visible = true
+			$Marker3D/Camera3D/Sprites/POR_Sword.visible = true
 
 			# Calculate upward + backward knockback (~45°)
 			var knockback_dir := (wall_normal + Vector3.UP).normalized()
@@ -659,14 +752,13 @@ func handle_wall_collision(direction: Vector3, wall_normal: Vector3):
 	await get_tree().create_timer(0.3).timeout
 	momentum = momentum.lerp(Vector3.ZERO, WALL_IMPACT_DECAY)
 
-
-
-
 func exit_slide():
 	is_sliding = false
-	#movement_points = 0
-	#momentum = Vector3.ZERO 
-	$"../../../../Sprites/POR_Sword".visible = true
+	$Marker3D/Camera3D/Sprites/POR_Sword.visible = true
+	var planar_velocity := velocity - _up() * velocity.dot(_up())
+	if planar_velocity.length() > 0.01:
+		speed = planar_velocity.length()
+
 
 func exit_slide_with_jump():
 	is_sliding = false
@@ -700,6 +792,8 @@ func _reset_collision_size():
 	collision_shape.position.y = 0.8
 
 func apply_damage(amount: int):
+	if invincible == true:
+		return
 	if amount >= 15 and amount <= 29:
 		hurt_sound_0.play()
 	elif amount >= 30:

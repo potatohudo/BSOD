@@ -1,5 +1,5 @@
 extends Node3D
-# Slope controller: self-driven velocity + dynamic drift physics.
+
 
 @export var slope_accel: float = 25.0
 @export var max_speed: float = 100.0

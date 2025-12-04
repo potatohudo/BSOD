@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dklkd4cp3ahr4"]
+
+[ext_resource type="Script" uid="uid://3c7p4a8n6p3x" path="res://3d/music/procedural/MusicSample.gd" id="1_dmfia"]
+
+[node name="Sample" type="AudioStreamPlayer"]
+script = ExtResource("1_dmfia")

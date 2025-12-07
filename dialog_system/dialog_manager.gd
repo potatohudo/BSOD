@@ -1,47 +1,38 @@
 extends Node
-# DialogManager.gd
-# Single manager (make it an autoload or place it under a central scene).
-# Responsibilities:
-# - Start conversations given a starting DialogBubble node
-# - Wait for DialogBubble to finish
-# - Decide next DialogBubble node based on per-node exports:
-#     next_yes, next_no, next_none (queue/random), walk_away, wait_time
-# - Ignore empty NodePaths
-# - Track meeting counts per NPC (keyed by parent path)
-# - Provide API to receive player choices (yes/no/walk_away/none)
-# - Minimal automatic meeting selection convention (see comments)
 
-@export var meetings: Array[NodePath] = []# meeting[0], meeting[1], meeting[2]...
-@export var walkaways: Array[NodePath] = []# walkaways[0], walkaways[1], ...
+@export var meetings: Array[NodePath] = []
+@export_multiline var walkaways: Array[String] = []# manager fallback walkaway texts (array of strings)
 @export var walkaway_limit: int = 3
 
 @export var character_nodes: Array[NodePath] = []# characters connected to this NPC
+
+# Internal
 var _current_bubble: Node = null
 var _force_next: Node = null
 
-var _return_timer = null
+var _pending_choice: String = "none"
+var _meeting_counts := {}
+var _pending_restart_bubble: Node = null
 var _paused_bubble: Node = null
-var _pause_time := 0.0
 
+var _manager_walkaway_counts := {} 
+
+var _local_walkaway_counts := {}
+
+
+var _walkaway_queue := []
+var _playing_walkaway := false
 
 signal conversation_finished(npc_root: Node)
 signal dialog_finished
 
-# pending choice provided by the player (or external system).
-# Expected values: "yes", "no", "none", "walk_away"
-var _pending_choice: String = "none"
-
-# meeting counts: keyed by NPC parent path (String), value = int
-var _meeting_counts := {}
-var _pending_restart_bubble: Node = null
-
-# internal guard
 var _running := false
 
-# Public API:
-# Call this to start a dialog flow given a DialogBubble node (start_node).
-# start_node should be the DialogBubble node to present first.
-# This method returns after the whole chain (until no next node) finishes.
+var _paused_bubble_name: String = ""
+var _pending_restart_name: String = ""
+
+
+# Public API
 func start_dialog(start_node: Node) -> void:
 	if _running:
 		push_warning("DialogManager already running a conversation.")
@@ -54,10 +45,7 @@ func start_dialog(start_node: Node) -> void:
 	await _run_dialog_flow(start_node)
 	_running = false
 	emit_signal("conversation_finished", start_node.get_parent() if start_node.has_node("..") else start_node)
-	
 
-# External systems (player nod/shake) call this method to supply a choice.
-# e.g. DialogManager.provide_choice("yes")
 func provide_choice(choice: String) -> void:
 	choice = choice.to_lower()
 	if choice in ["yes", "no", "none", "walk_away"]:
@@ -65,9 +53,6 @@ func provide_choice(choice: String) -> void:
 	else:
 		push_warning("DialogManager.provide_choice(): invalid choice '%s'" % choice)
 
-# Utility: Start conversation by NPC root node.
-# Convention-based: tries to find meeting nodes under npc_root by names "meeting_0", "meeting_1", etc.
-# If none found, it will try to find first child with DialogBubble script attached.
 func start_conversation(npc_root: Node) -> void:
 	if npc_root == null:
 		push_warning("start_conversation: npc_root is null")
@@ -92,22 +77,11 @@ func start_conversation(npc_root: Node) -> void:
 	_meeting_counts[key] = count + 1
 	start_dialog(candidate)
 
-# ----------------------------
 # Internal flow
-# ----------------------------
-func _start_dialog_flow(start_node: Node) -> void:
-	await _run_dialog_flow(start_node)
-	_running = false
-
-	var parent_npc := get_parent()
-	var key := str(parent_npc.get_path())
-	_meeting_counts[key] += 1
-
-
 
 func _run_dialog_flow(start_node: Node) -> void:
+	
 	var current: Node = start_node
-		# If a forced next bubble was requested externally (e.g. player returned), honor it immediately
 	if _force_next != null:
 		current = _force_next
 		_force_next = null
@@ -119,28 +93,41 @@ func _run_dialog_flow(start_node: Node) -> void:
 			push_warning("DialogManager: Node %s has no show_dialog()" % current.name)
 			break
 
-		# give manager character_nodes to the bubble if it exposes setter
 		if current.has_method("set_character_nodes"):
 			current.set_character_nodes(character_nodes)
 
-		# make this bubble the current one (used for interrupts)
 		_current_bubble = current
 		_hide_all_bubbles_except(current)
+		print("FLOW: current =", current.name, " paused =", _paused_bubble, " pending_restart =", _pending_restart_bubble)
 
-		# If this bubble was the paused one we intend to restart, play its return_text first.
-		if current == _paused_bubble:
+		if current.name == _paused_bubble_name:
+
+			
 			if current.has_method("play_return_text"):
 				await current.play_return_text()
-			# clear pause marker (we will fully restart it now)
 			_paused_bubble = null
-
-		# Show dialog and wait. If interrupted, finish_now() will return early.
-		# For a restarted bubble this will start it from the beginning.
-		await current.show_dialog()
+			_pending_restart_bubble = null
+	
 
 
-		# clear current
+		var res = await current.show_dialog()
+
 		_current_bubble = null
+
+		if res == "paused":
+			_paused_bubble = current
+			_pending_restart_bubble = current
+
+			while _force_next == null and _running:
+				# yield a frame to avoid busy loop
+				await get_tree().process_frame
+			# honor forced next if set
+			if _force_next != null:
+				current = _force_next
+				_force_next = null
+				continue
+			# otherwise, break
+			break
 
 		# If an interrupt requested a forced next bubble, honor it immediately
 		if _force_next != null:
@@ -148,12 +135,7 @@ func _run_dialog_flow(start_node: Node) -> void:
 			_force_next = null
 			continue
 
-		var wt := 0.0
-		if "wait_time" in current:
-			wt = float(current.wait_time)
-		if wt > 0.0:
-			await get_tree().create_timer(wt).timeout
-
+		# normal flow: optional wait_time already handled per-bubble earlier
 		var choice := _pending_choice
 		_pending_choice = "none"
 
@@ -173,6 +155,9 @@ func _run_dialog_flow(start_node: Node) -> void:
 		else:
 			current = null
 
+	# finished chain
+	_running = false
+	
 
 func _hide_all_bubbles_except(b: Node) -> void:
 	for c in get_children():
@@ -218,7 +203,6 @@ func _decide_next_node(current: Node, choice: String):
 
 	return null
 
-
 # Resolve NodePath relative to a source node, tries current node first then absolute
 func _resolve_path_from(source: Node, path) -> Node:
 	# Accept NodePath, String or Node
@@ -257,9 +241,7 @@ func _resolve_path_from(source: Node, path) -> Node:
 
 	return null
 
-
-var _walkaway_count := 0
-
+# Meeting helpers (unchanged)
 func _get_meeting_index() -> int:
 	var key := str(get_parent().get_path())
 	if not _meeting_counts.has(key):
@@ -283,25 +265,95 @@ func _get_meeting_dialog(index: int) -> Node:
 	push_warning("DialogManager: meeting[%d] could not be resolved (type=%s, value=%s)." % [index, str(typ), str(entry)])
 	return null
 
+# Walkaway queue & playback
 
+func _enqueue_walkaway(texts: Array, template: Node, npc_key: String, use_manager_count: bool, bubble_key: String) -> void:
+	if texts == null or texts.size() == 0:
+		return
+	_walkaway_queue.append({
+		"texts": texts.duplicate(true),
+		"template": template,
+		"npc_key": npc_key,
+		"use_manager_count": use_manager_count,
+		"bubble_key": bubble_key
+	})
+	# start processing if not already
+	if not _playing_walkaway:
+		call_deferred("_process_walkaway_queue")
 
-func _get_walkaway_dialog() -> Node:
-	for p in walkaways:
-		if p != NodePath(""):
-			var n := get_parent().get_node_or_null(p)
-			if n: return n
-	return null
+# Internal: process the queue (plays sequentially)
+func _process_walkaway_queue() -> void:
+	if _playing_walkaway:
+		return
+	_playing_walkaway = true
+	while _walkaway_queue.size() > 0:
+		var entry = _walkaway_queue.pop_front()
+		var texts: Array = entry.texts
+		var template: Node = entry.template
+		var npc_key: String = entry.npc_key
+		var use_manager_count: bool = entry.use_manager_count
+		var bubble_key: String = entry.bubble_key
 
-func _interrupt_and_switch_to(bubble: Node) -> void:
-	# Immediately finish current dialog so manager continues and uses _force_next
-	_force_next = bubble
-	if _current_bubble and _current_bubble.has_method("finish_now"):
-		_current_bubble.finish_now()
+		# Decide which index to play (queue behavior)
+		var idx := 0
+		if use_manager_count:
+			if not _manager_walkaway_counts.has(npc_key):
+				_manager_walkaway_counts[npc_key] = 0
+			idx = _manager_walkaway_counts[npc_key]
+		else:
+			if not _local_walkaway_counts.has(bubble_key):
+				_local_walkaway_counts[bubble_key] = 0
+			idx = _local_walkaway_counts[bubble_key]
 
-func _interrupt_and_stop() -> void:
-	_force_next = null
-	if _current_bubble and _current_bubble.has_method("finish_now"):
-		_current_bubble.finish_now()
+		# clip to available texts
+		var chosen_text := ""
+		if idx >= 0 and idx < texts.size():
+			chosen_text = texts[idx]
+		else:
+			# nothing left to play for this queue entry; skip
+			continue
+
+		if is_instance_valid(template):
+			var temp := template.duplicate()
+			add_child(temp)
+			temp.name = "%s_walkaway_temp" % template.name
+
+			# set its text to single-line
+			if temp.has_method("play_quick_text"):
+				var arr: Array[String] = []
+				arr.append(str(chosen_text))   
+				await temp.play_quick_text(arr)
+
+			else:
+				if "text" in temp:
+					var original_text = temp.text.duplicate(true)
+					temp.text = [chosen_text]
+					await temp.show_dialog()
+					temp.text = original_text
+				else:
+					pass
+			if is_instance_valid(temp):
+				temp.queue_free()
+		else:
+			pass
+
+		# Increment the counters we used
+		if use_manager_count:
+			_manager_walkaway_counts[npc_key] = _manager_walkaway_counts[npc_key] + 1
+			if walkaway_limit > 0 and _manager_walkaway_counts[npc_key] >= walkaway_limit:
+				pass
+		else:
+			_local_walkaway_counts[bubble_key] = _local_walkaway_counts[bubble_key] + 1
+
+	_playing_walkaway = false
+
+func _npc_key_for_node(n: Node) -> String:
+	if n == null:
+		return ""
+	var parent_npc := n.get_parent()
+	return str(parent_npc.get_path()) if parent_npc else str(n.get_path())
+
+# Interaction 
 
 func _on_area_3d_body_entered(body: Node) -> void:
 	if not body.is_in_group("player"):
@@ -313,17 +365,26 @@ func _on_area_3d_body_entered(body: Node) -> void:
 		var start_bubble := _get_meeting_dialog(index)
 		if start_bubble:
 			_running = true
-			_walkaway_count = 0
-			await _start_dialog_flow(start_bubble)
+			var npc_key := _npc_key_for_node(start_bubble)
+			_manager_walkaway_counts[npc_key] = 0
+			_walkaway_queue.clear()
+			_playing_walkaway = false
+			await _run_dialog_flow(start_bubble)
 		return
 
-	# If we have a pending restart bubble (paused earlier), request the manager to go back to it
-	if _pending_restart_bubble:
-		_force_next = _pending_restart_bubble
-		_pending_restart_bubble = null
-		# manager will honor _force_next immediately after current bubble finishes
-
-
+	if _pending_restart_name != "":
+		var candidate = _find_bubble_by_name(_pending_restart_name)
+		if candidate:
+			_force_next = candidate
+		_pending_restart_name = ""
+		print("ENTER → pending restart:", _pending_restart_bubble, " force_next:", _force_next)
+		return
+		
+func _find_bubble_by_name(name: String) -> Node:
+	for c in get_children():
+		if c is Control and c.name == name:
+			return c
+	return null
 
 
 func _on_area_3d_body_exited(body: Node) -> void:
@@ -332,34 +393,56 @@ func _on_area_3d_body_exited(body: Node) -> void:
 	if not _running:
 		return
 
-	# PAUSE current bubble (so it stops and hides)
 	if _current_bubble and _current_bubble.has_method("pause_dialog"):
 		_current_bubble.pause_dialog()
 		_paused_bubble = _current_bubble
-		# mark it as the one we should restart when player returns
-		_pending_restart_bubble = _paused_bubble
+		_paused_bubble_name = _current_bubble.name
+		_pending_restart_name = _current_bubble.name
 
-	# Play WALKAWAY bubble immediately (bubble-specific first, then manager fallback)
-	var bubble: Node = null
-	if _current_bubble and "walk_away" in _current_bubble and _current_bubble.walk_away != NodePath(""):
-		bubble = _resolve_path_from(self, _current_bubble.walk_away)
-	if bubble == null:
-		bubble = _get_walkaway_dialog()
 
-	if bubble:
-		# Immediately play the walkaway dialog NOW
-		# Do NOT merge it into the main dialog chain
-		_hide_all_bubbles_except(bubble)
-		await bubble.show_dialog()
+	var texts_to_use: Array = []
+	var use_manager_count := true
+	var bubble_key := ""
+	var npc_key := _npc_key_for_node(_current_bubble)
+
+	if _current_bubble:
+		bubble_key = str(_current_bubble.get_path())
+		# prefer bubble walkaway_texts if present
+		if "walkaway_texts" in _current_bubble and _current_bubble.walkaway_texts and _current_bubble.walkaway_texts.size() > 0:
+			texts_to_use = _current_bubble.walkaway_texts
+			use_manager_count = false if not bool(_current_bubble.walkaway_replace) else true
+			use_manager_count = bool(_current_bubble.walkaway_replace)
+		else:
+			# manager fallback
+			if walkaways and walkaways.size() > 0:
+				texts_to_use = walkaways
+				use_manager_count = true
+			else:
+				texts_to_use = []
+
+	if texts_to_use and texts_to_use.size() > 0:
+		_enqueue_walkaway(texts_to_use, _current_bubble, npc_key, use_manager_count, bubble_key)
 	else:
-		_interrupt_and_stop()
+		pass
+
+func get_manager_walkaway_count_for(npc_root: Node) -> int:
+	var key := str(npc_root.get_path())
+	return _manager_walkaway_counts.get(key, 0)
 
 
+# Helpers for walkaway
 
-	# START the 10-second return timer
-	#_start_return_timer()
-#
-#func _start_return_timer() -> void:
-	#if _return_timer:
-		#_return_timer.time_left = 0.0
-	#_return_timer = get_tree().create_timer(10.0)
+func enqueue_walkaway_for_bubble(bubble_node: Node) -> void:
+	if not bubble_node:
+		return
+	var npc_key := _npc_key_for_node(bubble_node)
+	var bubble_key := str(bubble_node.get_path())
+	var texts_to_use := []
+	var use_manager_count := true
+	if "walkaway_texts" in bubble_node and bubble_node.walkaway_texts and bubble_node.walkaway_texts.size() > 0:
+		texts_to_use = bubble_node.walkaway_texts
+		use_manager_count = bool(bubble_node.walkaway_replace)
+	else:
+		texts_to_use = walkaways
+		use_manager_count = true
+	_enqueue_walkaway(texts_to_use, bubble_node, npc_key, use_manager_count, bubble_key)

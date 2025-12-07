@@ -1,4 +1,4 @@
-[gd_scene load_steps=1118 format=3 uid="uid://b2iud4rbm8fp6"]
+[gd_scene load_steps=1119 format=3 uid="uid://b2iud4rbm8fp6"]
 
 [ext_resource type="Script" uid="uid://c3ibyffc6yil1" path="res://3d/npcs/ya3/ya_3.gd" id="1_lj0lm"]
 [ext_resource type="PackedScene" uid="uid://b1c5ps0ocnxoy" path="res://3d/npcs/ya3/revor.glb" id="1_pgqkd"]
@@ -7749,6 +7749,22 @@ tracks/0/keys = {
 "values": [6, 7]
 }
 
+[sub_resource type="Animation" id="Animation_1j2yx"]
+resource_name = "sad"
+length = 0.998
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [10, 11]
+}
+
 [sub_resource type="Animation" id="Animation_c7qc6"]
 resource_name = "smile"
 length = 0.7
@@ -7770,6 +7786,7 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_wapkt"),
 &"neutral": SubResource("Animation_c5a08"),
+&"sad": SubResource("Animation_1j2yx"),
 &"smile": SubResource("Animation_c7qc6")
 }
 

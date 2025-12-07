@@ -14,12 +14,12 @@
 [ext_resource type="AudioStream" uid="uid://cyas5gyubatuc" path="res://3d/sounds/slide_fail.mp3" id="7_fuas2"]
 [ext_resource type="Texture2D" uid="uid://dk30ciya5qldy" path="res://3d/sprites/catexp/Untitled-3.png" id="7_jkdwh"]
 [ext_resource type="Shader" uid="uid://bv5p83ewet33l" path="res://3d/datamoshing.gdshader" id="7_y4vo8"]
+[ext_resource type="Texture2D" uid="uid://c71qsc7g5edx" path="res://3d/sprites/por/grab_hands.png" id="8_3l2s8"]
 [ext_resource type="Texture2D" uid="uid://gc66jmxju5g5" path="res://3d/sprites/por/star_sprite.png" id="8_54vq2"]
 [ext_resource type="Script" uid="uid://tnb1cbtsjnik" path="res://3d/sprites.gd" id="9_m56cn"]
 [ext_resource type="Script" uid="uid://dxcngl7co3js4" path="res://3d/level_manager.gd" id="9_rlvy5"]
 [ext_resource type="Shader" uid="uid://fj2uc0wdyytq" path="res://3d/low_health.gdshader" id="9_vf5oh"]
 [ext_resource type="AudioStream" uid="uid://cfyc0gmsnnx4r" path="res://3d/sounds/hurt_test.mp3" id="13_drwl6"]
-[ext_resource type="Texture2D" uid="uid://cb8d6ayiynkjv" path="res://3d/sprites/attack_hands.png" id="13_j0ygm"]
 [ext_resource type="Texture2D" uid="uid://p7g5csfulnmq" path="res://3d/sprites/por/porsword.png" id="13_p61ww"]
 [ext_resource type="AudioStream" uid="uid://dp116jp7otldi" path="res://3d/sounds/Track3_VoiceAudio.wav" id="14_em0p2"]
 [ext_resource type="Texture2D" uid="uid://kej5iqewk8fj" path="res://3d/sprites/por/rovpor.png" id="14_tf4kn"]
@@ -830,10 +830,11 @@ position = Vector2(218.66666, 131)
 scale = Vector2(1.2597224, 0.6319759)
 sprite_frames = SubResource("SpriteFrames_6s88e")
 
-[node name="DashSprite" type="Sprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
-transform = Transform3D(1, 0, 0, 0, 0.742871, 0, 0, 0, 0, 600, 512, 0)
+[node name="DashSprite" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
 visible = false
-texture = ExtResource("13_j0ygm")
+position = Vector2(195.66666, 133.66667)
+scale = Vector2(0.33777776, 0.3316667)
+texture = ExtResource("8_3l2s8")
 
 [node name="POR" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
 

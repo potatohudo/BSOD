@@ -22,10 +22,7 @@ func _ready():
 		player = players[0]
 	player.connect("hit", Callable(self, "_on_player_hit"))
 
-	# Find player safely
 
-
-	# Collect sample nodes
 	for child in get_children():
 		if child.has_method("is_music_sample"):
 			sample_nodes.append(child)
@@ -49,7 +46,7 @@ func _process(delta):
 
 
 func _process_sample(sample, delta):
-	# Handle the interval (supports <1.0 and >1.0)
+	# Handle the interval 
 	var interval = loop_length * sample.play_at
 
 	var active = sample.should_play(self)
@@ -60,18 +57,15 @@ func _process_sample(sample, delta):
 	if sample.play_at == 1.0:
 		interval = loop_length
 
-		# Align next trigger time to next loop boundary
 		if became_active:
 			var loops_passed = floor(gtime / loop_length)
 			sample.next_trigger_time = (loops_passed + 1) * loop_length
 
 	else:
-		# Normal alignment for subdivision or extended intervals
 		if became_active:
 			var next = ceil(gtime / interval) * interval
 			sample.next_trigger_time = next
 
-	# Always trigger on its schedule (fade may mute volume later)
 	if gtime >= sample.next_trigger_time:
 		# Only restart if conditions are met
 		sample.trigger_play(sample.should_play(self))

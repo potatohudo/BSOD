@@ -1,4 +1,9 @@
+Label
+Sprite2D
+AnimatedSprite3D
+AudioStreamPlayer3D
 MeshInstance3D
+WorldEnvironment
 PanelContainer
 VBoxContainer
 Container
@@ -6,9 +11,4 @@ CollisionShape3D
 Area3D
 Node
 AnimationPlayer
-AnimatedSprite3D
 StaticBody3D
-Label
-SpotLight3D
-Panel
-Node3D

@@ -595,8 +595,8 @@ shape = SubResource("ConcavePolygonShape3D_75406")
 transform = Transform3D(-0.9588098, 0, -0.28404891, 0, 1, 0, 0.28404891, 0, -0.9588098, 0, -1.1980784, 55.485683)
 
 [node name="DialogManager" parent="ya3" instance=ExtResource("16_ckxg0")]
-meetings = Array[NodePath]([NodePath("DialogBubble")])
-walkaways = Array[NodePath]([NodePath("walkaway")])
+meetings = Array[NodePath]([NodePath("DialogBubble"), NodePath("ba")])
+walkaways = Array[String](["[emotion=0:sad]Wait- No- please don't leave just yet! I- I promise I can do better! Please don't leave me here!", "[emotion=0:sad]No- no- no where are you going? I thought we had something here. I thought you were connecting with me! Please don't leave me alone!", "[emotion=0:sad]Okay... I get it..."])
 character_nodes = Array[NodePath]([NodePath("..")])
 
 [node name="CollisionShape3D" parent="ya3/DialogManager/Area3D" index="0"]
@@ -614,12 +614,12 @@ offset_top = -0.2000122
 offset_right = -0.20007324
 offset_bottom = -0.6000366
 text = Array[String](["[emotion=0:happy]Oh, hey! I didn't expect anyone to visit me. 
-Uhm, sorry I would've cleaned up if I knew someone was coming. I'm Я3VOЯ, but just call me Ya3.", "[emotion=0:neutral] 
-Uhm, sorry I would've cleaned up if I knew someone was coming. I'm Я3VOЯ, but just call me Ya3."])
-speaker_name = "ya3"
+", "[emotion=0:neutral] Uhm, sorry I would've cleaned up if I knew someone was coming. [emotion=0:happy] I'm Я3VOЯ, but just call me Ya3."])
+speaker_name = "pc"
 character_nodes = Array[NodePath]([NodePath("../..")])
 next_none = Array[NodePath]([NodePath("../ztutzu")])
-return_text = "[emotion=0:neutral] .. "
+walkaway_texts = Array[String](["[emotion=0:sad]no wait :("])
+return_texts = Array[String]([".."])
 wait_time = 1.07
 
 [node name="ztutzu" parent="ya3/DialogManager" instance=ExtResource("6_0q3lm")]
@@ -633,10 +633,11 @@ offset_left = 0.5999999
 offset_top = -0.2000122
 offset_right = -0.20007324
 offset_bottom = -0.6000366
-text = Array[String](["[emotion=0:neutral] You remind me of something... Right! Like ferrofluid! It is a dark liquid that is attracted to the poles of a magnet. It is a colloidal liquid made of nanoscale ferromagnetic or ferrimagnetic particles suspended inside a carrier fluid (usually an organic solvent or water). Each magnetic particle is thoroughly coated with a surfactant to inhibit clumping.", "Large ferromagnetic particles can be ripped out of the homogeneous colloidal mixture, forming a separate clump of magnetic dust when exposed to strong magnetic fields. The magnetic attraction of tiny nanoparticles is weak enough that the surfactant's Van der Waals force is sufficient to prevent magnetic clumping or agglomeration. Ferrofluids usually do not retain magnetization in the absence of an externally applied field and thus are often classified as \"superparamagnets\" rather than ferromagnets.", "But I'm just rambling at this point...sorry..."])
-speaker_name = "d"
+text = Array[String](["[emotion=0:neutral] You remind me of something... [emotion=0:happy]Right! Like ferrofluid!  
+It is a dark liquid that is attracted to the poles of a magnet. It is a colloidal liquid made of nanoscale ferromagnetic or ferrimagnetic particles suspended inside a carrier fluid (usually an organic solvent or water). Each magnetic particle is thoroughly coated with a surfactant to inhibit clumping.", "[emotion=0:happy]Large ferromagnetic particles can be ripped out of the homogeneous colloidal mixture, forming a separate clump of magnetic dust when exposed to strong magnetic fields. The magnetic attraction of tiny nanoparticles is weak enough that the surfactant's Van der Waals force is sufficient to prevent magnetic clumping or agglomeration. Ferrofluids usually do not retain magnetization in the absence of an externally applied field and thus are often classified as \"superparamagnets\" rather than ferromagnets.", "[emotion=0:neutral] But I'm just rambling at this point...sorry..."])
+speaker_name = "ya3"
 character_nodes = Array[NodePath]([NodePath("../..")])
-return_text = "Oh, you're back! Look- I won't bore you again! I swear I can do better... please... Don't leave me like you did last time..."
+return_texts = Array[String](["[emotion=0:happy]Oh, you're back! [emotion=0:sad] Look- I won't bore you again! I swear I can do better... please... Don't leave me like you did last time..."])
 
 [node name="DialogBubble2" parent="ya3/DialogManager" instance=ExtResource("6_0q3lm")]
 visible = false
@@ -649,40 +650,10 @@ offset_left = 0.5999999
 offset_top = -0.2000122
 offset_right = -0.20007324
 offset_bottom = -0.6000366
-text = Array[String](["you know, when I don't have anything to do, I just re-read the Lorem Ipsum text. It's a dummy or placeholder text commonly used in graphic design, publishing, and web development. Its purpose is to permit a page layout to be designed, independently of the copy that will subsequently populate it, or to demonstrate various fonts of a typeface without meaningful text that could be distracting.", "Lorem ipsum is typically a corrupted version of De finibus bonorum et malorum, a 1st-century BC text by the Roman statesman and philosopher Cicero, with words altered, added, and removed to make it nonsensical and improper Latin. The first two words are the truncation of dolorem ipsum which means \"pain itself\". Ahhh, I got a bit carried away. Sorry I don't mean it."])
+text = Array[String](["[emotion=0:neutral]you know, when I don't have anything to do, I just re-read the Lorem Ipsum text. It's a dummy or placeholder text commonly used in graphic design, publishing, and web development. Its purpose is to permit a page layout to be designed, independently of the copy that will subsequently populate it, or to demonstrate various fonts of a typeface without meaningful text that could be distracting.", "[emotion=0:neutral]Lorem ipsum is typically a corrupted version of De finibus bonorum et malorum, a 1st-century BC text by the Roman statesman and philosopher Cicero, with words altered, added, and removed to make it nonsensical and improper Latin. The first two words are the truncation of dolorem ipsum which means \"pain itself\". Ahhh, I got a bit carried away. Sorry I don't mean it."])
 speaker_name = "ya3"
 character_nodes = Array[NodePath]([NodePath("../..")])
-return_text = "Oh, you're back! Look- I won't bore you again! I swear I can do better... please... Don't leave me like you did last time..."
-
-[node name="walkaway" parent="ya3/DialogManager" instance=ExtResource("6_0q3lm")]
-visible = false
-anchors_preset = -1
-anchor_left = 0.002
-anchor_top = 0.609
-anchor_right = 1.006
-anchor_bottom = 0.99700004
-offset_left = 0.5999999
-offset_top = -0.2000122
-offset_right = -0.20007324
-offset_bottom = -0.6000366
-text = Array[String](["Wait- No- please don't leave just yet! I- I promise I can do better! Please don't leave me here!"])
-speaker_name = "ya3"
-character_nodes = Array[NodePath]([NodePath("../..")])
-
-[node name="walkaway2" parent="ya3/DialogManager" instance=ExtResource("6_0q3lm")]
-visible = false
-anchors_preset = -1
-anchor_left = 0.002
-anchor_top = 0.609
-anchor_right = 1.006
-anchor_bottom = 0.99700004
-offset_left = 0.5999999
-offset_top = -0.2000122
-offset_right = -0.20007324
-offset_bottom = -0.6000366
-text = Array[String](["No- no- no where are you going? I thought we had something here. I thought you were connecting with me! Please don't leave me alone!"])
-speaker_name = "ya3"
-character_nodes = Array[NodePath]([NodePath("../..")])
+return_texts = Array[String](["[emotion=0:happy]Oh, you're back! [emotion=0:sad] Look- I won't bore you again! I swear I can do better... please... Don't leave me like you did last time..."])
 
 [node name="ba" parent="ya3/DialogManager" instance=ExtResource("6_0q3lm")]
 visible = false
@@ -695,9 +666,10 @@ offset_left = 0.5999999
 offset_top = -0.2000122
 offset_right = -0.20007324
 offset_bottom = -0.6000366
-text = Array[String]([".."])
-speaker_name = "d"
+text = Array[String](["[emotion=0:ba]"])
+speaker_name = "ya3"
 character_nodes = Array[NodePath]([NodePath("../..")])
+walkaway_texts = Array[String](["", "", ""])
 
 [node name="MeshInstance3D36" type="MeshInstance3D" parent="."]
 transform = Transform3D(200, 0, 0, 0, 175.7201, 95.511505, 0, -95.511505, 175.7201, 0, 1024.6128, 1695.0359)

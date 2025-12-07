@@ -24,7 +24,7 @@ theme = ExtResource("1_nm7lk")
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 166.0
+offset_left = 111.0
 offset_top = 47.0
 offset_right = 1084.0
 offset_bottom = 762.0
@@ -54,7 +54,8 @@ uppercase = true
 
 [node name="credit4" type="Label" parent="VBoxContainer3"]
 layout_mode = 2
-text = "concept artist
+text = "co-director
+concept artist
 character creator
 SFX
 music artist
@@ -84,15 +85,17 @@ music artist
 "
 label_settings = SubResource("LabelSettings_nm7lk")
 
-[node name="credit5" type="Label" parent="VBoxContainer3"]
+[node name="credit10" type="Label" parent="VBoxContainer3"]
 layout_mode = 2
-text = "s0lst1cx"
+text = "Sylvari!"
 label_settings = SubResource("LabelSettings_nm7lk")
 uppercase = true
 
-[node name="credit24" type="Label" parent="VBoxContainer3"]
+[node name="credit27" type="Label" parent="VBoxContainer3"]
 layout_mode = 2
-text = "concept artist
+text = "character creator
+SFX
+tester
 "
 label_settings = SubResource("LabelSettings_nm7lk")
 
@@ -104,128 +107,442 @@ uppercase = true
 
 [node name="credit26" type="Label" parent="VBoxContainer3"]
 layout_mode = 2
+text = "concept artist
+character creator
+2d artist
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit5" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "s0lst1cx"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit24" type="Label" parent="VBoxContainer3"]
+layout_mode = 2
+text = "concept artist
+hackathon contributor
+"
 label_settings = SubResource("LabelSettings_nm7lk")
 
 [node name="credit9" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
 text = "Scribl"
 label_settings = SubResource("LabelSettings_nm7lk")
 uppercase = true
 
 [node name="credit25" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
-label_settings = SubResource("LabelSettings_nm7lk")
-
-[node name="credit10" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-text = "Sylvari!"
-label_settings = SubResource("LabelSettings_nm7lk")
-uppercase = true
-
-[node name="credit27" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-label_settings = SubResource("LabelSettings_nm7lk")
-
-[node name="credit8" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-text = "parf"
-label_settings = SubResource("LabelSettings_nm7lk")
-uppercase = true
-
-[node name="credit28" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-label_settings = SubResource("LabelSettings_nm7lk")
-
-[node name="credit12" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-text = "handmadecup"
-label_settings = SubResource("LabelSettings_nm7lk")
-uppercase = true
-
-[node name="credit29" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-label_settings = SubResource("LabelSettings_nm7lk")
-
-[node name="credit13" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-text = "Stardust"
-label_settings = SubResource("LabelSettings_nm7lk")
-uppercase = true
-
-[node name="credit30" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-label_settings = SubResource("LabelSettings_nm7lk")
-
-[node name="credit14" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-text = "DeBogged"
-label_settings = SubResource("LabelSettings_nm7lk")
-uppercase = true
-
-[node name="credit31" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-label_settings = SubResource("LabelSettings_nm7lk")
-
-[node name="credit15" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-text = "DmanX"
-label_settings = SubResource("LabelSettings_nm7lk")
-uppercase = true
-
-[node name="credit32" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-label_settings = SubResource("LabelSettings_nm7lk")
-
-[node name="credit16" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
-text = "parf"
-label_settings = SubResource("LabelSettings_nm7lk")
-uppercase = true
-
-[node name="credit33" type="Label" parent="VBoxContainer3"]
-layout_mode = 2
+text = "character creator
+tester
+SFX
+"
 label_settings = SubResource("LabelSettings_nm7lk")
 
 [node name="credit17" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
 text = "B2047"
 label_settings = SubResource("LabelSettings_nm7lk")
 uppercase = true
 
 [node name="credit34" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
+text = "music artist
+tester
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit8" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "parf"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit28" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "character creator
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit15" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "DmanX"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit32" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "character creator
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit12" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "handmadecup"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit29" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "character creator
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit13" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "Stardust"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit30" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "character creator
+3d modeller
+hackathon contributor
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit14" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "DeBogged"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit31" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "hackathon contributor
+tester
+"
 label_settings = SubResource("LabelSettings_nm7lk")
 
 [node name="credit18" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
 text = "Raph"
 label_settings = SubResource("LabelSettings_nm7lk")
 uppercase = true
 
 [node name="credit35" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
+text = "2d artist
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit33" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "HAVEN!!!"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit41" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "tester
+"
 label_settings = SubResource("LabelSettings_nm7lk")
 
 [node name="credit19" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
 text = "max"
 label_settings = SubResource("LabelSettings_nm7lk")
 uppercase = true
 
 [node name="credit36" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
+text = "music artist
+hackathon contributor
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit39" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "sorper"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="empty8" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "concept art
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit40" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "EVIL chair"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="empty9" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "tester
+"
 label_settings = SubResource("LabelSettings_nm7lk")
 
 [node name="credit20" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
 text = "Zenith"
 label_settings = SubResource("LabelSettings_nm7lk")
 uppercase = true
 
 [node name="empty5" type="Label" parent="VBoxContainer3"]
+visible = false
 layout_mode = 2
+text = "tester
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit37" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "apit94"
 label_settings = SubResource("LabelSettings_nm7lk")
 uppercase = true
+
+[node name="empty6" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "music artist
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit38" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "anotherpersonforhire"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="empty7" type="Label" parent="VBoxContainer3"]
+visible = false
+layout_mode = 2
+text = "music artist
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 481.0
+offset_top = 47.0
+offset_right = 1084.0
+offset_bottom = 1778.0
+
+[node name="credit9" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "Scribl"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit25" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "character creator
+tester
+SFX
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit17" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "B2047"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit34" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "music artist
+tester
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit8" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "parf"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit28" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "character creator
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit15" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "DmanX"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit32" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "character creator
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit12" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "handmadecup"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit29" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "character creator
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit13" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "Stardust"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit30" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "character creator
+3d modeller
+hackathon contributor
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit14" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "DeBogged"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit31" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "hackathon contributor
+tester
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit18" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "Raph"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit35" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "2d artist
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit33" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "HAVEN!!!"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit41" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "tester
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit19" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "max"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit36" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "music artist
+hackathon contributor
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="VBoxContainer5" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 836.0
+offset_top = 47.0
+offset_right = 1084.0
+offset_bottom = 1778.0
+
+[node name="credit39" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "sorper"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="empty8" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "concept art
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit40" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "EVIL chair"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="empty9" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "tester
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit20" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "Zenith"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="empty5" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "tester
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit37" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "apit94"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="empty6" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "music artist
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit38" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "anotherpersonforhire"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="empty7" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "music artist
+"
+label_settings = SubResource("LabelSettings_nm7lk")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 visible = false
@@ -412,3 +729,12 @@ label_settings = SubResource("LabelSettings_nm7lk")
 layout_mode = 2
 text = "      Zenith"
 label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 913.0
+offset_top = 748.0
+offset_right = 1185.0
+offset_bottom = 785.0
+text = "CREDITS 2.0
+(please notify me if any of them are wrong!)"

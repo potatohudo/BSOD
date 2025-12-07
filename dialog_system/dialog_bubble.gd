@@ -1,9 +1,4 @@
 extends Control
-# DialogBubble.gd
-# UI + per-dialog data node.
-# - Put this on nodes that contain dialog text and exported next-paths.
-# - Responsible for presentation, tag parsing, and triggering emotions / speech.
-# - Emits when finished so DialogManager can pick the next dialog node.
 
 signal dialog_finished(bubble_node: Node)
 
@@ -12,27 +7,27 @@ signal dialog_finished(bubble_node: Node)
 @onready var panel: PanelContainer = %PanelContainer
 @onready var anim: AnimationPlayer = %AnimationPlayer
 
-# ----------------------------
-# Exported dialog data (per-node)
-# ----------------------------
 @export_multiline var text: Array[String] = []
 @export var speaker_name: String = ""
 @export var style: Dictionary = {}
 
 @export var character_nodes: Array[NodePath] = []# nodes to call start/stop speaking and set_emotion on
 
-@export var next_yes: NodePath = NodePath("")# NodePath to the next dialog for "yes"
-@export var next_no: NodePath = NodePath("")# NodePath to the next dialog for "no"
-@export var next_none: Array[NodePath] = []	# list of NodePaths for "none" (queue or random)
-@export var next_none_random: bool = false# true -> pick random from next_none; false -> queue (first available)
-@export var walk_away: NodePath = NodePath("")# walk away dialog node (optional)
-@export_multiline var return_text: String = ""
+@export var next_yes: NodePath = NodePath("")#  NodePath to the next dialog for "yes"
+@export var next_no: NodePath = NodePath("") # NodePath to the next dialog for "no"
+@export var next_none: Array[NodePath] = [] # list of NodePaths for "none" (queue or random)
+@export var next_none_random: bool = false # true -> pick random from next_none; false -> queue (first available)
 
+
+@export_multiline var walkaway_texts: Array[String] = []
+@export_multiline var return_texts: Array[String] = []
+
+@export var walkaway_replace: bool = true
 
 @export_range(0.005, 0.5, 0.001) var typing_speed := 0.03
 @export_range(0.0, 10.0, 0.01) var wait_time := 0.0
 
-# Effects / styling (kept for compatibility)
+# Effects / styling 
 @export_group("Effects: Shake")
 @export_range(0.0, 40.0, 0.1) var global_shake_intensity := 2.0
 @export_range(0.0, 1.0, 0.01) var global_shake_amount := 1.0
@@ -64,15 +59,11 @@ var _resume_char: int = 0
 var _resume_text: Array = []        # <<-- now an Array[String]
 var _resume_triggers: Array = []
 
-
-
-
 # --- internal state ---
 var _is_showing := false
 var _skip_requested := false
 var _typing_done := false
 
-# Triggers are per-segment. Each trigger dict:
 # { "segment": int, "pos": int, "type": "emotion"|"speech", "index": int, "value": String }
 var _trigger_queue := []
 
@@ -81,7 +72,7 @@ var _wave_effect
 var _shake_effect
 var _rand_effect
 
-# --- inline text effects (kept from original) ---
+# --- inline text stuff---
 class WaveEffect:
 	extends RichTextEffect
 	var bbcode := "wave"
@@ -119,25 +110,22 @@ class RandScaleEffect:
 		char_fx.transform = Transform2D().scaled(Vector2(s, s))
 		return true
 
-# --- lifecycle / API ---
 func _ready() -> void:
 	_apply_style()
 	_install_inline_effects()
 
-# Start showing this dialog node. Awaitable — returns when done.
-func show_dialog() -> void:
+# Start showing this dialog node. Awaitable -> returns "finished" or "paused".
+func show_dialog() -> String:
 	if _is_showing:
 		# already showing: don't re-enter
-		return
+		return "finished"
 	_is_showing = true
 	_skip_requested = false
 	_typing_done = false
 
-	# Make visible immediately (manager hides siblings)
 	self.visible = true
 	_apply_style()
 	_update_effect_params()
-
 
 	# set name label
 	if name_label:
@@ -145,74 +133,59 @@ func show_dialog() -> void:
 		name_label.text = speaker_name
 
 	# parse triggers and split into segments
-	var combined := "\n[n]\n".join(text)
+	var combined := String("[n]").join(text)
+
 	var result = _process_triggers_and_split(combined)
 	var segments = result[0]
 	var triggers = result[1]
 
 	_trigger_queue = triggers
 
-	# show segments in sequence
 	for segment_index in range(segments.size()):
-		# If paused, break immediately (we hide and let manager handle the rest)
 		if _paused:
 			break
 		var seg_text = segments[segment_index]
-		await _show_segment(segment_index, seg_text)
-		# if paused after the segment started, stop processing further segments
+		var res_seg = await _show_segment(segment_index, seg_text)
 		if _paused:
 			break
 
-		# if skip requested and user wanted to break early, we still continue to show remaining segments (consistency).
-		# segment-level behavior is handled by skip flags.
-
 	_is_showing = false
-	emit_signal("dialog_finished", self)
-	_paused = false
-	_typing_done = true
 
-	# Keep dialog visible for a short read-buffer; allow DialogManager's wait_time to add more
-	var read_buffer := 0.6  # seconds; you can expose as export if you want
+	if _paused:
+		_paused = false
+		_is_showing = false
+		return "paused"
+
+	var read_buffer := 0.6  
 	if "wait_time" in self and float(wait_time) > 0.0:
-		# if the bubble defines a wait_time, prefer it (keeps prior behavior)
 		read_buffer = float(wait_time)
 
-	# Wait a little so player can read (unless skip requested earlier)
+	# Wait a little so player can read 
 	if read_buffer > 0.0:
 		await get_tree().create_timer(read_buffer).timeout
 
 	# hide bubble after display
 	self.visible = false
+	return "finished"
 
 func _unhandled_input(event):
+	#dialog skip
 	if event.is_action_pressed("ui_accept"):
-		# if typing -> skip to full text
 		if not _typing_done:
 			_skip_requested = true
-		# else if finished -> hide early (simulate accept)
 		elif _typing_done and _is_showing:
-			# expedite hide: set tiny buffer to zero
 			_skip_requested = true
 			_typing_done = true
 
-
-# Request the current reveal to finish immediately
 func finish_now() -> void:
 	if not _typing_done:
 		_skip_requested = true
-		# force visible characters to all so get_total_character_count won't block
 		if label:
 			label.visible_characters = -1
-		# fire any remaining triggers for current segment and all others
 		_fire_all_remaining_triggers()
 
-
-# ----------------------------
 # Trigger parsing & splitting
-# ----------------------------
-# Splits by [n] into segments, removes all tags from each segment, and returns:
-# - segments_clean: Array[String]
-# - triggers: Array[Dictionary]
+
 func _process_triggers_and_split(orig_text: String) -> Array:
 	var segments_raw := orig_text.split("[n]", false)
 	var segments_clean := []
@@ -224,22 +197,25 @@ func _process_triggers_and_split(orig_text: String) -> Array:
 		# process emotion tags first
 		var regex_em := RegEx.new()
 		regex_em.compile("\\[emotion=(\\d+):([^\\]]+)\\]")
+
+		var matches := regex_em.search_all(seg)
+		var shift := 0
 		var r := regex_em.search(seg)
-		while r:
-			var start := r.get_start() - offset
-			var end := r.get_end() - offset
-			var idx := int(r.get_string(1))
-			var val := r.get_string(2)
+
+		for m in matches:
+			var start := m.get_start() - shift
+			var end := m.get_end() - shift
 			triggers.append({
 				"segment": s_index,
 				"pos": start,
 				"type": "emotion",
-				"index": idx,
-				"value": val
+				"index": int(m.get_string(1)),
+				"value": m.get_string(2)
 			})
 			var removed_len := end - start
 			seg = seg.erase(start, removed_len)
-			offset += removed_len
+			shift += removed_len
+
 			r = regex_em.search(seg)
 
 		# process speech tags [INDEX:s] or [INDEX:sp]
@@ -281,12 +257,7 @@ func _sort_triggers(a, b) -> int:
 		return 1
 	return 0
 
-# ----------------------------
-# Segment presentation
-# ----------------------------
 func _show_segment(segment_index: int, seg_text: String) -> void:
-	# seg_text may contain '\n' for new lines (keep those)
-	# we'll parse BBCode as usual, but trigger tags at correct visible-character positions
 	label.clear()
 	label.bbcode_enabled = true
 	label.text = ""
@@ -306,7 +277,6 @@ func _show_segment(segment_index: int, seg_text: String) -> void:
 	_start_all_characters_speaking()
 
 	for i in range(total_chars + 1):
-		# run triggers for this segment at position i
 		for t in _trigger_queue:
 			if t.segment == segment_index and t.pos == i:
 				_process_trigger(t)
@@ -380,9 +350,7 @@ func _stop_all_characters_speaking():
 		if c and c.has_method("stop_speaking"):
 			c.stop_speaking()
 
-
-# Emotion application (safe checks)
-
+# Emotion application 
 func _apply_emotion(index: int, emotion: String) -> void:
 	if index < 0 or index >= character_nodes.size():
 		push_warning("Emotion index %d out of range on %s" % [index, self.name])
@@ -397,7 +365,6 @@ func _apply_emotion(index: int, emotion: String) -> void:
 	char.set_emotion(emotion)
 
 # Style / effects helpers
-
 func _apply_style() -> void:
 	if panel and bubble_style:
 		panel.add_theme_stylebox_override("panel", bubble_style)
@@ -425,7 +392,7 @@ func _update_effect_params() -> void:
 	if _rand_effect:
 		_rand_effect.scale_amount = global_random_scale_amount
 
-# Fade helpers (kept)
+# Fade helpers 
 func _fade_in() -> void:
 	if anim and anim.has_animation("fade_in"):
 		anim.play("fade_in")
@@ -456,19 +423,19 @@ func _simple_fade(from_alpha: float, to_alpha: float) -> void:
 func pause_dialog() -> void:
 	if not _is_showing:
 		return
+	# Tell show_dialog() to stop revealing immediately
 	_paused = true
-	finish_now()
+	_skip_requested = true
 	visible = false
 
 
-func resume_dialog() -> void:
+func resume_dialog() -> String:
 	if not _paused:
-		return
-
+		return "finished"
 	_paused = false
 	visible = true
 	await _resume_reveal()
-
+	return "finished"
 
 func _resume_reveal() -> void:
 	var combined := ""
@@ -493,7 +460,6 @@ func _resume_reveal() -> void:
 	_resume_char = 0
 
 	emit_signal("dialog_finished", self)
-
 
 func _resume_segment_reveal(seg_index: int, seg_text: String, start_char: int) -> void:
 	_current_segment = seg_index
@@ -524,10 +490,26 @@ func restart_dialog() -> void:
 	_paused = false
 	await show_dialog()
 
+
 func play_return_text() -> void:
-	if return_text.strip_edges() == "":
+	if not return_texts or return_texts.size() == 0:
+
 		return
 	var original_segments := text.duplicate(true)
-	text = [return_text]
+	text = return_texts.duplicate(true)
 	await show_dialog()
 	text = original_segments
+
+
+func play_quick_text(texts: Array[String]):
+	if not texts or texts.size() == 0:
+		return
+	var original_segments := text.duplicate(true)
+	var original_visible := visible
+
+	text = texts.duplicate(true)
+	var res := await show_dialog()
+	# restore
+	text = original_segments
+	visible = original_visible
+	return res

@@ -137,11 +137,10 @@ func update_camera():
 	#it does not work any other way :(
 
 func update_dash_sprite():
-	#if is_grabbing == true:
-		#dash_sprite.visible = true
-	#else:
-		#dash_sprite.visible = false
-	pass
+	if is_grabbing == true:
+		dash_sprite.visible = true
+	else:
+		dash_sprite.visible = false
 
 func _physics_process(delta: float) -> void:
 	if is_game_over:
@@ -295,19 +294,26 @@ var attack_was_pressed: bool = false
 func _handle_attack_and_jump(up: Vector3) -> void:
 	var dash_pressed := Input.is_action_just_pressed("sprint")
 # Track attack hold
+		
 	if Input.is_action_just_pressed("attack"):
+		if current_mode == PlayerMode.PEACEFUL:
+			return
 		attack_was_pressed = true
 		slash_buffered = false
 		attack_hold_time = 0.0
 
 	# Holding
 	if attack_was_pressed and Input.is_action_pressed("attack"):
+		if current_mode == PlayerMode.PEACEFUL:
+			return
 		attack_hold_time += get_physics_process_delta_time()
 		slash_buffered = true
 		#return
 
 	# On release → fire slash
 	if attack_was_pressed and Input.is_action_just_released("attack"):
+		if current_mode == PlayerMode.PEACEFUL:
+			return
 		attack_was_pressed = false
 
 		if current_mode == PlayerMode.FIGHTING and can_slash:
@@ -317,7 +323,7 @@ func _handle_attack_and_jump(up: Vector3) -> void:
 		return
 	if Input.is_action_just_pressed("grab"):
 		perform_grab()
-
+		return
 	if Input.is_action_just_pressed("jump"):
 		if is_sliding and is_on_floor():
 			#exit_slide_with_jump()
@@ -363,7 +369,6 @@ func perform_superdash() -> void:
 
 	get_tree().create_timer(0.25).timeout.connect(func(): dash_efx = false)
 
-	# Longer cooldown
 	await get_tree().create_timer(DASH_COOLDOWN + SUPERDASH_EXTRA_COOLDOWN).timeout
 	if is_instance_valid(self):
 		can_dash = true
@@ -384,7 +389,6 @@ func perform_slash(is_long: bool) -> void:
 	var dash_force := DASH_FORCE * (LONG_DASH_SPEED_MULT if is_long else 0.8)
 
 	# --- Direction ---
-	# Camera forward for long dash. No axis-locking.
 	var cam_forward := -camera.global_transform.basis.z
 	cam_forward.y = clamp(cam_forward.y, -1.0, 0.3) # prevent upward yeet
 	cam_forward = cam_forward.normalized()
@@ -516,6 +520,7 @@ func _start_slide_from_player() -> void:
 	if slope_node and slope_node.has_method("start_slide"):
 		slope_node.start_slide(initial_dir, slide_speed)
 	slope_node.visible = true
+	$Marker3D/Camera3D/Sprites/POR_Sword/Idle.visible = false
 	$Marker3D/Camera3D/Sprites/POR_Sword.visible = false
 
 func _handle_crouch_or_slide(delta: float) -> void:
@@ -562,6 +567,7 @@ func _handle_crouch_or_slide(delta: float) -> void:
 				slope_node.reset_slide_velocity()
 			if slope_node:
 				slope_node.visible = false
+				$Marker3D/Camera3D/Sprites/POR_Sword/Idle.visible = true
 				$Marker3D/Camera3D/Sprites/POR_Sword.visible = true
 		crouching = false
 		_reset_collision_size()
@@ -609,14 +615,11 @@ func perform_dash() -> void:
 	dash_active = true
 	invincible = true
 
-	# add fixed speed boost
 	dash_added_speed = 20.0
 	speed += dash_added_speed
 
-	# dash vfx
 	dash_efx = true
 	
-	# dash ends after 0.2 sec
 	await get_tree().create_timer(0.2).timeout
 	
 	# remove exactly the speed we added, no matter what happened meanwhile
@@ -630,10 +633,6 @@ func perform_dash() -> void:
 	await get_tree().create_timer(DASH_COOLDOWN).timeout
 	can_dash = true
 
-	# ------- COOLDOWN -------
-	await get_tree().create_timer(DASH_COOLDOWN).timeout
-	if is_instance_valid(self):
-		can_dash = true
 
 
 
@@ -707,15 +706,13 @@ func check_wall_impact():
 			handle_wall_collision(camera_facing, normal)
 
 func handle_wall_collision(direction: Vector3, wall_normal: Vector3):
-	# If currently sliding, handle separately
 	if is_sliding:
 		# Invincible to wall damage during slide
 		if speed >= SLIDE_WALL_BOUNCE_SPEED:
-			# Play sound / effect
 			$slope/Fail.play()
+			$Marker3D/Camera3D/Sprites/POR_Sword/Idle.visible = true
 			$Marker3D/Camera3D/Sprites/POR_Sword.visible = true
 
-			# Calculate upward + backward knockback (~45°)
 			var knockback_dir := (wall_normal + Vector3.UP).normalized()
 			var knockback_force := knockback_dir * SLIDE_WALL_KNOCKBACK_FORCE
 
@@ -754,6 +751,7 @@ func handle_wall_collision(direction: Vector3, wall_normal: Vector3):
 
 func exit_slide():
 	is_sliding = false
+	$Marker3D/Camera3D/Sprites/POR_Sword/Idle.visible = true
 	$Marker3D/Camera3D/Sprites/POR_Sword.visible = true
 	var planar_velocity := velocity - _up() * velocity.dot(_up())
 	if planar_velocity.length() > 0.01:
@@ -844,4 +842,3 @@ func respawn():
 	is_game_over = false
 	
 	
-#communoicationsd

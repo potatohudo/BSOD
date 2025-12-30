@@ -34,8 +34,8 @@ func _ready() -> void:
 	subviewport_container = get_node_or_null("SubViewportContainer")
 	settings_manager.set_main_reference(self)
 	DisplayServer.window_set_size(Vector2i(1280, 800))
-	
-	handle_command("load track")
+	#
+	#handle_command("load track")
 
 
 func get_subviewport_container():

@@ -334,44 +334,6 @@ func _handle_attack_and_jump(up: Vector3) -> void:
 				velocity -= vert
 			velocity += up * JUMP_VELOCITY
 
-func perform_superdash() -> void:
-	if not can_dash:
-		return
-
-	can_dash = false
-	dash_efx = true
-	print("SUPERDASH!")
-
-	var up := _up()
-	var dir := get_movement_direction()
-	if dir.length() == 0.0:
-		dir = _project_on_plane(-camera.global_transform.basis.z, up).normalized()
-
-	var dash_force := DASH_FORCE * SUPERDASH_MULT
-	momentum = dir * dash_force
-	velocity += momentum
-	speed = max(speed, speed + dash_force * 0.7)
-
-	sprite_handler.slash_play()  
-	var space_state = get_world_3d().direct_space_state
-	var query := PhysicsRayQueryParameters3D.create(global_transform.origin, global_transform.origin + dir * 5.0)
-	query.exclude = [self]
-	query.collide_with_areas = false
-	query.collide_with_bodies = true
-	var result := space_state.intersect_ray(query)
-	if result:
-		var collider = result.collider
-		# var normal := result.normal
-		var dmg = BASE_DAMAGE * 2.5 + speed * 0.8
-		print("Superdash hit for ", dmg, " dmg!")
-		if collider.is_in_group("enemy"):
-			collider.apply_damage(dmg)
-
-	get_tree().create_timer(0.25).timeout.connect(func(): dash_efx = false)
-
-	await get_tree().create_timer(DASH_COOLDOWN + SUPERDASH_EXTRA_COOLDOWN).timeout
-	if is_instance_valid(self):
-		can_dash = true
 
 var combo_count: int = 0
 var combo_reset_timer: float = 0.0
@@ -388,7 +350,7 @@ func perform_slash(is_long: bool) -> void:
 
 	var dash_force := DASH_FORCE * (LONG_DASH_SPEED_MULT if is_long else 0.8)
 
-	# --- Direction ---
+	# Direction 
 	var cam_forward := -camera.global_transform.basis.z
 	cam_forward.y = clamp(cam_forward.y, -1.0, 0.3) # prevent upward yeet
 	cam_forward = cam_forward.normalized()
@@ -399,7 +361,6 @@ func perform_slash(is_long: bool) -> void:
 		dash_force *= 1.5
 
 	if is_long:
-		# LONG SLASH — uses pure camera direction
 		invincible = true
 		
 		if not is_on_floor():
@@ -412,39 +373,17 @@ func perform_slash(is_long: bool) -> void:
 		get_tree().create_timer(0.5).timeout.connect(func():
 			invincible = false
 		)
+		raycast_dmg(slash_dir, BASE_DAMAGE * 1.5, 10)
 	else:
-		# SHORT SLASH — keeps your existing momentum behavior
 		velocity += momentum
 		speed = max(speed, speed + dash_force * 0.3)
-
-	# --- Damage Raycast ---
-	var origin := camera.global_transform.origin
-	var query := PhysicsRayQueryParameters3D.create(origin, origin + slash_dir * 10.0)
-	query.exclude = [self]
-	query.collide_with_bodies = true
-
-	var result := get_world_3d().direct_space_state.intersect_ray(query)
-	if result:
-		var hit_node := result.collider as Node
-		while hit_node and not hit_node.is_in_group("enemy"):
-			hit_node = hit_node.get_parent()
-
-		if hit_node:
-			var dmg := BASE_DAMAGE
-			if is_long:
-				dmg *= LONG_DASH_DAMAGE_MULT
-			dmg += speed * 0.6
-
-			if hit_node.has_method("apply_damage"):
-				hit_node.apply_damage(dmg)
-
-			emit_signal("hit", hit_node, dmg)
-			print(is_long, hit_node, dmg)
-
-	# --- Cooldown ---
-	await get_tree().create_timer(SLASH_COOLDOWN).timeout
+		
+		raycast_dmg(slash_dir, BASE_DAMAGE, 10)
+		
+	await get_tree().create_timer(SLASH_COOLDOWN).timeout #cooldown
 	can_slash = true
 	in_long_dash = false
+
 
 
 var is_grabbing = false
@@ -635,8 +574,6 @@ func perform_dash() -> void:
 
 
 
-
-
 # -------- Smooth Dash Loss for Long Dash --------
 func _start_smooth_dash_loss():
 	var loss_time := 0.001   # duration of smooth fade-out
@@ -789,7 +726,30 @@ func _reset_collision_size():
 	collision_shape.shape.height = 1.6  
 	collision_shape.position.y = 0.8
 
+
+# --to/from player damage--
+
+func raycast_dmg(dir, dmg, dist):
+	#add how long the raycast is performed
+	#add raycast delay (projectile stuff)
+	var origin := camera.global_transform.origin
+	var query := PhysicsRayQueryParameters3D.create(origin, origin + dir * dist)
+	query.exclude = [self]
+	query.collide_with_bodies = true
+
+	var result := get_world_3d().direct_space_state.intersect_ray(query)
+	if result:
+		var hit_node := result.collider as Node
+		while hit_node and not hit_node.is_in_group("enemy"):
+			hit_node = hit_node.get_parent()
+
+		if hit_node and hit_node.has_method("apply_damage"):
+			hit_node.apply_damage(dmg)
+			emit_signal("hit", hit_node, dmg)
+		print(hit_node, dmg)
+
 func apply_damage(amount: int):
+	#applies damage TO the player
 	if invincible == true:
 		return
 	if amount >= 15 and amount <= 29:
@@ -798,11 +758,15 @@ func apply_damage(amount: int):
 		hurt_sound_1.play()
 	#elif amount >= 40:
 		#hurt_sound_2.play()
-
+		
+	#the whole sound thing is kinda ass but whatever we'll figure it out later
+	
 	health -= amount
 	health = max(health, 0)
 	health_bar.value = health
-	
+
+
+
 #shader logic
 	var freaky_intensity = clamp(amount / 50.0, 0.1, 1.0)
 	var freaky2_intensity = clamp(amount / 50.0, 0.01, 1.0)

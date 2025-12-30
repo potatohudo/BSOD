@@ -595,7 +595,7 @@ shape = SubResource("ConcavePolygonShape3D_75406")
 transform = Transform3D(-0.9588098, 0, -0.28404891, 0, 1, 0, 0.28404891, 0, -0.9588098, 0, -1.1980784, 55.485683)
 
 [node name="DialogManager" parent="ya3" instance=ExtResource("16_ckxg0")]
-meetings = Array[NodePath]([NodePath("DialogBubble"), NodePath("ba")])
+meetings = Array[NodePath]([NodePath("ba")])
 walkaways = Array[String](["[emotion=0:sad]Wait- No- please don't leave just yet! I- I promise I can do better! Please don't leave me here!", "[emotion=0:sad]No- no- no where are you going? I thought we had something here. I thought you were connecting with me! Please don't leave me alone!", "[emotion=0:sad]Okay... I get it..."])
 character_nodes = Array[NodePath]([NodePath("..")])
 

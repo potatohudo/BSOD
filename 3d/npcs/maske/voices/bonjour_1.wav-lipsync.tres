@@ -1,0 +1,59 @@
+[gd_resource type="Resource" script_class="AudioStreamLipsync" load_steps=5 format=3 uid="uid://bnu8g4y70rtlc"]
+
+[ext_resource type="AudioStream" uid="uid://2hq7pgpymg6m" path="res://3d/npcs/maske/voices/bonjour_1.wav" id="1_tshhe"]
+[ext_resource type="Script" uid="uid://bfi5hlhgr5yl0" path="res://addons/baked_lipsync/resources/audio_stream_lipsync.gd" id="2_q4uf8"]
+
+[sub_resource type="Animation" id="Animation_lo75r"]
+length = 2.44
+tracks/0/type = "audio"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("1_tshhe")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/0/use_blend = true
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:mouth_shape_set")
+tracks/1/interp = 0
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.67, 0.73, 0.78, 0.99, 1.13, 1.27, 1.62, 2.24, 2.36, 2.43),
+"transitions": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+"update": 1,
+"values": [0, 5, 6, 2, 7, 6, 2, 0, 2, 0, 0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:expression_set")
+tracks/2/interp = 0
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(0),
+"update": 1,
+"values": ["expression_name"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_du2cm"]
+_data = {
+&"play": SubResource("Animation_lo75r")
+}
+
+[resource]
+script = ExtResource("2_q4uf8")
+audio_stream = ExtResource("1_tshhe")
+animation_library = SubResource("AnimationLibrary_du2cm")
+animation = SubResource("Animation_lo75r")
+lipsync_data = [[0.0, "X"], [0.67, "E"], [0.73, "F"], [0.78, "B"], [0.99, "G"], [1.13, "F"], [1.27, "B"], [1.62, "X"], [2.24, "B"], [2.36, "X"], [2.43, "X"]]
+expression_data = [[0.0, "expression_name"]]

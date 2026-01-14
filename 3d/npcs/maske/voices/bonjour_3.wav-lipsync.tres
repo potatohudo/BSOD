@@ -1,0 +1,58 @@
+[gd_resource type="Resource" script_class="AudioStreamLipsync" load_steps=5 format=3 uid="uid://bmp3emcqrwgv2"]
+
+[ext_resource type="AudioStream" uid="uid://f1jty5nr63pq" path="res://3d/npcs/maske/voices/bonjour_3.wav" id="1_4v8e1"]
+[ext_resource type="Script" uid="uid://bfi5hlhgr5yl0" path="res://addons/baked_lipsync/resources/audio_stream_lipsync.gd" id="2_1jqsf"]
+
+[sub_resource type="Animation" id="Animation_px3er"]
+length = 3.0
+tracks/0/type = "audio"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("1_4v8e1")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/0/use_blend = true
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:mouth_shape_set")
+tracks/1/interp = 0
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.29, 0.44, 0.48, 0.86, 1.08, 1.15, 1.22, 1.64, 1.81, 2.08, 2.58, 2.65, 2.72, 2.79, 2.99),
+"transitions": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+"update": 1,
+"values": [0, 4, 3, 2, 3, 5, 6, 0, 2, 0, 2, 3, 5, 6, 0, 0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:expression_set")
+tracks/2/interp = 0
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kd8bx"]
+_data = {
+&"play": SubResource("Animation_px3er")
+}
+
+[resource]
+script = ExtResource("2_1jqsf")
+audio_stream = ExtResource("1_4v8e1")
+animation_library = SubResource("AnimationLibrary_kd8bx")
+animation = SubResource("Animation_px3er")
+lipsync_data = [[0.0, "X"], [0.29, "D"], [0.44, "C"], [0.48, "B"], [0.86, "C"], [1.08, "E"], [1.15, "F"], [1.22, "X"], [1.64, "B"], [1.81, "X"], [2.08, "B"], [2.58, "C"], [2.65, "E"], [2.72, "F"], [2.79, "X"], [2.99, "X"]]

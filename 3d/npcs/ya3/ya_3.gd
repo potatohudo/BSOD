@@ -19,6 +19,7 @@ func set_emotion(emotion: String) -> void:
 			$AnimationPlayer.play("sad")
 		"ba":
 			$AnimatedSprite3D2.visible = true
+			$RaytracedAudioPlayer3D.play(4.0)
 			$AnimatedSprite3D2.play()
 
 func start_speaking():

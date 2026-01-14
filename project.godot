@@ -36,7 +36,7 @@ window/vsync/vsync_mode=0
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/raytraced_audio/plugin.cfg")
+enabled=PackedStringArray("res://addons/baked_lipsync/plugin.cfg", "res://addons/raytraced_audio/plugin.cfg")
 
 [global_group]
 

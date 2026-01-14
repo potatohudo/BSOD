@@ -1,0 +1,58 @@
+[gd_resource type="Resource" script_class="AudioStreamLipsync" load_steps=5 format=3 uid="uid://cbep1f5i6l1n6"]
+
+[ext_resource type="AudioStream" uid="uid://qb50j0w26m1b" path="res://3d/npcs/maske/voices/bonjour_4.wav" id="1_17pb2"]
+[ext_resource type="Script" uid="uid://bfi5hlhgr5yl0" path="res://addons/baked_lipsync/resources/audio_stream_lipsync.gd" id="2_l8q0n"]
+
+[sub_resource type="Animation" id="Animation_o35le"]
+length = 1.74
+tracks/0/type = "audio"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("1_17pb2")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/0/use_blend = true
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:mouth_shape_set")
+tracks/1/interp = 0
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.29, 0.37, 0.49, 0.7, 0.91, 1.1, 1.73),
+"transitions": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0),
+"update": 1,
+"values": [0, 5, 1, 2, 6, 1, 0, 0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:expression_set")
+tracks/2/interp = 0
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_srscm"]
+_data = {
+&"play": SubResource("Animation_o35le")
+}
+
+[resource]
+script = ExtResource("2_l8q0n")
+audio_stream = ExtResource("1_17pb2")
+animation_library = SubResource("AnimationLibrary_srscm")
+animation = SubResource("Animation_o35le")
+lipsync_data = [[0.0, "X"], [0.29, "E"], [0.37, "A"], [0.49, "B"], [0.7, "F"], [0.91, "A"], [1.1, "X"], [1.73, "X"]]

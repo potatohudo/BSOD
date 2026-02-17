@@ -198,3 +198,7 @@ func _on_tp_button_pressed() -> void:
 	loader.add_child(file_window)
 	file_window.show()
 	register_task(" ", file_window, Vector2(0, -1))
+
+
+func _on_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://main_menu.tscn")

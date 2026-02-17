@@ -1,6 +1,8 @@
+
+##I KNOW THIS CODE IS A HOT MESS BUT IT WORKS SO DONT TOUCH IT
+
 extends Control
 
-signal dialog_finished(bubble_node: Node)
 
 @onready var label: RichTextLabel = %RichTextLabel
 @onready var name_label: Label = %NameLabel
@@ -13,16 +15,6 @@ signal dialog_finished(bubble_node: Node)
 
 @export var character_nodes: Array[NodePath] = []# nodes to call start/stop speaking and set_emotion on
 
-@export var next_yes: NodePath = NodePath("")#  NodePath to the next dialog for "yes"
-@export var next_no: NodePath = NodePath("") # NodePath to the next dialog for "no"
-@export var next_none: Array[NodePath] = [] # list of NodePaths for "none" (queue or random)
-@export var next_none_random: bool = false # true -> pick random from next_none; false -> queue (first available)
-
-
-@export_multiline var walkaway_texts: Array[String] = []
-@export_multiline var return_texts: Array[String] = []
-
-@export var walkaway_replace: bool = true
 
 @export_range(0.005, 0.5, 0.001) var typing_speed := 0.03
 @export_range(0.0, 10.0, 0.01) var wait_time := 0.0
@@ -47,17 +39,14 @@ signal dialog_finished(bubble_node: Node)
 @export var fade_in := true
 @export var fade_out := true
 @export_range(0.1, 5.0, 0.1) var fade_duration := 0.5
-
-@export_group("Styling")
-@export var label_settings: LabelSettings
-@export var bubble_style: StyleBox
+ 
+var _active_character: Node = null
 
 var _current_segment: int = 0
 var _paused: bool = false
 var _resume_segment: int = 0
 var _resume_char: int = 0
-var _resume_text: Array = []        # <<-- now an Array[String]
-var _resume_triggers: Array = []
+var _resume_text: Array = []       
 
 # --- internal state ---
 var _is_showing := false
@@ -67,7 +56,6 @@ var _typing_done := false
 # { "segment": int, "pos": int, "type": "emotion"|"speech", "index": int, "value": String }
 var _trigger_queue := []
 
-# kept inline effects
 var _wave_effect
 var _shake_effect
 var _rand_effect
@@ -111,7 +99,6 @@ class RandScaleEffect:
 		return true
 
 func _ready() -> void:
-	_apply_style()
 	_install_inline_effects()
 
 # Start showing this dialog node. Awaitable -> returns "finished" or "paused".
@@ -124,7 +111,6 @@ func show_dialog() -> String:
 	_typing_done = false
 
 	self.visible = true
-	_apply_style()
 	_update_effect_params()
 
 	# set name label
@@ -144,10 +130,13 @@ func show_dialog() -> String:
 	for segment_index in range(segments.size()):
 		if _paused:
 			break
+		_current_segment = segment_index
 		var seg_text = segments[segment_index]
 		var res_seg = await _show_segment(segment_index, seg_text)
 		if _paused:
 			break
+	if _skip_requested:
+		_fire_all_remaining_triggers(_current_segment)
 
 	_is_showing = false
 
@@ -182,7 +171,7 @@ func finish_now() -> void:
 		_skip_requested = true
 		if label:
 			label.visible_characters = -1
-		_fire_all_remaining_triggers()
+		_fire_all_remaining_triggers(_current_segment)
 
 # Trigger parsing & splitting
 
@@ -257,6 +246,46 @@ func _sort_triggers(a, b) -> int:
 		return 1
 	return 0
 
+# mode: "normal", "return", "quick"
+func play(start_segment := 0) -> String:
+	_current_segment = start_segment
+	return await show_dialog()
+
+
+func _play_with_text(texts: Array) -> String:
+	if texts.is_empty():
+		return "finished"
+
+	var original := text.duplicate(true)
+	var typed: Array[String] = []
+	for s in texts:
+		typed.append(String(s))
+
+	text = typed
+
+
+	var res := await show_dialog()
+
+	text = original
+	return res
+
+
+
+func force_stop() -> void:
+	_skip_requested = true
+	_paused = false
+	_is_showing = false
+	visible = false
+
+	if label:
+		label.visible_characters = -1
+
+	_fire_all_remaining_triggers(_current_segment)
+
+	_active_character = null
+	_trigger_queue.clear()
+
+
 func _show_segment(segment_index: int, seg_text: String) -> void:
 	label.clear()
 	label.bbcode_enabled = true
@@ -274,7 +303,10 @@ func _show_segment(segment_index: int, seg_text: String) -> void:
 	var total_chars := label.get_total_character_count()
 
 	# Start speaking for all characters during segment by default
-	_start_all_characters_speaking()
+	if _active_character and _active_character.has_method("stop_speaking"):
+		_active_character.stop_speaking()
+	_active_character = null
+
 
 	for i in range(total_chars + 1):
 		for t in _trigger_queue:
@@ -283,13 +315,14 @@ func _show_segment(segment_index: int, seg_text: String) -> void:
 
 		if _skip_requested:
 			label.visible_characters = -1
-			_fire_remaining_triggers_for_segment(segment_index)
+			_fire_all_remaining_triggers(_current_segment)
 			break
 
 		label.visible_characters = i
 		await get_tree().create_timer(typing_speed).timeout
 
-	_stop_all_characters_speaking()
+	_active_character = null
+
 
 	_typing_done = true
 
@@ -303,58 +336,45 @@ func _process_trigger(t: Dictionary) -> void:
 	if t.type == "emotion":
 		_apply_emotion(t.index, str(t.value))
 	elif t.type == "speech":
-		# t.value is "s" or "sp"
-		var idx := int(t.index)
-		var char = _get_character_node(idx)
-		if char:
-			if str(t.value) == "s" and char.has_method("start_speaking"):
-				char.start_speaking()
-			elif str(t.value) == "sp" and char.has_method("stop_speaking"):
-				char.stop_speaking()
+		var char := _get_character_node(int(t.index))
+		if not char:
+			return
 
-func _fire_remaining_triggers_for_segment(segment_index: int) -> void:
+		# stop previous speaker
+		if _active_character and _active_character != char:
+			if _active_character.has_method("stop_speaking"):
+				_active_character.stop_speaking()
+
+		_active_character = char
+
+
+func _fire_all_remaining_triggers(segment_index: int) -> void:
 	for t in _trigger_queue:
 		if t.segment == segment_index:
 			_process_trigger(t)
-
-func _fire_all_remaining_triggers() -> void:
-	for t in _trigger_queue:
-		_process_trigger(t)
 
 # Character helpers
 func _get_character_node(index: int) -> Node:
 	if index < 0 or index >= character_nodes.size():
 		return null
+
 	var path := character_nodes[index]
 	if path == NodePath("") or str(path) == "":
 		return null
-	# Try relative resolution first
+
 	var n := get_node_or_null(path)
 	if n:
 		return n
+
 	return get_tree().get_root().get_node_or_null(path)
 
-func _start_all_characters_speaking():
-	for path in character_nodes:
-		if path == NodePath("") or str(path) == "":
-			continue
-		var c := _get_character_node(character_nodes.find(path))
-		if c and c.has_method("start_speaking"):
-			c.start_speaking()
 
-func _stop_all_characters_speaking():
-	for path in character_nodes:
-		if path == NodePath("") or str(path) == "":
-			continue
-		var c := _get_character_node(character_nodes.find(path))
-		if c and c.has_method("stop_speaking"):
-			c.stop_speaking()
 
 # Emotion application 
 func _apply_emotion(index: int, emotion: String) -> void:
-	if index < 0 or index >= character_nodes.size():
-		push_warning("Emotion index %d out of range on %s" % [index, self.name])
-		return
+	#if index < 0 or index >= character_nodes.size():
+		#push_warning("Emotion index %d out of range on %s" % [index, self.name])
+		#return
 	var char := _get_character_node(index)
 	if char == null:
 		push_warning("Character at index %d not found on %s" % [index, self.name])
@@ -365,11 +385,7 @@ func _apply_emotion(index: int, emotion: String) -> void:
 	char.set_emotion(emotion)
 
 # Style / effects helpers
-func _apply_style() -> void:
-	if panel and bubble_style:
-		panel.add_theme_stylebox_override("panel", bubble_style)
-	if label and label_settings:
-		label.label_settings = label_settings
+
 
 func _install_inline_effects() -> void:
 	_wave_effect = WaveEffect.new()
@@ -469,7 +485,10 @@ func _resume_segment_reveal(seg_index: int, seg_text: String, start_char: int) -
 	label.visible_characters = start_char
 
 	var total := label.get_total_character_count()
-	_start_all_characters_speaking()
+	if _active_character and _active_character.has_method("stop_speaking"):
+		_active_character.stop_speaking()
+	_active_character = null
+
 
 	for i in range(start_char, total + 1):
 
@@ -479,26 +498,20 @@ func _resume_segment_reveal(seg_index: int, seg_text: String, start_char: int) -
 
 		if _skip_requested:
 			label.visible_characters = -1
+			_fire_all_remaining_triggers(_current_segment)
+			_typing_done = true
 			break
+
 
 		label.visible_characters = i
 		await get_tree().create_timer(typing_speed).timeout
 
-	_stop_all_characters_speaking()
+	_active_character = null
+
 
 func restart_dialog() -> void:
 	_paused = false
 	await show_dialog()
-
-
-func play_return_text() -> void:
-	if not return_texts or return_texts.size() == 0:
-
-		return
-	var original_segments := text.duplicate(true)
-	text = return_texts.duplicate(true)
-	await show_dialog()
-	text = original_segments
 
 
 func play_quick_text(texts: Array[String]):
@@ -513,3 +526,9 @@ func play_quick_text(texts: Array[String]):
 	text = original_segments
 	visible = original_visible
 	return res
+
+func start_speaking():
+	$AnimationPlayer.play()
+
+func stop_speaking():
+	$AnimationPlayer.stop()

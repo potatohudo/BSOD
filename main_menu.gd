@@ -83,3 +83,10 @@ func _on_button_2_pressed() -> void:
 func transanim():
 	var tween2 := create_tween().set_parallel(true)
 	tween2.tween_property(blackout, "modulate:a", 1.0, 0.3)
+
+
+func _on_button_3_pressed() -> void:
+	await get_tree().create_timer(0.2).timeout
+	transanim()
+	await get_tree().create_timer(0.3).timeout
+	get_tree().change_scene_to_file("res://credits.tscn")

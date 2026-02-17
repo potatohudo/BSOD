@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dimtvq0kmhumm"
+path="res://.godot/imported/TF2 Frying Pan Hit Sound Effect [Download].mp3-d621c2dffa19532ab1c72e9456b7597b.mp3str"
+
+[deps]
+
+source_file="res://3d/npcs/ya3/TF2 Frying Pan Hit Sound Effect [Download].mp3"
+dest_files=["res://.godot/imported/TF2 Frying Pan Hit Sound Effect [Download].mp3-d621c2dffa19532ab1c72e9456b7597b.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

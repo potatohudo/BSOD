@@ -1,6 +1,9 @@
 extends Node
 
 @export var loop_length: float = 8.0
+@export var times: int = 1
+var active: bool = false
+
 const PREWARM_DISTANCE := 200.0
 
 var sample_nodes: Array = []
@@ -12,7 +15,6 @@ var player: Node = null
 
 var fighting_timer: float = 0.0
 const FIGHT_DURATION := 10.0
-
 
 func _ready():
 	await get_tree().process_frame
@@ -30,11 +32,13 @@ func _ready():
 #  PROCESS
 
 func _process(delta):
-	if not playing:
+	if not active:
+		time_in_loop = 0.0
 		return
+
 	if fighting_timer > 0.0:
 		fighting_timer -= delta
-	# Update musical loop timer
+
 	time_in_loop += delta
 	if time_in_loop >= loop_length:
 		time_in_loop = fmod(time_in_loop, loop_length)
@@ -43,7 +47,6 @@ func _process(delta):
 
 	for sample in sample_nodes:
 		_process_sample(sample, delta)
-
 
 func _process_sample(sample, delta):
 	# Handle the interval 

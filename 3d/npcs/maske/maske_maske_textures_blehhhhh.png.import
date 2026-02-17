@@ -2,15 +2,12 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://drg64vttxve5u"
+uid="uid://bowpgd2xtajm3"
 path.s3tc="res://.godot/imported/maske_maske_textures_blehhhhh.png-f63531f092c23f0c00f3b6fc0cba69f2.s3tc.ctex"
 path.etc2="res://.godot/imported/maske_maske_textures_blehhhhh.png-f63531f092c23f0c00f3b6fc0cba69f2.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "b936080ac264a294be1ce5b7607fa502"
 }
 
 [deps]

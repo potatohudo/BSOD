@@ -24,7 +24,7 @@ config/icon="res://icon.svg"
 
 Global="*res://global.gd"
 Save="*res://save.gd"
-DialogManager="res://dialog_system/dialog_manager.gd"
+DialogManager="*res://dialog_system/dialog_manager.gd"
 
 [display]
 

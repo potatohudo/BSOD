@@ -1,0 +1,74 @@
+[gd_scene load_steps=21 format=3 uid="uid://dblacw5o582es"]
+
+[ext_resource type="Script" uid="uid://bx0yunedairbl" path="res://3d/npcs/boa/ball_of_agony.gd" id="1_73ckb"]
+[ext_resource type="PackedScene" uid="uid://b8i2y52nvs1kh" path="res://dialog_system/dialog_bubble.tscn" id="2_uosdj"]
+[ext_resource type="AudioStream" uid="uid://b3cs75xuqc2js" path="res://3d/npcs/boa/a.mp3" id="3_83gpf"]
+[ext_resource type="AudioStream" uid="uid://b44vknul1j0ne" path="res://3d/npcs/boa/AAA.mp3" id="4_5xji0"]
+[ext_resource type="AudioStream" uid="uid://b7ld7ijih8sxc" path="res://3d/npcs/boa/aaaa.mp3" id="5_rh5gh"]
+[ext_resource type="AudioStream" uid="uid://bjkcdxhf6pvcn" path="res://3d/npcs/boa/AAAAAA.mp3" id="6_6b8wm"]
+[ext_resource type="AudioStream" uid="uid://borv1lok6g7w8" path="res://3d/npcs/boa/AHHHHHHH.mp3" id="7_3wyoh"]
+[ext_resource type="AudioStream" uid="uid://by57b3jhnyvc6" path="res://3d/npcs/boa/AAAAAAAAA.mp3" id="8_43cka"]
+[ext_resource type="AudioStream" uid="uid://dx5nr8a6q00sc" path="res://3d/npcs/boa/AAAAAAAAAA.mp3" id="9_op8kk"]
+[ext_resource type="AudioStream" uid="uid://dchs65y44e2ne" path="res://3d/npcs/boa/AAAAAAAAAAAAAA.mp3" id="10_8dwde"]
+[ext_resource type="Script" uid="uid://dkb8ltjc6067n" path="res://addons/raytraced_audio/raytraced_audio_player_3d.gd" id="11_ubi24"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qnccs"]
+albedo_color = Color(0.18197948, 0.3885747, 0.5993704, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_rpa28"]
+rings = 3
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_uvy5g"]
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_njt4q"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_n8e37"]
+material = SubResource("ORMMaterial3D_njt4q")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_73ckb"]
+bg_color = Color(0, 0, 1, 1)
+
+[sub_resource type="Theme" id="Theme_uosdj"]
+Panel/styles/panel = SubResource("StyleBoxFlat_73ckb")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_73ckb"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_5u7ns"]
+random_pitch = 1.08
+streams_count = 8
+stream_0/stream = ExtResource("3_83gpf")
+stream_1/stream = ExtResource("4_5xji0")
+stream_2/stream = ExtResource("5_rh5gh")
+stream_3/stream = ExtResource("6_6b8wm")
+stream_4/stream = ExtResource("7_3wyoh")
+stream_5/stream = ExtResource("8_43cka")
+stream_6/stream = ExtResource("9_op8kk")
+stream_7/stream = ExtResource("10_8dwde")
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_73ckb")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_qnccs")
+mesh = SubResource("SphereMesh_rpa28")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+process_material = SubResource("ParticleProcessMaterial_uvy5g")
+draw_pass_1 = SubResource("QuadMesh_n8e37")
+
+[node name="DialogBubble" parent="." instance=ExtResource("2_uosdj")]
+visible = false
+offset_top = 183.0
+theme = SubResource("Theme_uosdj")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("SphereShape3D_73ckb")
+
+[node name="RaytracedAudioPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamRandomizer_5u7ns")
+unit_size = 30.87
+max_distance = 275.1
+script = ExtResource("11_ubi24")
+metadata/_custom_type_script = "uid://dkb8ltjc6067n"

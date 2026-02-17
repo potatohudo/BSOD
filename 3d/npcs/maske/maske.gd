@@ -4,7 +4,7 @@ extends Node3D
 @onready var sface = $maske/Armature/Skeleton3D/Cube_005
 @onready var prefix: Node3D = $maske/Armature_001
 @onready var pface = $maske/Armature_001/Skeleton3D/Cube_004
-
+@onready var maske = $maske/Armature_002/Skeleton3D/Cube_003
 
 
 @export var prefix_radius := 1.0
@@ -48,6 +48,20 @@ extends Node3D
 @onready var pEdown = load("res://3d/npcs/maske/PREFIX_33.png")
 @onready var pAdown = load("res://3d/npcs/maske/PREFIX_44.png")
 
+@onready var sIup = load("res://3d/npcs/maske/SUFFIX_1.png")
+@onready var sAEup = load("res://3d/npcs/maske/SUFFIX_2.png")
+@onready var sAneutral = load("res://3d/npcs/maske/SUFFIX_3.png") 
+@onready var sSup = load("res://3d/npcs/maske/SUFFIX_4.png") #uhhhhhhhh
+@onready var sAup = load("res://3d/npcs/maske/SUFFIX_5.png")
+@onready var sOup = load("res://3d/npcs/maske/SUFFIX_6.png")
+@onready var sEup = load("res://3d/npcs/maske/SUFFIX_7.png")
+@onready var sUH = load("res://3d/npcs/maske/SUFFIX_8.png")
+@onready var sOdown = load("res://3d/npcs/maske/SUFFIX_11.png")
+@onready var sAdown = load("res://3d/npcs/maske/SUFFIX_22.png")
+@onready var sSdown = load("res://3d/npcs/maske/SUFFIX_33.png")
+
+@onready var mDEF= load("res://3d/npcs/maske/maske.png") 
+
 var rng := RandomNumberGenerator.new()
 var objects := {}
 
@@ -56,6 +70,9 @@ func _ready() -> void:
 	rng.randomize()
 	_register_object(prefix, prefix_radius)
 	_register_object(suffix, suffix_radius)
+	set_mouth(pSup, pface)
+	set_mouth(sIup, sface) 
+	#set_mouth(mDEF, maske)
 
 func play_voiceline(line: String) -> void:
 	if not voicelines.has(line):
@@ -67,6 +84,7 @@ func play_voiceline(line: String) -> void:
 		return
 
 	$PrefixLipsync.play_lipsync(lines.pick_random()) #play the line
+	#this function is like that temporarely OK
 
 
 func set_emotion(emotion: String) -> void:
@@ -135,11 +153,11 @@ func _random_interval() -> float:
 ##--- faces and uh.lipcyncc logic ---
 #these functions can be just separated into 2 parts end connected to the corresponding signals
 
-func set_mouth(texture: Texture2D) -> void:
+func set_mouth(texture: Texture2D, face) -> void:
 	if not pface:
 		return
 
-	var mesh = pface.get_mesh()
+	var mesh = face.get_mesh()
 	if not mesh:
 		return
 
@@ -153,66 +171,119 @@ func set_mouth(texture: Texture2D) -> void:
 		mesh.surface_set_material(0, mat)
 
 
-var up = true
+var pup = true
+var sup = true
 
 func _on_prefix_lipsync_mouth_shape_changed(mouth_shape: int) -> void:
 	print(mouth_shape)
-	if up == true:
+	if pup == true:
 		match mouth_shape:
 			0: # Rest position
-				set_mouth(pSup)
+				set_mouth(pSup, pface)
 			1: # Very closed 
-				set_mouth(pSup)
+				set_mouth(pSup, pface)
 			2: # Slightly open (e.g. EE sound)
-				set_mouth(pIup)
+				set_mouth(pIup, pface)
 			3: # Open (e.g. AE sound)
-				set_mouth(pEup)
+				set_mouth(pEup, pface)
 			4: # Wide open
-				set_mouth(pAup)
+				set_mouth(pAup, pface)
 			5: # Slightly rounded (e.g. the i in bird)
-				set_mouth(pEup)
+				set_mouth(pEup, pface)
 			6: # O
-				set_mouth(pOup)
+				set_mouth(pOup, pface)
 			7: # F
-				set_mouth(pUH)
+				set_mouth(pUH, pface)
 			8: # Tongue on top of mouth (L sound)
 				# The model doesn't move the tongue. girl whatever
-				set_mouth(pSup)
+				set_mouth(pSup, pface)
 	else:
 		match mouth_shape:
 			0: # Rest position
-				set_mouth(pSup)
+				set_mouth(pSup, pface)
 			1: # Very closed 
-				set_mouth(pEdown)
+				set_mouth(pEdown, pface)
 			2: # Slightly open (e.g. EE sound)
-				set_mouth(pIdown)
+				set_mouth(pIdown, pface)
 			3: # Open (e.g. AE sound)
-				set_mouth(pEdown)
+				set_mouth(pEdown, pface)
 			4: # Wide open
-				set_mouth(pAdown)
+				set_mouth(pAdown, pface)
 			5: # Slightly rounded (e.g. the i in bird)
-				set_mouth(pEdown)
+				set_mouth(pEdown, pface)
 			6: # O
-				set_mouth(pOdown)
+				set_mouth(pOdown, pface)
 			7: # F
-				set_mouth(pUH)
+				set_mouth(pUH, pface)
 			8: # L
-				set_mouth(pEdown)
+				set_mouth(pEdown, pface)
 		
 
 
-func _on_prefix_lipsync_expression_changed(expression: String) -> void:
-	if expression == up:
-		up = true
-	else:
-		up = false
+#func _on_prefix_lipsync_expression_changed(expression) -> void:
+	#if expression == pup:
+		#pup = true
+	#else:
+		#pup = false
 		
 #yanderesim ahh code i'll figure out how to shorten it later ok
 
 
 func _on_suffix_lipsync_mouth_shape_changed(mouth_shape: int) -> void:
-	pass # Replace with function body.
+	print(mouth_shape)
+	if sup == true:
+		match mouth_shape:
+			0: # Rest position
+				set_mouth(sIup, sface)
+			1: # Very closed 
+				set_mouth(sSup, sface)
+			2: # Slightly open (e.g. EE sound)
+				set_mouth(sEup, sface)
+			3: # Open (e.g. AE sound)
+				set_mouth(sAEup, sface)
+			4: # Wide open
+				set_mouth(sAup, sface)
+			5: # Slightly rounded (e.g. the i in bird)
+				set_mouth(pIup, sface)
+			6: # O
+				set_mouth(sOup, sface)
+			7: # F
+				set_mouth(sUH, sface)
+			8: # Tongue on top of mouth (L sound)
+				# The model doesn't move the tongue. girl whatever
+				set_mouth(sSup, sface)
+	else:
+		match mouth_shape:
+			0: # Rest position
+				set_mouth(sIup, sface)
+			1: # Very closed 
+				set_mouth(sSdown, sface)
+			2: # Slightly open (e.g. EE sound)
+				set_mouth(sEup, sface)
+			3: # Open (e.g. AE sound)
+				set_mouth(sAneutral, sface)
+			4: # Wide open
+				set_mouth(sAdown, sface)
+			5: # Slightly rounded (e.g. the i in bird)
+				set_mouth(sOdown, sface)
+			6: # O
+				set_mouth(sOdown, sface)
+			7: # F
+				set_mouth(sUH, sface)
+			8: # Tongue on top of mouth (L sound)
+				# The model doesn't move the tongue. girl whatever
+				set_mouth(sSdown, sface)
 
 
 func _on_suffix_lipsync_expression_changed(expression: String) -> void:
-	pass # Replace with function body.
+	if expression == pup:
+		sup = true
+	else:
+		sup = false
+
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if not body.is_in_group("player"):
+		return
+	play_voiceline("greeting")

@@ -1,10 +1,10 @@
 [gd_scene load_steps=17 format=3 uid="uid://bnclps4msda17"]
 
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="1_mfimt"]
-[ext_resource type="Shader" path="res://3d/freaky.gdshader" id="2_3tlvh"]
-[ext_resource type="Script" path="res://main_menu.gd" id="2_hwvh2"]
-[ext_resource type="Script" path="res://3d/texture_rect.gd" id="3_yti4h"]
-[ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="4_lxcef"]
+[ext_resource type="Shader" uid="uid://ckwv2lo1vnbxh" path="res://3d/freaky.gdshader" id="2_3tlvh"]
+[ext_resource type="Script" uid="uid://ckqqwj8p03ubp" path="res://main_menu.gd" id="2_hwvh2"]
+[ext_resource type="Script" uid="uid://exatvhmch4" path="res://3d/texture_rect.gd" id="3_yti4h"]
+[ext_resource type="Shader" uid="uid://bv5p83ewet33l" path="res://3d/datamoshing.gdshader" id="4_lxcef"]
 [ext_resource type="AudioStream" uid="uid://xxeud11r6ijm" path="res://main_menu.mp3" id="6_kpkwb"]
 [ext_resource type="AudioStream" uid="uid://drhpnwnmambj5" path="res://startup.mp3" id="7_b4gni"]
 
@@ -26,10 +26,10 @@ viewport_path = NodePath("SubViewportContainer/SubViewport")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y50rn"]
 resource_local_to_scene = true
 shader = ExtResource("2_3tlvh")
-shader_parameter/strength = 1.0
-shader_parameter/triggered = true
 shader_parameter/screen_texture = SubResource("ViewportTexture_t308c")
 shader_parameter/motion_vectors = SubResource("ViewportTexture_5kxqv")
+shader_parameter/strength = 1.0
+shader_parameter/triggered = true
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_igneh"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
@@ -40,10 +40,10 @@ viewport_path = NodePath("SubViewportContainer/SubViewport")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_77b86"]
 resource_local_to_scene = true
 shader = ExtResource("4_lxcef")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_i001q")
 shader_parameter/datamosh_strength = 0.021
 shader_parameter/strength = 0.064
 shader_parameter/block_size = 1.0
-shader_parameter/motion_vectors = SubResource("ViewportTexture_i001q")
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -235,3 +235,4 @@ stream = ExtResource("7_b4gni")
 
 [connection signal="pressed" from="SubViewportContainer/SubViewport/Control/VBoxContainer/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="SubViewportContainer/SubViewport/Control/VBoxContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="SubViewportContainer/SubViewport/Control/VBoxContainer/Button3" to="." method="_on_button_3_pressed"]

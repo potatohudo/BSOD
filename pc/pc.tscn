@@ -1,11 +1,11 @@
 [gd_scene load_steps=16 format=3 uid="uid://b5yvv32x8oiti"]
 
-[ext_resource type="Script" path="res://pc/pc.gd" id="1_ullek"]
+[ext_resource type="Script" uid="uid://bp4r015dgi6lr" path="res://pc/pc.gd" id="1_ullek"]
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="2_urj55"]
-[ext_resource type="Script" path="res://pc/panel.gd" id="3_efrs8"]
+[ext_resource type="Script" uid="uid://cnwk7ruovwvbj" path="res://pc/panel.gd" id="3_efrs8"]
 [ext_resource type="Texture2D" uid="uid://dbtnd6mcdirw0" path="res://pc/programs/icons/tp.png" id="4_skdsj"]
-[ext_resource type="Shader" path="res://3d/freaky.gdshader" id="5_msk1t"]
-[ext_resource type="Shader" path="res://3d/datamoshing.gdshader" id="6_5wph7"]
+[ext_resource type="Shader" uid="uid://ckwv2lo1vnbxh" path="res://3d/freaky.gdshader" id="5_msk1t"]
+[ext_resource type="Shader" uid="uid://bv5p83ewet33l" path="res://3d/datamoshing.gdshader" id="6_5wph7"]
 [ext_resource type="AudioStream" uid="uid://nsyrhb4df0hn" path="res://pc/sounds/noise.mp3" id="7_e2ov3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cdfbd"]
@@ -20,10 +20,10 @@ viewport_path = NodePath("SubViewportContainer/SubViewport")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1fbyj"]
 resource_local_to_scene = true
 shader = ExtResource("5_msk1t")
-shader_parameter/strength = 0.001
-shader_parameter/triggered = true
 shader_parameter/screen_texture = SubResource("ViewportTexture_4xe3u")
 shader_parameter/motion_vectors = SubResource("ViewportTexture_6icj4")
+shader_parameter/strength = 0.001
+shader_parameter/triggered = true
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ooye2"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
@@ -34,10 +34,10 @@ viewport_path = NodePath("SubViewportContainer/SubViewport")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b5vbf"]
 resource_local_to_scene = true
 shader = ExtResource("6_5wph7")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_sdcix")
 shader_parameter/datamosh_strength = 0.011
 shader_parameter/strength = 0.085
 shader_parameter/block_size = 1.0
-shader_parameter/motion_vectors = SubResource("ViewportTexture_sdcix")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_flsyp"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
@@ -317,4 +317,5 @@ autoplay = true
 parameters/looping = true
 
 [connection signal="item_selected" from="SubViewportContainer/SubViewport/Explorer/HBoxContainer/Tree" to="SubViewportContainer/SubViewport/Explorer" method="_on_tree_item_selected"]
+[connection signal="pressed" from="SubViewportContainer/SubViewport/Explorer/TaskPanel/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="SubViewportContainer/SubViewport/Explorer/TPButton" to="." method="_on_tp_button_pressed"]

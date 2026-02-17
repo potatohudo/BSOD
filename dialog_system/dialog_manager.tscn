@@ -1,17 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bejvkis0t22op"]
+[gd_scene load_steps=2 format=3 uid="uid://bejvkis0t22op"]
 
 [ext_resource type="Script" uid="uid://jfkoxe8nvtyp" path="res://dialog_system/dialog_manager.gd" id="1_8w7nt"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_8w7nt"]
-radius = 0.38889444
-
 [node name="DialogManager" type="Node"]
 script = ExtResource("1_8w7nt")
-
-[node name="Area3D" type="Area3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-shape = SubResource("SphereShape3D_8w7nt")
-
-[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
-[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

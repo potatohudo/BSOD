@@ -719,19 +719,20 @@ func get_movement_direction() -> Vector3:
 
 
 func _apply_crouch_collision():
-	collision_shape.shape.height = 0.8  
-	collision_shape.position.y = 0.4  
+	collision_shape.shape.height = 1.3  
+	collision_shape.position.y = 1.14
 
 func _reset_collision_size():
-	collision_shape.shape.height = 1.6  
-	collision_shape.position.y = 0.8
+	collision_shape.shape.height = 2.0 
+	collision_shape.position.y =  1.14
+	#this part of the code is fucking useless but fick it we ball i dont care
 
 
 # --to/from player damage--
 
 func raycast_dmg(dir, dmg, dist):
 	#add how long the raycast is performed
-	#add raycast delay (projectile stuff)
+	#add raycast delay (projectile stuff), if needed
 	var origin := camera.global_transform.origin
 	var query := PhysicsRayQueryParameters3D.create(origin, origin + dir * dist)
 	query.exclude = [self]
@@ -740,7 +741,7 @@ func raycast_dmg(dir, dmg, dist):
 	var result := get_world_3d().direct_space_state.intersect_ray(query)
 	if result:
 		var hit_node := result.collider as Node
-		while hit_node and not hit_node.is_in_group("enemy"):
+		while hit_node and not hit_node.has_method("apply_damage"):
 			hit_node = hit_node.get_parent()
 
 		if hit_node and hit_node.has_method("apply_damage"):

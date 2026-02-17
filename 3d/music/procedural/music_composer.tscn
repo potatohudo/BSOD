@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://88rcu6acssk0"]
+
+[ext_resource type="Script" uid="uid://d0sr83e3l5o8v" path="res://3d/music/procedural/music_composer.gd" id="1_eppju"]
+
+[node name="MusicComposer" type="Node"]
+script = ExtResource("1_eppju")
+end_timer = 30.0

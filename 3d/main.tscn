@@ -795,16 +795,18 @@ skeleton = NodePath("../LevelHolder")
 
 [node name="CharacterBody3D" parent="SubViewportContainer/SubViewport/Node3D" groups=["player"] instance=ExtResource("1_arn5h")]
 process_mode = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.74464154, 0)
 
 [node name="Marker3D" type="Marker3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D"]
 
 [node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0.285)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3842247, -0.027345762)
 script = ExtResource("2_e55b0")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.231125, -0.776971)
-light_energy = 4.114
+visible = false
+light_energy = 0.0
 light_indirect_energy = 8.162
 light_volumetric_fog_energy = 5.724
 shadow_enabled = true
@@ -882,6 +884,7 @@ frame = 21
 frame_progress = 1.0
 
 [node name="slope" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46614337, 0)
 visible = false
 script = ExtResource("5_087wm")
 

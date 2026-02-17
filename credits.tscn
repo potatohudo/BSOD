@@ -123,6 +123,7 @@ uppercase = true
 layout_mode = 2
 text = "concept artist
 hackathon contributor
+character creator
 "
 label_settings = SubResource("LabelSettings_nm7lk")
 
@@ -346,7 +347,7 @@ label_settings = SubResource("LabelSettings_nm7lk")
 [node name="VBoxContainer4" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 481.0
-offset_top = 47.0
+offset_top = 35.0
 offset_right = 1084.0
 offset_bottom = 1778.0
 
@@ -361,6 +362,20 @@ layout_mode = 2
 text = "character creator
 tester
 SFX
+"
+label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="credit33" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "HAVEN!!!"
+label_settings = SubResource("LabelSettings_nm7lk")
+uppercase = true
+
+[node name="credit41" type="Label" parent="VBoxContainer4"]
+layout_mode = 2
+text = "tester
+2d artist
+2d animator
 "
 label_settings = SubResource("LabelSettings_nm7lk")
 
@@ -452,18 +467,6 @@ text = "2d artist
 "
 label_settings = SubResource("LabelSettings_nm7lk")
 
-[node name="credit33" type="Label" parent="VBoxContainer4"]
-layout_mode = 2
-text = "HAVEN!!!"
-label_settings = SubResource("LabelSettings_nm7lk")
-uppercase = true
-
-[node name="credit41" type="Label" parent="VBoxContainer4"]
-layout_mode = 2
-text = "tester
-"
-label_settings = SubResource("LabelSettings_nm7lk")
-
 [node name="credit19" type="Label" parent="VBoxContainer4"]
 layout_mode = 2
 text = "max"
@@ -543,6 +546,45 @@ layout_mode = 2
 text = "music artist
 "
 label_settings = SubResource("LabelSettings_nm7lk")
+
+[node name="Label" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "Pezil"
+uppercase = true
+
+[node name="Label2" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "concept artist
+2d artist
+character creator
+voice actor?
+"
+
+[node name="Label3" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "CUROSY
+coder? kinda?
+bro i dont remember what you did go fill out the form
+"
+
+[node name="Label4" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "Spoodersourus"
+uppercase = true
+
+[node name="Label5" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "voice actor
+"
+
+[node name="Label6" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "fuzzy_donut"
+uppercase = true
+
+[node name="Label7" type="Label" parent="VBoxContainer5"]
+layout_mode = 2
+text = "character creator"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 visible = false
@@ -736,5 +778,5 @@ offset_left = 913.0
 offset_top = 748.0
 offset_right = 1185.0
 offset_bottom = 785.0
-text = "CREDITS 2.0
+text = "CREDITS 2.1
 (please notify me if any of them are wrong!)"

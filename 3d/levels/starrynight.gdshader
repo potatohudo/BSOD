@@ -1,6 +1,5 @@
 shader_type sky;
 
-// ---------- Basic view / primary controls ----------
 uniform vec2 u_res = vec2(1024.0, 768.0);
 
 uniform float u_time = 0.0;
@@ -8,7 +7,7 @@ uniform float u_zoom : hint_range(-100, 100) = 1.0;
 uniform int u_iter : hint_range(1, 4096) = 512;
 uniform vec2 u_offset = vec2(0.0, 0.0);
 
-// ---------- rotation / 4D support ----------
+// ---------- rotation / "4d" support ----------
 uniform float u_rot : hint_range(0.0, 6.2831853) = 0.0;
 uniform float u_zrot : hint_range(0.0, 6.2831853) = 1.3;
 uniform float u_krot : hint_range(0.0, 6.2831853) = 0.0;
@@ -95,9 +94,7 @@ vec3 paletteL(float t, float h){
 
 // ---------- main sky entry ----------
 void sky() {
-    // ---------------------------------------------
-    // 1. Resolve direction vector from SKY_COORDS
-    // ---------------------------------------------
+
     vec3 dir;
 
     // Attempt vec3 first
@@ -111,7 +108,6 @@ void sky() {
     }
     #endif
 
-    // Fallback to vec2 → build 3D direction manually
     if (!is_vec3) {
         vec2 uv = SKY_COORDS;
 
@@ -125,9 +121,7 @@ void sky() {
         ));
     }
 
-    // ---------------------------------------------
-    // 2. Convert direction → spherical UV
-    // ---------------------------------------------
+
     float lon2 = atan(dir.z, dir.x);
     float lat2 = asin(clamp(dir.y, -1.0, 1.0));
 
@@ -136,9 +130,7 @@ void sky() {
         0.5 - lat2 / PI
     );
 
-    // ---------------------------------------------
-    // 3. Set up fractal UV
-    // ---------------------------------------------
+
     float aspect = max(0.0001, u_res.x / max(1.0, u_res.y));
     vec2 uv0 = (sph_uv - vec2(0.5) + u_offset) * vec2(aspect, 1.0) * u_zoom;
 
@@ -151,9 +143,7 @@ void sky() {
         );
     }
 
-    // ---------------------------------------------
-    // 4. Debug modes (always return a vec4 COLOR)
-    // ---------------------------------------------
+
     if (u_debug_mode == 1) {
         vec3 dbg = vec3(sph_uv, 0.0);
         COLOR = dbg;
@@ -166,9 +156,7 @@ void sky() {
 
     }
 
-    // ---------------------------------------------
-    // 5. FRACTAL ENGINE (unchanged from your code)
-    // ---------------------------------------------
+
     vec4 state = vec4(uv0, 0.0, 0.0);
     vec3 col = vec3(0.0);
     float iterReached = 0.0;
@@ -258,8 +246,5 @@ void sky() {
     vec3 finalCol =
         mix(vec3(0.0), col, smoothstep(0.0, 1.0, tNorm));
 
-    // ---------------------------------------------
-    // 6. Output (vec4)
-    // ---------------------------------------------
     COLOR = finalCol;
 }

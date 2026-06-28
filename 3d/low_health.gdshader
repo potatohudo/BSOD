@@ -1,72 +1,72 @@
 shader_type canvas_item;
 
-uniform sampler2D screen_texture : hint_screen_texture, filter_linear_mipmap;
-uniform sampler2D motion_vectors; // Not used in this version
 
-// Effect Controls
-uniform float strength : hint_range(0.0, 2.0) = 1.0;
-uniform bool triggered = false;
+uniform float noise_scale = 7.0;
 
-// Distortion Settings
-uniform float noise_intensity : hint_range(0.0, 1.0) = 0.5;
+uniform float blob_threshold = 0.5;
+uniform float blob_softness = 0.1;
 
-// Heartbeat Settings
-uniform float heartbeat_speed : hint_range(0.0, 10.0) = 5.0;
-uniform float warp_intensity : hint_range(0.0, 2.0) = 1.0;
+uniform float plasma_scale = 3.0;
+uniform float plasma_speed = 1.0;
+uniform float plasma_strength = 0.2;
 
-// Dissolve Settings
-uniform float dissolve_intensity : hint_range(0.0, 1.0) = 0.5;
-uniform float dissolve_threshold : hint_range(0.0, 1.0) = 0.6;
+uniform float center_size = 0.3;
+uniform float center_blur = 0.25;
 
-// Original noise function
-float random(vec2 st) {
-	return fract(sin(dot(st, vec2(12.9898,78.233))) * 43758.5453123);
-}
+
+uniform sampler2D noise_tex;
+uniform sampler2D noise_mask;
+
+render_mode blend_premul_alpha;
+
 
 void fragment() {
-	vec2 uv = UV;
-	vec4 base_color = texture(screen_texture, uv);
+    vec2 uv = UV;
+    float t = TIME;
 
-	if (triggered) {
-		// Heartbeat pulse (range: 0.3 to 1.0) affects noise only.
-		float pulse = 0.3 + 0.7 * abs(sin(TIME * heartbeat_speed));
+    float step_time = floor(t / 0.1);
 
-		// Warp offset: organic distortion NOT affected by heartbeat.
-		vec2 warp_offset = vec2(
-			sin(uv.y * 10.0 + TIME * 2.0),
-			cos(uv.x * 10.0 + TIME * 2.0)
-		) * warp_intensity;
+    float seed = fract(sin(step_time * 12.9898) * 43758.5453);
 
-		// Compute displaced UV using only the warp offset (multiplied by strength).
-		vec2 displaced_uv = clamp(uv + warp_offset * strength, vec2(0.0), vec2(1.0));
+    vec2 offset = vec2(
+        fract(seed * 13.37),
+        fract(seed * 91.7)
+    );
 
-		// Compute noise for dark spots (noise is affected by heartbeat).
-		float noise_val = random(uv + TIME);
-		float noise_dark = noise_val * noise_intensity * pulse;
+    // Base noise
+    vec2 noise_uv = fract(uv * noise_scale + offset);
+    vec4 noise_sample = texture(noise_tex, noise_uv);
 
-		// Get the glitched color from the displaced coordinates.
-		vec4 glitched_color = texture(screen_texture, displaced_uv);
+    // Mask (bigger blobs: lower scale usually)
+    vec2 mask_uv = uv * 1.0;
+    vec4 mask_sample = texture(noise_mask, mask_uv);
 
-		// Apply the noise as a darkening factor (multiply the color).
-		vec4 noise_applied_color = glitched_color * (1.0 - noise_dark);
+	float mask_value = texture(noise_mask, uv).r;
 
-		// Dissolve effect: generate high-frequency noise for small, random smear spots.
-		float small_noise = random(uv * 50.0 + TIME);
-		float dissolve_mask = smoothstep(dissolve_threshold, dissolve_threshold + 0.1, small_noise * dissolve_intensity);
+	// small spatial variation
+	float variation = texture(noise_mask, uv * 2.50 + t * 0.01).r * 0.2;
 
-		// Create a blurred version by averaging nearby pixels.
-		vec4 blurred_color = (
-			texture(screen_texture, displaced_uv + vec2(0.005, 0.0)) +
-			texture(screen_texture, displaced_uv + vec2(-0.005, 0.0)) +
-			texture(screen_texture, displaced_uv + vec2(0.0, 0.005)) +
-			texture(screen_texture, displaced_uv + vec2(0.0, -0.005))
-		) / 4.0;
+	float dynamic_threshold = blob_threshold 
+	    + sin(t * 0.8) * 0.2
+	    + variation;
 
-		// Mix the noise-applied color with the blurred version based on the dissolve mask.
-		vec4 final_color = mix(noise_applied_color, blurred_color, dissolve_mask);
+	float blob = smoothstep(
+	    dynamic_threshold - blob_softness,
+	    dynamic_threshold + blob_softness,
+	    mask_value
+	);
+	
+	//central mask
+    float dist = distance(UV, vec2(0.5));
 
-		COLOR = final_color;
-	} else {
-		COLOR = base_color;
-	}
+    float center_mask = smoothstep(
+        center_size,
+        center_size + center_blur,
+        dist
+    );
+
+    float alpha = 1.0 - blob;
+
+    COLOR = vec4(noise_sample.rgb, noise_sample.a * alpha * center_mask);
 }
+

@@ -74,16 +74,13 @@ void fragment() {
     vec3 view_dir = normalize(-VIEW);
     vec3 look_dir = normalize(world_pos); // used for refraction
 
-    // Calculate energy boost based on light direction
     float light_strength = max(dot(normalize(fake_light_dir), fixed_world_normal), 0.0);
     float energy_multiplier = mix(min_energy_multiplier, max_energy_multiplier, light_strength);
 
-    // Matcap reflection
     vec3 matcap_color = texture(matcap, matcap_uv).rgb;
     if (matcap_color == vec3(0.0)) matcap_color = vec3(0.8);
     vec3 color = mix(base_color, matcap_color, 0.8);
 
-    // Shimmer
     float shimmer = sin((UV.x + UV.y) * 30.0 + t * shimmer_speed);
     shimmer = shimmer * 0.5 + 0.5;
     color += vec3(1.0, 0.9, 0.95) * shimmer_strength * shimmer;
@@ -98,11 +95,9 @@ void fragment() {
     float gradient = gradient_direction.x + gradient_direction.y + gradient_direction.z + t;
     vec3 refraction = 0.5 + 0.5 * sin(vec3(-1.0, 0.0, 1.0) * (1.0 - look_dot) * refraction_split + gradient);
     color = mix(color, color * (1.0 - refraction * refraction_affect), 0.5);
-
-    // Apply energy multiplier based on fake light amount
+	
     ALBEDO = color * energy_multiplier;
 
-    // Normal distortion
     vec3 normal_offset = vec3(
         sin(UV.y * 40.0 + t * wave_speed * 1.5),
         cos(UV.x * 40.0 + t * wave_speed * 1.5),

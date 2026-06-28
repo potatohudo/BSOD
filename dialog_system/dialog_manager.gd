@@ -16,9 +16,6 @@ var _stored_id: int = -1
 # id -> { "node": Node, "example": Control }
 var _characters: Dictionary = {}
 
-# -------------------------
-# CHARACTER REGISTRATION
-# -------------------------
 
 func register_character(character: Node, example_bubble: Control) -> void:
 	if not is_instance_valid(character):
@@ -39,10 +36,7 @@ func unregister_character(character: Node) -> void:
 func _character_id(c: Node) -> String:
 	return str(c.get_path())
 
-# -------------------------
 # PUBLIC API
-# -------------------------
-
 func play(
 	texts: Array,
 	character: Node,
@@ -154,10 +148,7 @@ func show(characters: Array) -> void:
 
 
 
-# -------------------------
-# INTERNAL FLOW
-# -------------------------
-
+#flow
 func _run_bubble(bubble: Control, id: int) -> void:
 	if not is_instance_valid(bubble):
 		_finish(id)

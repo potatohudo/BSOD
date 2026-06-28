@@ -1,4 +1,4 @@
-[gd_scene load_steps=125 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene load_steps=131 format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" uid="uid://btd68ay3n2lrg" path="res://3d/main3d.gd" id="1_h31h8"]
@@ -707,21 +707,6 @@ shader_parameter/datamosh_strength = 0.0
 shader_parameter/strength = 0.0
 shader_parameter/block_size = 1.0
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_nijhe"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xtxmy"]
-resource_local_to_scene = true
-shader = ExtResource("9_vf5oh")
-shader_parameter/motion_vectors = SubResource("ViewportTexture_nijhe")
-shader_parameter/strength = 1.0
-shader_parameter/triggered = false
-shader_parameter/noise_intensity = 0.129
-shader_parameter/heartbeat_speed = 3.8
-shader_parameter/warp_intensity = 0.005
-shader_parameter/dissolve_intensity = 0.5
-shader_parameter/dissolve_threshold = 0.6
-
 [sub_resource type="Theme" id="Theme_jpke2"]
 resource_local_to_scene = true
 HBoxContainer/colors/body_color = Color(0, 0, 0, 1)
@@ -741,6 +726,56 @@ baseline_offset = 0.435
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1hbw6"]
 shader = ExtResource("3_ktawk")
+
+[sub_resource type="Gradient" id="Gradient_s4t7x"]
+offsets = PackedFloat32Array(0, 0.98895025, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.8563536, 0.8563536, 0.8563536, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3l2s8"]
+noise_type = 3
+seed = 3
+frequency = 0.002
+fractal_type = 2
+fractal_gain = -0.22
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_s4t7x"]
+noise = SubResource("FastNoiseLite_3l2s8")
+color_ramp = SubResource("Gradient_s4t7x")
+
+[sub_resource type="Gradient" id="Gradient_3l2s8"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.5414365, 0.9116022)
+colors = PackedColorArray(0, 0, 0, 1, 0.012617188, 0.012617188, 0.012617188, 0)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_s4t7x"]
+noise_type = 4
+frequency = 0.2586
+fractal_type = 0
+domain_warp_type = 1
+domain_warp_frequency = 5.45
+domain_warp_fractal_type = 2
+domain_warp_fractal_gain = 0.96
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xx3hs"]
+noise = SubResource("FastNoiseLite_s4t7x")
+color_ramp = SubResource("Gradient_3l2s8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xtxmy"]
+resource_local_to_scene = true
+shader = ExtResource("9_vf5oh")
+shader_parameter/noise_scale = 6.0
+shader_parameter/blob_threshold = 0.47
+shader_parameter/blob_softness = 0.1
+shader_parameter/plasma_scale = 3.0
+shader_parameter/plasma_speed = 1.0
+shader_parameter/plasma_strength = 0.2
+shader_parameter/center_size = 0.13
+shader_parameter/center_blur = 0.54
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_xx3hs")
+shader_parameter/noise_mask = SubResource("NoiseTexture2D_s4t7x")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_3l2s8"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [node name="Main" type="Node"]
 process_mode = 1
@@ -958,17 +993,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 texture = SubResource("ViewportTexture_ih1cd")
 
-[node name="LowHealth" type="ColorRect" parent="SubViewportContainer/SubViewport"]
-visible = false
-material = SubResource("ShaderMaterial_xtxmy")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
 [node name="PauseMenu" type="Panel" parent="."]
 process_mode = 3
 visible = false
@@ -1150,6 +1174,17 @@ offset_top = 9.0
 offset_right = 1193.0
 offset_bottom = 796.0
 text = "SPEED"
+
+[node name="LowHealth" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_xtxmy")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource("ViewportTexture_3l2s8")
 
 [connection signal="animation_finished" from="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword/AnimationPlayer" to="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites" method="_on_animation_player_animation_finished"]
 [connection signal="animation_finished" from="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword/Slash" to="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites" method="_on_slash_animation_finished"]

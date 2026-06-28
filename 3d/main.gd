@@ -173,7 +173,6 @@ func play_cat_animation():
 	health = 0
 	get_tree().paused = false
 
-# **Other Functions**
 func save_game():
 	command_output.append_text("\nGame saved!")
 

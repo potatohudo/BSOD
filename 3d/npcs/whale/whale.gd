@@ -234,9 +234,6 @@ func _pick_new_direction() -> void:
 	turn_time = 0.0
 	next_turn_timer = rng.randf_range(turn_interval_min, turn_interval_max)
 
-# -------------------
-# Navigation helpers
-# -------------------
 func call_whale(target: Node3D) -> void:
 	if mode == Mode.NAVIGATING and (Time.get_ticks_msec() / 1000.0 - last_call_time) < call_cooldown:
 		return # ignore call

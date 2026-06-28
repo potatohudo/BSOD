@@ -31,7 +31,7 @@ var can_dash = true
 var dash_efx = false
 
 var speed = BASE_SPEED
-var health = 100
+var health = 10
 var is_sliding = false
 var can_wall_jump = false  
 var slide_timer = 0.0  
@@ -84,7 +84,7 @@ var crouch_offset: Vector3 = Vector3.ZERO
 @onready var freaky = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky") 
 @onready var freaky2 = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky/Freaky2")
 @onready var dm = get_node("/root/Main/SubViewportContainer/SubViewport/Freaky/Datamoshing")
-@onready var LH = get_node("/root/Main/SubViewportContainer/SubViewport/LowHealth")
+@onready var LH = get_node("/root/Main/LowHealth")
 @onready var hurt_sound_0: AudioStreamPlayer = get_node("/root/Main/Hurt0")
 @onready var hurt_sound_1: AudioStreamPlayer = get_node("/root/Main/Hurt1")
 @onready var hurt_sound_2: AudioStreamPlayer = get_node("/root/Main/Hurt2")

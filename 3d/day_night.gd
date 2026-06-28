@@ -25,7 +25,6 @@ func _ready():
 	flicker_timer.timeout.connect(_flicker_sun)
 	add_child(flicker_timer)
 
-	# Start with daytime
 	trigger_day()
 
 func trigger_day():
@@ -34,11 +33,9 @@ func trigger_day():
 	ambient.play()
 	pulsar.play()
 	
-	# Play all effects first
 	sky_mat.set_sun_angle_max(360)
 	environment.environment.set_tonemap_exposure(3)
 
-	# Play all effects first
 	var tween = get_tree().create_tween()
 	tween.tween_property(sky_mat, "sun_angle_max", 30.0, 1.0).set_trans(Tween.TRANS_SINE)
 	var tween1 = get_tree().create_tween()
@@ -46,7 +43,6 @@ func trigger_day():
 	var tween2 = get_tree().create_tween()
 	tween2.tween_property(pulsar,"volume_db", -100, day_duration * 2).set_trans(Tween.TRANS_LINEAR)
 	
-	# Adjust brightness & contrast for day
 	environment.environment.adjustment_brightness = 1.0
 	environment.environment.adjustment_contrast = 1.0
 	
@@ -55,7 +51,6 @@ func trigger_day():
 	
 	is_day = true  
 
-	# Wait until the day duration ends, then switch to night
 	await get_tree().create_timer(day_duration).timeout
 	trigger_night()
 

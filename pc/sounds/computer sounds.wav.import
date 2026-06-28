@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://b5s1vdcfdtnix"
+path="res://.godot/imported/computer sounds.wav-7743be2d5f0c10d5d8502ebf6752c083.sample"
+
+[deps]
+
+source_file="res://pc/sounds/computer sounds.wav"
+dest_files=["res://.godot/imported/computer sounds.wav-7743be2d5f0c10d5d8502ebf6752c083.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

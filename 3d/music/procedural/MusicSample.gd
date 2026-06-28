@@ -43,21 +43,15 @@ func should_play(manager) -> bool:
 
 func trigger_play(active: bool):
 	if not active:
-		# Conditions not met → do NOT trigger anything
 		return
-
-	# Always force a restart on trigger
 	stop()
 	play()
 
 
 
-# -------------------------------------------------------------------
-# VOLUME / FADE LOGIC
-# -------------------------------------------------------------------
+
 func update_volume(active: bool, delta: float):
 	if fade_in or fade_out:
-		# Fade logic (muting only)
 		if active:
 			target_volume = 0.0
 		else:
@@ -67,7 +61,5 @@ func update_volume(active: bool, delta: float):
 		volume_db = current_volume
 
 	else:
-		# No fading: hard-gated logic
-		# do not mute or stop — just leave volume as-is
 		if active:
 			volume_db = 0.0

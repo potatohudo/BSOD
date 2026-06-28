@@ -97,24 +97,20 @@ void fragment(){
     float t = v_inst_norm;
     // map to -1..1 then angle
     float tt = t * 2.0 - 1.0;
-    float ang = tt * 3.14159265; // half-turn mapping; you can change range
+    float ang = tt * 3.14159265;
 
-    // rotate the ring by global rotation uniform
     float total_ang = ang + u_global_rot;
 
-    // set inst_pos on a ring in XZ plane; use tt for vertical variation
     vec3 inst_pos = vec3(cos(total_ang), 0.0, sin(total_ang)) * u_field_radius + vec3(0.0, tt * (u_field_radius * 0.2), 0.0);
     // slice mapping normalized
     float slice_z = inst_pos.z / u_field_radius;
     float slice_k = length(inst_pos.xy) / u_field_radius;
 
-    // compute a per-slice param (0..1) from t (you can make different mappings)
+    // compute a per-slice param (0..1) from t 
     float param_t = t; // 0..1 across slices
-    // allow symmetry mapping (center stronger) - optional
-    float c_t = abs(param_t - 0.5) * 2.0; // 0=center, 1=edges
+    float c_t = abs(param_t - 0.5) * 2.0; 
     float mapped = param_t; // default linear
 
-    // pick mapped based on selection (you can expand)
     float param_value = mix(u_slice_param_min, u_slice_param_max, mapped);
 
     // start with base values
@@ -134,7 +130,6 @@ void fragment(){
         local_bonusM += param_value;
     }
 
-    // --- uv space and distortion (same as before) ---
     vec2 uv0 = (UV - vec2(0.5) + u_offset) * vec2(u_res.x / max(1.0, u_res.y), 1.0) * u_zoom;
     uv0 = rot2(u_rot) * uv0;
     if (u_dist > 0.0){

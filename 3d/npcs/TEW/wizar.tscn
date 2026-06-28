@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0b4lqpjaasyn"]
+
+[ext_resource type="PackedScene" uid="uid://cu70i8kvnlrex" path="res://3d/npcs/TEW/KOLDUN_revised.blend" id="1_j1drg"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="KOLDUN_revised" parent="." instance=ExtResource("1_j1drg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.534953, 0, -0.92334414)

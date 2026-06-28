@@ -1,17 +1,14 @@
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx, blend_mix, depth_draw_always, cull_disabled;
 
-// === GROUP: Albedo ===
 group_uniforms albedo;
 uniform vec4 albedo : source_color = vec4(1.0, 1.0, 1.0, 0.0);
 uniform sampler2D albedo_texture : source_color, hint_default_white;
 
-// === GROUP: Roughness ===
 group_uniforms roughness;
 uniform float roughness : hint_range(0.0, 1.0) = 0.15;
 uniform sampler2D roughness_texture : hint_roughness_r;
 
-// === GROUP: Refraction ===
 group_uniforms refraction;
 uniform float refraction : hint_range(-16, 16) = 0.5;
 uniform sampler2D texture_refraction : filter_linear_mipmap, repeat_enable;
@@ -20,24 +17,20 @@ uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_l
 uniform sampler2D depth_texture : hint_depth_texture;
 uniform float distortion_amount : hint_range(0.0, 0.05) = 0.01;
 
-// === GROUP: Reflection ===
 group_uniforms reflection;
 uniform samplerCube reflection_cubemap;
 uniform float reflection_strength : hint_range(0.0, 1.0) = 0.4;
 
-// === GROUP: Normal ===
 group_uniforms normal;
 uniform float normal_strength : hint_range(0.0, 1.0) = 0.0;
 uniform sampler2D normal_map : hint_normal;
 
-// === GROUP: Misc ===
 group_uniforms misc;
 uniform vec4 edge_color : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform float surface_contribution = 0.2;
 uniform float specular_contribution = 0.2;
 uniform float refraction_contribution = 1.0;
 
-// === GROUP: UV ===
 group_uniforms uv;
 uniform vec3 uv1_scale = vec3(1.0);
 uniform vec3 uv1_offset = vec3(0.0);
@@ -53,7 +46,6 @@ void vertex() {
 }
 
 void fragment() {
-	// --- Smoothed normals ---
 	vec3 smooth_normal = normalize(NORMAL);
 	vec3 unpacked_normal = texture(normal_map, UV).xyz * 2.0 - 1.0;
 	vec3 tangent_normal = normalize(

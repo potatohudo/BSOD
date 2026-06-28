@@ -6,10 +6,8 @@ uniform vec3 light_color : source_color = vec3(0.3, 0.6, 1.0); // bluish for tes
 uniform float alpha_value : hint_range(0.0, 1.0) = 0.5; // optional control
 
 void fragment() {
-    // Debug pattern to show UV mapping
     EMISSION = vec3(UV.x, UV.y, 1.0) * intensity;
 
-    // You can uncomment this to test the actual color instead
     // EMISSION = light_color * intensity;
 
     ALPHA = alpha_value;

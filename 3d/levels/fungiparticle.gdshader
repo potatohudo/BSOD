@@ -5,11 +5,11 @@ shader_type particles;
 //uniform float size_max : hint_range(0.01, 0.2) = 0.05;
 //
 //void start() {
-    //// Randomize size for variation
+    //// randomize size for variation
     //float size = mix(size_min, size_max, randf());
     //SCALE = vec3(size);
 //
-    //// Random upward drift
+    //// random upward drift
     //VELOCITY = vec3(randf() * 0.2 - 0.1, 1.0 + randf() * 0.5, randf() * 0.2 - 0.1);
 //
     //// Lifespan randomness
@@ -21,6 +21,6 @@ shader_type particles;
     //VELOCITY.x += (randf() - 0.5) * 0.01;
     //VELOCITY.z += (randf() - 0.5) * 0.01;
 //
-    //// Fade out based on lifetime
+    //// fade out based on lifetime
     //float t = AGE / LIFETIME;
     //COLOR = spore_color * vec4(1.0, 1.0, 1.0, 1.0 - smoothstep(0.7, 1.0, t));

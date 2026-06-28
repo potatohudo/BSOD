@@ -14,7 +14,6 @@ float random(vec2 st) {
 void fragment() {
 	vec2 uv = UV;
 
-	// Create blocky sampling
 	vec2 block_uv = floor(uv * block_size) / block_size;
 
 	// Sample motion vector and remap from [0,1] to [-1,1]

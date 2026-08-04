@@ -31,7 +31,7 @@ var can_dash = true
 var dash_efx = false
 
 var speed = BASE_SPEED
-var health = 10
+var health = 100
 var is_sliding = false
 var can_wall_jump = false  
 var slide_timer = 0.0  

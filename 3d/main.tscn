@@ -1176,6 +1176,7 @@ offset_bottom = 796.0
 text = "SPEED"
 
 [node name="LowHealth" type="TextureRect" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_xtxmy")
 anchors_preset = 15
 anchor_right = 1.0

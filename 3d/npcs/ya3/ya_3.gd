@@ -85,117 +85,26 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 	if not body.is_in_group("player"):
 		return
 
-	player_inside = true
-
-	# If walkaway is playing -> switch to return
-	if mode == Mode.WALKAWAY:
-		DialogManager.interrupt()
-		_play_return()
-		return
-
-	if needs_return:
-		_play_return()
-		return
-
-
-	# If nothing played yet -> start main
-	if not main_played and not DialogManager.is_playing():
-		_play_main()
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
 	if not body.is_in_group("player"):
 		return
 
-	player_inside = false
 
-	# Interrupt main or return, then play walkaway
-	if mode == Mode.MAIN or mode == Mode.RETURN:
-		DialogManager.interrupt()
-
-	_play_walkaway()
 
 
 # -------------------------
 # PLAY HELPERS
 # -------------------------
 
-func _play_main() -> void:
-	if main_index >= main_dialogs.size():
-		return
-
-	mode = Mode.MAIN
-	main_played = true
-
-	DialogManager.play(
-		main_dialogs[main_index],
-		self,
-		100 + main_index
-	)
-
-func _play_walkaway() -> void:
-	start_speaking()
-	if walkaway_index >= walkaway_dialogs.size():
-		return
-
-	mode = Mode.WALKAWAY
-	walkaway_played.append(walkaway_index)
-
-	DialogManager.play(
-		walkaway_dialogs[walkaway_index],
-		self,
-		200 + walkaway_index
-	)
-
-func _play_return() -> void:
-	start_speaking()
-	if return_index >= return_dialogs.size():
-		return
-
-	mode = Mode.RETURN
-	return_played.append(return_index)
-
-	DialogManager.play(
-		return_dialogs[return_index],
-		self,
-		300 + return_index
-	)
 
 # -------------------------
 # DIALOG FLOW
 # -------------------------
 
 func _on_dialog_finished(id: int) -> void:
-	match mode:
-
-		Mode.MAIN:
-			main_index += 1
-
-			if player_inside and main_index < main_dialogs.size():
-				_play_main()
-				start_speaking()
-			else:
-				mode = Mode.NONE
-				stop_speaking()
-
-
-		Mode.WALKAWAY:
-			walkaway_index += 1
-			needs_return = true
-			mode = Mode.NONE
-			stop_speaking()
-
-
-		Mode.RETURN:
-			return_index += 1
-			needs_return = false
-
-			if player_inside and main_index < main_dialogs.size():
-				mode = Mode.MAIN
-				_play_main()
-				start_speaking()
-			else:
-				mode = Mode.NONE
-				stop_speaking()
+	match id:
+		pass
 
 func start_speaking():
 	$AnimationPlayer.play()

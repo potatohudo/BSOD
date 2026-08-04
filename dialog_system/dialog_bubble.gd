@@ -9,7 +9,7 @@ extends Control
 @onready var panel: PanelContainer = %PanelContainer
 @onready var anim: AnimationPlayer = %AnimationPlayer
 
-@export_multiline var text: Array[String] = []
+@export_multiline var text: String = ""
 @export var speaker_name: String = ""
 @export var style: Dictionary = {}
 
@@ -45,8 +45,7 @@ var _active_character: Node = null
 var _current_segment: int = 0
 var _paused: bool = false
 var _resume_segment: int = 0
-var _resume_char: int = 0
-var _resume_text: Array = []       
+var _resume_char: int = 0 
 
 # --- internal state ---
 var _is_showing := false
@@ -119,7 +118,7 @@ func show_dialog() -> String:
 		name_label.text = speaker_name
 
 	# parse triggers and split into segments
-	var combined := String("[n]").join(text)
+	var combined := text
 
 	var result = _process_triggers_and_split(combined)
 	var segments = result[0]
@@ -252,23 +251,16 @@ func play(start_segment := 0) -> String:
 	return await show_dialog()
 
 
-func _play_with_text(texts: Array) -> String:
-	if texts.is_empty():
-		return "finished"
+func _play_with_text(dialog_text: String) -> String:
+	var original := text
 
-	var original := text.duplicate(true)
-	var typed: Array[String] = []
-	for s in texts:
-		typed.append(String(s))
-
-	text = typed
-
+	text = dialog_text
 
 	var res := await show_dialog()
 
 	text = original
-	return res
 
+	return res
 
 
 func force_stop() -> void:
@@ -454,13 +446,8 @@ func resume_dialog() -> String:
 	return "finished"
 
 func _resume_reveal() -> void:
-	var combined := ""
-	if _resume_text.size() > 0:
-		combined = "\n[n]\n".join(_resume_text)
-	else:
-		combined = ""
 
-	var parsed = _process_triggers_and_split(combined)
+	var parsed = _process_triggers_and_split(text)
 	var segments: Array = parsed[0]
 	var triggers: Array = parsed[1]
 
@@ -514,17 +501,20 @@ func restart_dialog() -> void:
 	await show_dialog()
 
 
-func play_quick_text(texts: Array[String]):
-	if not texts or texts.size() == 0:
+func play_quick_text(dialog_text: String):
+	if dialog_text.is_empty():
 		return
-	var original_segments := text.duplicate(true)
+
+	var original := text
 	var original_visible := visible
 
-	text = texts.duplicate(true)
+	text = dialog_text
+
 	var res := await show_dialog()
-	# restore
-	text = original_segments
+
+	text = original
 	visible = original_visible
+
 	return res
 
 func start_speaking():

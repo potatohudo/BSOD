@@ -3,12 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cu70i8kvnlrex"
-valid=false
+uid="uid://d2b13n15kw27f"
+path="res://.godot/imported/KOLDUNZIK.blend-64ad27ad404e5c6a830ca493a6ac114c.scn"
 
 [deps]
 
-source_file="res://3d/npcs/TEW/KOLDUN_revised.blend"
+source_file="res://3d/npcs/maske/KOLDUNZIK.blend"
+dest_files=["res://.godot/imported/KOLDUNZIK.blend-64ad27ad404e5c6a830ca493a6ac114c.scn"]
 
 [params]
 

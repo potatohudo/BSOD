@@ -38,7 +38,7 @@ func _character_id(c: Node) -> String:
 
 # PUBLIC API
 func play(
-	texts: Array,
+	text: String,
 	character: Node,
 	id: int,
 	example_override: Control = null
@@ -68,10 +68,7 @@ func play(
 
 	# Replace text BEFORE playing
 
-	var arr: Array[String] = []
-	for t in texts:
-		arr.append(String(t))
-	bubble.text = arr
+	bubble.text = String(text)
 	#else:
 		#push_warning("Bubble has no 'text' variable")
 		#return

@@ -609,6 +609,7 @@ blend_shape_mode = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sgwef"]
 cull_mode = 2
+diffuse_mode = 3
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_32vcs"]
 cull_mode = 2
@@ -780,6 +781,7 @@ skin = SubResource("Skin_niy5b")
 [node name="CheesePull" type="SoftBody3D" parent="maske/Armature_002/Skeleton3D"]
 transform = Transform3D(-0.07173421, 0.052501496, 0.996041, 0.5921757, 0.80580884, 0.00017377082, -0.8026096, 0.58984375, -0.088894166, 2.1772447, -0.11774312, -0.75096995)
 material_override = SubResource("StandardMaterial3D_sgwef")
+cast_shadow = 0
 mesh = ExtResource("8_cb6wl")
 skeleton = NodePath("../../../Armature_001")
 parent_collision_ignore = NodePath("../../../Armature_001/StaticBody3D")

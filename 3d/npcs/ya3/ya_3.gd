@@ -80,15 +80,22 @@ func set_emotion(emotion: String) -> void:
 # -------------------------
 # AREA EVENTS
 # -------------------------
+var started = false
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if not body.is_in_group("player"):
 		return
+	if not started:
+		DialogManager.play("AAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHhhhhhhhhhhhhhhhhhhhhhhhhHHHHH", self, 743)
+		started = true
+	else:
+		DialogManager.resume()
 
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
-	if not body.is_in_group("player"):
+	if not body.is_in_group("player")or not started:
 		return
+	DialogManager.interrupt()
 
 
 
@@ -104,7 +111,8 @@ func _on_area_3d_body_exited(body: Node3D) -> void:
 
 func _on_dialog_finished(id: int) -> void:
 	match id:
-		pass
+		743:
+			DialogManager.play("bbebebebbebebbebebebebebbebebebbbbbbbbeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeebeb", self, 743)
 
 func start_speaking():
 	$AnimationPlayer.play()

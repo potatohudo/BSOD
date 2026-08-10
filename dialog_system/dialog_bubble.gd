@@ -1,6 +1,3 @@
-
-##I KNOW THIS CODE IS A HOT MESS BUT IT WORKS SO DONT TOUCH IT
-
 extends Control
 
 
@@ -16,7 +13,8 @@ extends Control
 @export var character_nodes: Array[NodePath] = []# nodes to call start/stop speaking and set_emotion on
 
 
-@export_range(0.005, 0.5, 0.001) var typing_speed := 0.03
+
+@export var typing_speed := 0.03
 @export_range(0.0, 10.0, 0.01) var wait_time := 0.0
 
 # Effects / styling 
@@ -42,15 +40,16 @@ extends Control
  
 var _active_character: Node = null
 
-var _current_segment: int = 0
-var _paused: bool = false
-var _resume_segment: int = 0
-var _resume_char: int = 0 
 
-# --- internal state ---
+var _current_segment: int = 0
+var _stored_char: int = 0
+
 var _is_showing := false
 var _skip_requested := false
 var _typing_done := false
+var _paused := false
+
+signal dialog_resumed
 
 # { "segment": int, "pos": int, "type": "emotion"|"speech", "index": int, "value": String }
 var _trigger_queue := []
@@ -101,13 +100,16 @@ func _ready() -> void:
 	_install_inline_effects()
 
 # Start showing this dialog node. Awaitable -> returns "finished" or "paused".
-func show_dialog() -> String:
+func play() -> String:
+	print(_stored_char, _is_showing)
 	if _is_showing:
 		# already showing: don't re-enter
 		return "finished"
+	
 	_is_showing = true
 	_skip_requested = false
 	_typing_done = false
+	_paused = false
 
 	self.visible = true
 	_update_effect_params()
@@ -127,22 +129,21 @@ func show_dialog() -> String:
 	_trigger_queue = triggers
 
 	for segment_index in range(segments.size()):
-		if _paused:
-			break
+		#if _paused:
+			#break
 		_current_segment = segment_index
 		var seg_text = segments[segment_index]
 		var res_seg = await _show_segment(segment_index, seg_text)
-		if _paused:
-			break
+
 	if _skip_requested:
 		_fire_all_remaining_triggers(_current_segment)
 
 	_is_showing = false
 
-	if _paused:
-		_paused = false
-		_is_showing = false
-		return "paused"
+	#if _paused:
+		#_paused = false
+		#_is_showing = false
+		#return "paused"
 
 	var read_buffer := 0.6  
 	if "wait_time" in self and float(wait_time) > 0.0:
@@ -153,9 +154,9 @@ func show_dialog() -> String:
 		await get_tree().create_timer(read_buffer).timeout
 
 	# hide bubble after display
-	self.visible = false
+	
 	return "finished"
-
+	
 func _unhandled_input(event):
 	#dialog skip
 	if event.is_action_pressed("ui_accept"):
@@ -245,22 +246,18 @@ func _sort_triggers(a, b) -> int:
 		return 1
 	return 0
 
-# mode: "normal", "return", "quick"
-func play(start_segment := 0) -> String:
-	_current_segment = start_segment
-	return await show_dialog()
 
 
-func _play_with_text(dialog_text: String) -> String:
-	var original := text
-
-	text = dialog_text
-
-	var res := await show_dialog()
-
-	text = original
-
-	return res
+#func _play_with_text(dialog_text: String) -> String:
+	#var original := text
+#
+	#text = dialog_text
+#
+	#var res := await show_dialog()
+#
+	#text = original
+#
+	#return res
 
 
 func force_stop() -> void:
@@ -279,9 +276,9 @@ func force_stop() -> void:
 
 
 func _show_segment(segment_index: int, seg_text: String) -> void:
-	label.clear()
+	#label.clear()
 	label.bbcode_enabled = true
-	label.text = ""
+	#label.text = ""
 
 	if fade_in:
 		await _fade_in()
@@ -291,12 +288,12 @@ func _show_segment(segment_index: int, seg_text: String) -> void:
 
 	# parse and reveal
 	label.parse_bbcode(seg_text)
-	label.visible_characters = 0
+	label.visible_characters = _stored_char
 	var total_chars := label.get_total_character_count()
 
 	# Start speaking for all characters during segment by default
-	if _active_character and _active_character.has_method("stop_speaking"):
-		_active_character.stop_speaking()
+	if _active_character and _active_character.has_method("start_speaking"):
+		_active_character.start_speaking()
 	_active_character = null
 
 
@@ -309,7 +306,11 @@ func _show_segment(segment_index: int, seg_text: String) -> void:
 			label.visible_characters = -1
 			_fire_all_remaining_triggers(_current_segment)
 			break
-
+		if _paused:
+			_stored_char = i
+			print("paused!", _stored_char)
+			
+			break
 		label.visible_characters = i
 		await get_tree().create_timer(typing_speed).timeout
 
@@ -431,94 +432,16 @@ func _simple_fade(from_alpha: float, to_alpha: float) -> void:
 func pause_dialog() -> void:
 	if not _is_showing:
 		return
-	# Tell show_dialog() to stop revealing immediately
 	_paused = true
-	_skip_requested = true
-	visible = false
 
-
-func resume_dialog() -> String:
-	if not _paused:
-		return "finished"
-	_paused = false
-	visible = true
-	await _resume_reveal()
-	return "finished"
-
-func _resume_reveal() -> void:
-
-	var parsed = _process_triggers_and_split(text)
-	var segments: Array = parsed[0]
-	var triggers: Array = parsed[1]
-
-	_trigger_queue = triggers
-
-	for seg_i in range(_resume_segment, segments.size()):
-		var seg_text: String = segments[seg_i]
-
-		var start_char := (_resume_char if seg_i == _resume_segment else 0)
-
-		await _resume_segment_reveal(seg_i, seg_text, start_char)
-
-	_resume_char = 0
-
-	emit_signal("dialog_finished", self)
-
-func _resume_segment_reveal(seg_index: int, seg_text: String, start_char: int) -> void:
-	_current_segment = seg_index
-
-	label.clear()
-	label.parse_bbcode(seg_text)
-	label.visible_characters = start_char
-
-	var total := label.get_total_character_count()
-	if _active_character and _active_character.has_method("stop_speaking"):
-		_active_character.stop_speaking()
-	_active_character = null
-
-
-	for i in range(start_char, total + 1):
-
-		for t in _trigger_queue:
-			if t.segment == seg_index and t.pos == i:
-				_process_trigger(t)
-
-		if _skip_requested:
-			label.visible_characters = -1
-			_fire_all_remaining_triggers(_current_segment)
-			_typing_done = true
-			break
-
-
-		label.visible_characters = i
-		await get_tree().create_timer(typing_speed).timeout
-
-	_active_character = null
-
-
-func restart_dialog() -> void:
-	_paused = false
-	await show_dialog()
-
-
-func play_quick_text(dialog_text: String):
-	if dialog_text.is_empty():
+func resume_dialog() -> void:
+	if not _is_showing:
 		return
+	_paused = false
+	dialog_resumed.emit()
 
-	var original := text
-	var original_visible := visible
-
-	text = dialog_text
-
-	var res := await show_dialog()
-
-	text = original
-	visible = original_visible
-
-	return res
-
-func start_speaking():
-	$AnimationPlayer.play()
-
-func stop_speaking():
-	$AnimationPlayer.stop()
+#func start_speaking():
+	#$AnimationPlayer.play()
+#
+#func stop_speaking():
+	#$AnimationPlayer.stop()

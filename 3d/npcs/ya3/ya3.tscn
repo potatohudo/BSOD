@@ -1,4 +1,4 @@
-[gd_scene load_steps=1124 format=3 uid="uid://b2iud4rbm8fp6"]
+[gd_scene load_steps=1127 format=4 uid="uid://b2iud4rbm8fp6"]
 
 [ext_resource type="Script" uid="uid://c3ibyffc6yil1" path="res://3d/npcs/ya3/ya_3.gd" id="1_lj0lm"]
 [ext_resource type="PackedScene" uid="uid://b1c5ps0ocnxoy" path="res://3d/npcs/ya3/revor.glb" id="1_pgqkd"]
@@ -30,6 +30,44 @@ data = PackedVector3Array(-1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1,
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_lj0lm"]
 data = PackedVector3Array(-1, 0.4705, 0.4705, -1.1722, 0.4705, -0.4705, -1, 0.4705, -0.4705, -1, 0.4705, 0.4705, -1.1722, 0.4705, 0.4705, -1.1722, 0.4705, -0.4705, 0.8182, -1, -1, 1, 1, -1, 0.8182, 1, -1, 0.8182, -1, -1, 1, -1, -1, 1, 1, -1, 0.6364, -1, -1, 0.8182, -1, -1, 0.8182, 1, -1, 0.6364, -1, -1, 0.8182, 1, -1, 0.6364, 1, -1, 0.4545, -1, -1, 0.6364, -1, -1, 0.6364, 1, -1, 0.4545, -1, -1, 0.6364, 1, -1, 0.4545, 1, -1, 0.27269998, -1, -1, 0.4545, -1, -1, 0.4545, 1, -1, 0.27269998, -1, -1, 0.4545, 1, -1, 0.27269998, 1, -1, 0.0909, -1, -1, 0.27269998, -1, -1, 0.27269998, 1, -1, 0.0909, -1, -1, 0.27269998, 1, -1, 0.0909, 1, -1, -0.0909, -1, -1, 0.0909, -1, -1, 0.0909, 1, -1, -0.0909, -1, -1, 0.0909, 1, -1, -0.0909, 1, -1, -0.27269998, -1, -1, -0.0909, -1, -1, -0.0909, 1, -1, -0.27269998, -1, -1, -0.0909, 1, -1, -0.27269998, 1, -1, -0.4545, -1, -1, -0.27269998, -1, -1, -0.27269998, 1, -1, -0.4545, -1, -1, -0.27269998, 1, -1, -0.4545, 1, -1, -0.6364, -1, -1, -0.4545, -1, -1, -0.4545, 1, -1, -0.6364, -1, -1, -0.4545, 1, -1, -0.6364, 1, -1, -0.8182, -1, -1, -0.6364, -1, -1, -0.6364, 1, -1, -0.8182, -1, -1, -0.6364, 1, -1, -0.8182, 1, -1, -1, -1, -1, -0.8182, -1, -1, -0.8182, 1, -1, -1, -1, -1, -0.8182, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, 1, 1, -0.8182, -1, 1, -1, 1, 1, -0.8182, 1, 1, -0.8182, -1, 1, -1, -1, 1, -1, 1, 1, -0.6364, -1, 1, -0.8182, -1, 1, -0.8182, 1, 1, -0.6364, -1, 1, -0.8182, 1, 1, -0.6364, 1, 1, -0.4545, -1, 1, -0.6364, -1, 1, -0.6364, 1, 1, -0.4545, -1, 1, -0.6364, 1, 1, -0.4545, 1, 1, -0.27269998, -1, 1, -0.4545, -1, 1, -0.4545, 1, 1, -0.27269998, -1, 1, -0.4545, 1, 1, -0.27269998, 1, 1, -0.0909, -1, 1, -0.27269998, -1, 1, -0.27269998, 1, 1, -0.0909, -1, 1, -0.27269998, 1, 1, -0.0909, 1, 1, 0.0909, -1, 1, -0.0909, -1, 1, -0.0909, 1, 1, 0.0909, -1, 1, -0.0909, 1, 1, 0.0909, 1, 1, 0.27269998, -1, 1, 0.0909, -1, 1, 0.0909, 1, 1, 0.27269998, -1, 1, 0.0909, 1, 1, 0.27269998, 1, 1, 0.4545, -1, 1, 0.27269998, -1, 1, 0.27269998, 1, 1, 0.4545, -1, 1, 0.27269998, 1, 1, 0.4545, 1, 1, 0.6364, -1, 1, 0.4545, -1, 1, 0.4545, 1, 1, 0.6364, -1, 1, 0.4545, 1, 1, 0.6364, 1, 1, 0.8182, -1, 1, 0.6364, -1, 1, 0.6364, 1, 1, 0.8182, -1, 1, 0.6364, 1, 1, 0.8182, 1, 1, 1, -1, 1, 0.8182, -1, 1, 0.8182, 1, 1, 1, -1, 1, 0.8182, 1, 1, 1, 1, 1, 0.8182, -1, -1, 1, -1, 1, 1, -1, -1, 0.8182, -1, -1, 0.8182, -1, 1, 1, -1, 1, 0.6364, -1, -1, 0.8182, -1, 1, 0.8182, -1, -1, 0.6364, -1, -1, 0.6364, -1, 1, 0.8182, -1, 1, 0.4545, -1, -1, 0.6364, -1, 1, 0.6364, -1, -1, 0.4545, -1, -1, 0.4545, -1, 1, 0.6364, -1, 1, 0.27269998, -1, -1, 0.4545, -1, 1, 0.4545, -1, -1, 0.27269998, -1, -1, 0.27269998, -1, 1, 0.4545, -1, 1, 0.0909, -1, -1, 0.27269998, -1, 1, 0.27269998, -1, -1, 0.0909, -1, -1, 0.0909, -1, 1, 0.27269998, -1, 1, -0.0909, -1, -1, 0.0909, -1, 1, 0.0909, -1, -1, -0.0909, -1, -1, -0.0909, -1, 1, 0.0909, -1, 1, -0.27269998, -1, -1, -0.0909, -1, 1, -0.0909, -1, -1, -0.27269998, -1, -1, -0.27269998, -1, 1, -0.0909, -1, 1, -0.4545, -1, -1, -0.27269998, -1, 1, -0.27269998, -1, -1, -0.4545, -1, -1, -0.4545, -1, 1, -0.27269998, -1, 1, -0.6364, -1, -1, -0.4545, -1, 1, -0.4545, -1, -1, -0.6364, -1, -1, -0.6364, -1, 1, -0.4545, -1, 1, -0.8182, -1, -1, -0.6364, -1, 1, -0.6364, -1, -1, -0.8182, -1, -1, -0.8182, -1, 1, -0.6364, -1, 1, -1, -1, -1, -0.8182, -1, 1, -0.8182, -1, -1, -1, -1, -1, -1, -1, 1, -0.8182, -1, 1, -0.8182, 1, -1, -1, 1, 1, -1, 1, -1, -0.8182, 1, -1, -0.8182, 1, 1, -1, 1, 1, -0.6364, 1, -1, -0.8182, 1, 1, -0.8182, 1, -1, -0.6364, 1, -1, -0.6364, 1, 1, -0.8182, 1, 1, -0.4545, 1, -1, -0.6364, 1, 1, -0.6364, 1, -1, -0.4545, 1, -1, -0.4545, 1, 1, -0.6364, 1, 1, -0.27269998, 1, -1, -0.4545, 1, 1, -0.4545, 1, -1, -0.27269998, 1, -1, -0.27269998, 1, 1, -0.4545, 1, 1, -0.0909, 1, -1, -0.27269998, 1, 1, -0.27269998, 1, -1, -0.0909, 1, -1, -0.0909, 1, 1, -0.27269998, 1, 1, 0.0909, 1, -1, -0.0909, 1, 1, -0.0909, 1, -1, 0.0909, 1, -1, 0.0909, 1, 1, -0.0909, 1, 1, 0.27269998, 1, -1, 0.0909, 1, 1, 0.0909, 1, -1, 0.27269998, 1, -1, 0.27269998, 1, 1, 0.0909, 1, 1, 0.4545, 1, -1, 0.27269998, 1, 1, 0.27269998, 1, -1, 0.4545, 1, -1, 0.4545, 1, 1, 0.27269998, 1, 1, 0.6364, 1, -1, 0.4545, 1, 1, 0.4545, 1, -1, 0.6364, 1, -1, 0.6364, 1, 1, 0.4545, 1, 1, 0.8182, 1, -1, 0.6364, 1, 1, 0.6364, 1, -1, 0.8182, 1, -1, 0.8182, 1, 1, 0.6364, 1, 1, 1, 1, -1, 0.8182, 1, 1, 0.8182, 1, -1, 1, 1, -1, 1, 1, 1, 0.8182, 1, 1, -1, 1, -1, -1, 0.4705, 0.4705, -1, 0.4705, -0.4705, -1, -0.4705, -0.4705, -1, 1, -1, -1, 0.4705, -0.4705, -1, 1, 1, -1, 0.4705, 0.4705, -1, 1, -1, -1, -0.4705, -0.4705, -1, -1, -1, -1, 1, -1, -1, 1, 1, -1, -0.4705, 0.4705, -1, 0.4705, 0.4705, -1, -0.4705, 0.4705, -1, -1, -1, -1, -0.4705, -0.4705, -1, -0.4705, 0.4705, -1, 1, 1, -1, -1, 1, -1, -0.4705, 0.4705, -1, -1, 1, -1, -1, -1, -1.1722, -0.4705, 0.4705, -1.1722, 0.4705, -0.4705, -1.1722, 0.4705, 0.4705, -1.1722, -0.4705, 0.4705, -1.1722, -0.4705, -0.4705, -1.1722, 0.4705, -0.4705, -1, -0.4705, -0.4705, -1.1722, -0.4705, 0.4705, -1, -0.4705, 0.4705, -1, -0.4705, -0.4705, -1.1722, -0.4705, -0.4705, -1.1722, -0.4705, 0.4705, -1, 0.4705, -0.4705, -1.1722, -0.4705, -0.4705, -1, -0.4705, -0.4705, -1, 0.4705, -0.4705, -1.1722, 0.4705, -0.4705, -1.1722, -0.4705, -0.4705, -1, -0.4705, 0.4705, -1.1722, 0.4705, 0.4705, -1, 0.4705, 0.4705, -1, -0.4705, 0.4705, -1.1722, -0.4705, 0.4705, -1.1722, 0.4705, 0.4705)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1j2yx"]
+resource_name = "Material.003"
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(0.06020619, 0.043921024, 0.033958275, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_8r5eo"]
+_surfaces = [{
+"aabb": AABB(-0.84187806, -0.73246086, 0.9657241, 1.5743389, 1.4649217, 0.10667968),
+"format": 34896613377,
+"index_count": 30,
+"index_data": PackedByteArray("AAABAAIAAwACAAEAAAAEAAEAAwAFAAIABQAAAAIABQADAAYABAAAAAcABQAHAAAABAAHAAYABQAGAAcA"),
+"name": "Material.003",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("3gx3Df//AAAAAP//AAAAAN4Mh/L//wAA/////wAAAAAAAAAAAAAAACDzh/L//wAA//8AAAAAAAAg83cN//8AAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_7j2ys"]
+resource_name = "revor_Cube_003"
+_surfaces = [{
+"aabb": AABB(-0.84187806, -0.73246086, 0.9657241, 1.5743389, 1.4649217, 0.10667968),
+"attribute_data": PackedByteArray("snwZgJoV04maFRmAsnzTiZoVuxCyfBmAmhUZgLJ8uxCaFbsQsnwBB7J8uxCaFQEHSoYZgLJ8uxBKhrsQsnwZgAIMuxCaFRmAAgwZgJoVuxA="),
+"format": 34896613399,
+"index_count": 30,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEA"),
+"material": SubResource("StandardMaterial3D_1j2yx"),
+"name": "Material.003",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 20,
+"vertex_data": PackedByteArray("3gx3Df//ScgAAP//AABJyN4Mh/L//0nIAAAAAAAAScgg84fy////v94Mdw3///+/3gyH8v///78g83cN////vyDzh/L//0nI//8AAAAAScgg83cN//9JyP////8AAEnIAAAAAAAARNgg83cN///NuP//AAAAALy33gx3Df//Btv/////AABE2N4Mh/L//824AAD//wAAvLcg84fy//8G2+RfGqDkXxqg5F8aoORfGqD/f/9//3//f/9//3//f/9/GqDkXxqg5F8aoORfGqDkX9hpMVxhUXdkFlDnZHFrplsmls2jna6Hm+ivF5uNlFik")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_8r5eo")
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_uqvsu"]
 data = PackedVector3Array(-0.76269996, -0.6554, 1.0724, -0.8419, 0.73249996, 0.9657, -0.76269996, 0.6554, 1.0724, -0.76269996, -0.6554, 1.0724, -0.8419, -0.73249996, 0.9657, -0.8419, 0.73249996, 0.9657, 0.6533, 0.6554, 1.0724, -0.76269996, -0.6554, 1.0724, -0.76269996, 0.6554, 1.0724, 0.6533, 0.6554, 1.0724, 0.6533, -0.6554, 1.0724, -0.76269996, -0.6554, 1.0724, 0.6533, 0.6554, 1.0724, 0.73249996, -0.73249996, 0.9657, 0.6533, -0.6554, 1.0724, 0.6533, 0.6554, 1.0724, 0.73249996, 0.73249996, 0.9657, 0.73249996, -0.73249996, 0.9657, -0.8419, -0.73249996, 0.9657, 0.6533, -0.6554, 1.0724, 0.73249996, -0.73249996, 0.9657, -0.8419, -0.73249996, 0.9657, -0.76269996, -0.6554, 1.0724, 0.6533, -0.6554, 1.0724, 0.73249996, 0.73249996, 0.9657, -0.76269996, 0.6554, 1.0724, -0.8419, 0.73249996, 0.9657, 0.73249996, 0.73249996, 0.9657, 0.6533, 0.6554, 1.0724, -0.76269996, 0.6554, 1.0724)
@@ -7832,6 +7870,9 @@ shape = SubResource("ConcavePolygonShape3D_lpywo")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube_002/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_lj0lm")
 
+[node name="Cube_003" parent="revor" index="5"]
+mesh = SubResource("ArrayMesh_7j2ys")
+
 [node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube_003" index="0"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube_003/StaticBody3D"]
@@ -7877,8 +7918,6 @@ offset_left = 0.5999999
 offset_top = -0.2000122
 offset_right = -0.20007324
 offset_bottom = -0.6000366
-text = Array[String](["[emotion=0:happy]Oh, hey! I didn't expect anyone to visit me. 
-", "[emotion=0:neutral] Uhm, sorry I would've cleaned up if I knew someone was coming. [emotion=0:happy] I'm Я3VOЯ, but just call me Ya3."])
 speaker_name = "pc"
 character_nodes = Array[NodePath]([NodePath("../..")])
 wait_time = 1.07
@@ -7894,8 +7933,6 @@ offset_left = -2.4
 offset_top = 46.799988
 offset_right = -3.2000732
 offset_bottom = 46.399963
-text = Array[String](["[emotion=0:neutral] You remind me of something... [emotion=0:happy]Right! Like ferrofluid!  
-It is a dark liquid that is attracted to the poles of a magnet. It is a colloidal liquid made of nanoscale ferromagnetic or ferrimagnetic particles suspended inside a carrier fluid (usually an organic solvent or water). Each magnetic particle is thoroughly coated with a surfactant to inhibit clumping.", "[emotion=0:happy]Large ferromagnetic particles can be ripped out of the homogeneous colloidal mixture, forming a separate clump of magnetic dust when exposed to strong magnetic fields. The magnetic attraction of tiny nanoparticles is weak enough that the surfactant's Van der Waals force is sufficient to prevent magnetic clumping or agglomeration. Ferrofluids usually do not retain magnetization in the absence of an externally applied field and thus are often classified as \"superparamagnets\" rather than ferromagnets.", "[emotion=0:neutral] But I'm just rambling at this point...sorry..."])
 speaker_name = "ya3"
 character_nodes = Array[NodePath]([NodePath("../..")])
 
@@ -7910,7 +7947,6 @@ offset_left = 0.5999999
 offset_top = -0.2000122
 offset_right = -0.20007324
 offset_bottom = -0.6000366
-text = Array[String](["[emotion=0:neutral]you know, when I don't have anything to do, I just re-read the Lorem Ipsum text. It's a dummy or placeholder text commonly used in graphic design, publishing, and web development. Its purpose is to permit a page layout to be designed, independently of the copy that will subsequently populate it, or to demonstrate various fonts of a typeface without meaningful text that could be distracting.", "[emotion=0:neutral]Lorem ipsum is typically a corrupted version of De finibus bonorum et malorum, a 1st-century BC text by the Roman statesman and philosopher Cicero, with words altered, added, and removed to make it nonsensical and improper Latin. The first two words are the truncation of dolorem ipsum which means \"pain itself\". Ahhh, I got a bit carried away. Sorry I don't mean it."])
 speaker_name = "ya3"
 character_nodes = Array[NodePath]([NodePath("../..")])
 
@@ -7925,7 +7961,6 @@ offset_left = 0.5999999
 offset_top = -0.2000122
 offset_right = -0.20007324
 offset_bottom = -0.6000366
-text = Array[String](["[emotion=0:ba]"])
 speaker_name = "ya3"
 character_nodes = Array[NodePath]([NodePath("../..")])
 
@@ -7940,8 +7975,6 @@ offset_left = 0.5999999
 offset_top = -0.2000122
 offset_right = -0.20007324
 offset_bottom = -0.6000366
-text = Array[String](["[emotion=0:happy]Oh, hey! I didn't expect anyone to visit me. 
-", "[emotion=0:neutral] Uhm, sorry I would've cleaned up if I knew someone was coming. [emotion=0:happy] I'm Я3VOЯ, but just call me Ya3."])
 speaker_name = "pc"
 character_nodes = Array[NodePath]([NodePath("../..")])
 wait_time = 1.07
@@ -7949,7 +7982,6 @@ wait_time = 1.07
 [node name="DialogBubble4" parent="Dialogs" instance=ExtResource("21_7j2ys")]
 visible = false
 offset_top = 164.0
-text = Array[String](["[emotion=0:hurt] >:("])
 
 [node name="Area3D" type="Area3D" parent="."]
 
@@ -7980,3 +8012,4 @@ wait_time = 1.07
 [connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
 
 [editable path="revor"]
+[editable path="DialogBubble"]

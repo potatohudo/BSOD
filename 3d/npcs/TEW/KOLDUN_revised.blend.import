@@ -4,11 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cu70i8kvnlrex"
-valid=false
+path="res://.godot/imported/KOLDUN_revised.blend-fdabbd34cbec31288e8da4d2d8570224.scn"
 
 [deps]
 
 source_file="res://3d/npcs/TEW/KOLDUN_revised.blend"
+dest_files=["res://.godot/imported/KOLDUN_revised.blend-fdabbd34cbec31288e8da4d2d8570224.scn"]
 
 [params]
 

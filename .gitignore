@@ -1,10 +1,4 @@
-# Godot 4+ specific ignores
-/android/
 /merc_SETTINGS.tscn
-.godot/
 /android/
-/.godot
-/.godot
-/.godot
+/.godot/
 /.godot/editor
-/.godot

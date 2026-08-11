@@ -45,9 +45,7 @@ func play(
 ) -> void:
 	if not active:
 		return
-
-
-	_interrupt_internal()
+	quit()
 
 	var char_id := _character_id(character)
 	if not _characters.has(char_id):
@@ -105,8 +103,9 @@ func interrupt() -> void:
 func resume() -> void:
 	if state != State.PAUSED:
 		return
-	
+
 	if not is_instance_valid(_stored_bubble):
+		state = State.INACTIVE
 		return
 
 	_current_bubble = _stored_bubble
@@ -115,17 +114,25 @@ func resume() -> void:
 	_current_bubble.visible = true
 
 	if _current_bubble.has_method("resume_dialog"):
-		await _current_bubble.resume_dialog()
-	_current_bubble.play()
+		_current_bubble.resume_dialog()
+
 	state = State.PLAYING
-	#emit_signal("dialog_finished", _stored_id)
 
 
-func quit() -> void:
-	if state != State.PLAYING:
-		return
+func quit(free_stored = true) -> void:
+	var bubble := _current_bubble if is_instance_valid(_current_bubble) else _stored_bubble
 
-	_interrupt_internal()
+	if is_instance_valid(bubble):
+		if bubble.has_method("force_stop"):
+			bubble.force_stop()
+		bubble.queue_free()
+
+	_current_bubble = null
+	if free_stored:
+		_stored_bubble = null
+		_stored_id = -1
+	state = State.INACTIVE
+
 	emit_signal("dialog_interrupted", -1)
 
 #HIDE.
@@ -170,14 +177,3 @@ func _finish(id: int) -> void:
 	state = State.INACTIVE
 	emit_signal("dialog_finished", id)
 	print(state)
-
-func _interrupt_internal() -> void:
-	if not is_instance_valid(_current_bubble):
-		return
-
-	if _current_bubble.has_method("force_stop"):
-		_current_bubble.force_stop()
-
-	_current_bubble.queue_free()
-	_current_bubble = null
-	state = State.INACTIVE

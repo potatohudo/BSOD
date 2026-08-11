@@ -46,8 +46,8 @@ func play(
 	if not active:
 		return
 
-	if state == State.PLAYING:
-		_interrupt_internal()
+
+	_interrupt_internal()
 
 	var char_id := _character_id(character)
 	if not _characters.has(char_id):
@@ -63,10 +63,9 @@ func play(
 	var bubble: Control = example.duplicate()
 	example.get_parent().add_child(bubble)
 
-	# Reset visibility & state
 	bubble.visible = true
 
-	# Replace text BEFORE playing
+	# replace text BEFORE playing
 
 	bubble.text = String(text)
 	#else:
@@ -88,6 +87,7 @@ func interrupt() -> void:
 	if state != State.PLAYING:
 		return
 
+
 	if not is_instance_valid(_current_bubble):
 		return
 
@@ -105,6 +105,7 @@ func interrupt() -> void:
 func resume() -> void:
 	if state != State.PAUSED:
 		return
+	
 	if not is_instance_valid(_stored_bubble):
 		return
 
@@ -116,8 +117,7 @@ func resume() -> void:
 	if _current_bubble.has_method("resume_dialog"):
 		await _current_bubble.resume_dialog()
 	_current_bubble.play()
-
-	#state = State.INACTIVE
+	state = State.PLAYING
 	#emit_signal("dialog_finished", _stored_id)
 
 
@@ -157,15 +157,12 @@ func _run_bubble(bubble: Control, id: int) -> void:
 		push_warning("Bubble has no play()")
 		_finish(id)
 		return
-	if state == State.PLAYING:
+	while state == State.PLAYING:
 		await bubble.play()
-
 		_finish(id)
 	print(state)
 
 func _finish(id: int) -> void:
-	if is_playing() == false:
-		return
 	if is_instance_valid(_current_bubble):
 		_current_bubble.queue_free()
 

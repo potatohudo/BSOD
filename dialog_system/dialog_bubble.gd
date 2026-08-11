@@ -42,8 +42,6 @@ var _active_character: Node = null
 
 
 var _current_segment: int = 0
-var _stored_char: int = 0
-
 var _is_showing := false
 var _skip_requested := false
 var _typing_done := false
@@ -51,7 +49,6 @@ var _paused := false
 
 signal dialog_resumed
 
-# { "segment": int, "pos": int, "type": "emotion"|"speech", "index": int, "value": String }
 var _trigger_queue := []
 
 var _wave_effect
@@ -101,7 +98,7 @@ func _ready() -> void:
 
 # Start showing this dialog node. Awaitable -> returns "finished" or "paused".
 func play() -> String:
-	print(_stored_char, _is_showing)
+	print(_is_showing, _paused)
 	if _is_showing:
 		# already showing: don't re-enter
 		return "finished"
@@ -128,22 +125,19 @@ func play() -> String:
 
 	_trigger_queue = triggers
 
-	for segment_index in range(segments.size()):
-		#if _paused:
-			#break
+	for segment_index in segments.size():
 		_current_segment = segment_index
-		var seg_text = segments[segment_index]
-		var res_seg = await _show_segment(segment_index, seg_text)
+		await _show_segment(segment_index, segments[segment_index])
 
 	if _skip_requested:
 		_fire_all_remaining_triggers(_current_segment)
 
 	_is_showing = false
 
-	#if _paused:
-		#_paused = false
-		#_is_showing = false
-		#return "paused"
+	if _paused:
+		_paused = false
+		_is_showing = false
+		return "paused"
 
 	var read_buffer := 0.6  
 	if "wait_time" in self and float(wait_time) > 0.0:
@@ -154,7 +148,6 @@ func play() -> String:
 		await get_tree().create_timer(read_buffer).timeout
 
 	# hide bubble after display
-	
 	return "finished"
 	
 func _unhandled_input(event):
@@ -173,7 +166,7 @@ func finish_now() -> void:
 			label.visible_characters = -1
 		_fire_all_remaining_triggers(_current_segment)
 
-# Trigger parsing & splitting
+# trigger parsing & splitting
 
 func _process_triggers_and_split(orig_text: String) -> Array:
 	var segments_raw := orig_text.split("[n]", false)
@@ -230,7 +223,7 @@ func _process_triggers_and_split(orig_text: String) -> Array:
 
 		segments_clean.append(seg)
 
-	# Sort triggers by segment then by pos (stability)
+	# sort triggers by segment then by pos 
 	triggers.sort_custom(Callable(self, "_sort_triggers"))
 	return [segments_clean, triggers]
 
@@ -245,19 +238,6 @@ func _sort_triggers(a, b) -> int:
 	if a.pos > b.pos:
 		return 1
 	return 0
-
-
-
-#func _play_with_text(dialog_text: String) -> String:
-	#var original := text
-#
-	#text = dialog_text
-#
-	#var res := await show_dialog()
-#
-	#text = original
-#
-	#return res
 
 
 func force_stop() -> void:
@@ -276,9 +256,10 @@ func force_stop() -> void:
 
 
 func _show_segment(segment_index: int, seg_text: String) -> void:
-	#label.clear()
+	label.clear()
 	label.bbcode_enabled = true
-	#label.text = ""
+	label.parse_bbcode(seg_text)
+	label.visible_characters = 0
 
 	if fade_in:
 		await _fade_in()
@@ -286,37 +267,27 @@ func _show_segment(segment_index: int, seg_text: String) -> void:
 	_skip_requested = false
 	_typing_done = false
 
-	# parse and reveal
-	label.parse_bbcode(seg_text)
-	label.visible_characters = _stored_char
-	var total_chars := label.get_total_character_count()
-
-	# Start speaking for all characters during segment by default
-	if _active_character and _active_character.has_method("start_speaking"):
+	if _active_character:
 		_active_character.start_speaking()
-	_active_character = null
+		_active_character = null
 
+	for i in range(label.get_total_character_count() + 1):
+		while _paused:
+			await dialog_resumed
 
-	for i in range(total_chars + 1):
 		for t in _trigger_queue:
 			if t.segment == segment_index and t.pos == i:
 				_process_trigger(t)
 
 		if _skip_requested:
 			label.visible_characters = -1
-			_fire_all_remaining_triggers(_current_segment)
+			_fire_all_remaining_triggers(segment_index)
 			break
-		if _paused:
-			_stored_char = i
-			print("paused!", _stored_char)
-			
-			break
+
 		label.visible_characters = i
 		await get_tree().create_timer(typing_speed).timeout
 
 	_active_character = null
-
-
 	_typing_done = true
 
 	if wait_time > 0.0:
@@ -430,13 +401,9 @@ func _simple_fade(from_alpha: float, to_alpha: float) -> void:
 	await tw.finished
 
 func pause_dialog() -> void:
-	if not _is_showing:
-		return
 	_paused = true
 
 func resume_dialog() -> void:
-	if not _is_showing:
-		return
 	_paused = false
 	dialog_resumed.emit()
 

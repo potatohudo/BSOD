@@ -31,9 +31,6 @@ var main_dialogs := [
 		Its purpose is to permit a page layout to be designed, independently of the copy that will subsequently populate it, or to demonstrate various fonts of a typeface without meaningful text that could be distracting. Lorem ipsum is typically a corrupted version of De finibus bonorum et malorum, a 1st-century BC text by the Roman statesman and philosopher Cicero, with words altered, added, and removed to make it nonsensical and improper Latin. The first two words are the truncation of dolorem ipsum which means 'pain itself'"],
 		["[emotion=0:neutral]Ahhh, I got a bit carried away. Sorry I don't mean it."]
 ]
-var main_dialogs1 := [
-	["test"]
-]
 
 var walkaway_dialogs := [
 	["[emotion=0:sad]Wait- No- please don't leave just yet! I- I promise I can do better! Please don't leave me here!"],

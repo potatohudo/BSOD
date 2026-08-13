@@ -72,44 +72,59 @@ func set_emotion(emotion: String) -> void:
 		"s":
 			$AnimationPlayer.pause()
 		
+#flow
+#a tear dropped from my asscheek
 
 
-# -------------------------
-# AREA EVENTS
-# -------------------------
+
+func talk(dialog, index, id):
+	if index >= dialog.size():
+		return
+	var segment = array_to_string(dialog[index])
+	DialogManager.play(segment, self, id + index)
+	
+
+#AREA BS
 var started = false
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if not body.is_in_group("player"):
 		return
-	if not started:
-		DialogManager.play("AAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHhhhhhhhhhhhhhhhhhhhhhhhhHHHHH", self, 743)
-		started = true
-	else:
-		DialogManager.resume()
+	if started:
+		talk(return_dialogs, return_index, 74300)
+		return
+	talk(main_dialogs, main_index, 743)
+	started = true
 
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
-	if not body.is_in_group("player")or not started:
+	if not body.is_in_group("player"):
 		return
-	DialogManager.interrupt()
+	talk(walkaway_dialogs, walkaway_index, 7430)
 
-
-
-
-# -------------------------
-# PLAY HELPERS
-# -------------------------
-
-
-# -------------------------
-# DIALOG FLOW
-# -------------------------
 
 func _on_dialog_finished(id: int) -> void:
+	var mainid = main_index + 743
+	var walkawayid = walkaway_index + 7430
+	var returnid = return_index + 74300
 	match id:
-		743:
-			DialogManager.play("bbebebebbebebbebebebebebbebebebbbbbbbbeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeebeb", self, 743)
+		mainid:
+			main_index += 1
+			talk(main_dialogs, main_index, 743)
+		walkawayid:
+			walkaway_index += 1
+		returnid:
+			talk(main_dialogs, main_index, 743)
+			return_index += 1
+		
+
+#useless helpers
+
+func array_to_string(arr: Array) -> String:
+	var s = ""
+	for i in arr:
+		s += String(i)
+	return s
 
 func start_speaking():
 	$AnimationPlayer.play()

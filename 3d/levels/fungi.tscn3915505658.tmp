@@ -22,7 +22,6 @@
 [ext_resource type="AudioStream" uid="uid://dpk1cruqp5k1y" path="res://3d/music/procedural/threat_1/strangebassthing.wav" id="21_jnmty"]
 [ext_resource type="AudioStream" uid="uid://bpm8iyaq235yh" path="res://3d/music/procedural/threat_1/strangebassthing_calm.wav" id="21_pwfdc"]
 [ext_resource type="AudioStream" uid="uid://cjcwctoxtx7o3" path="res://3d/music/procedural/threat_1/tensionstring.wav" id="22_pwfdc"]
-[ext_resource type="PackedScene" uid="uid://gnxlvcmuo2e" path="res://3d/npcs/bloop/bloop.tscn" id="23_pwfdc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_86wc7"]
 render_priority = 0
@@ -678,11 +677,14 @@ shape = SubResource("ConcavePolygonShape3D_5uw5m")
 
 [node name="MusicComposer" parent="." unique_id=1696262446 instance=ExtResource("10_rk0vv")]
 process_mode = 3
-intro = Array[NodePath]([NodePath("MusicManager")])
-main = Array[NodePath]([NodePath("MusicManager")])
+intro = null
+main = Array[NodePath]([NodePath("MusicManager"), NodePath("")])
+outro = null
+cut = null
 enable_intro = false
 enable_outro = false
-end_timer = 10.0
+outro_dist = null
+end_timer = null
 
 [node name="MusicManager" parent="MusicComposer" unique_id=953644041 instance=ExtResource("9_27f6l")]
 loop_length = 13.716
@@ -693,11 +695,15 @@ stream = ExtResource("11_1bufp")
 volume_db = -8.0
 play_at = 0.125
 play_range = 20.0
+fade_in = false
+fade_out = false
 
 [node name="Sample2" parent="MusicComposer/MusicManager" unique_id=1011137458 instance=ExtResource("10_66o3w")]
 stream = ExtResource("12_66o3w")
 play_at = 0.25
 play_range = 20.0
+fade_in = false
+fade_out = false
 
 [node name="Sample3" parent="MusicComposer/MusicManager" unique_id=617356967 instance=ExtResource("10_66o3w")]
 stream = ExtResource("13_1bufp")
@@ -707,46 +713,43 @@ play_range = 30.0
 stream = ExtResource("14_xet0g")
 play_at = 0.25
 play_range = 10.0
-fade_in = true
-fade_out = true
 fight_mode = 1
 
 [node name="Sample5" parent="MusicComposer/MusicManager" unique_id=787852699 instance=ExtResource("10_66o3w")]
 stream = ExtResource("21_jnmty")
 play_at = 0.25
 play_range = 20.0
-fade_out = true
+fade_in = false
+fade_out = false
 fight_mode = 1
 
 [node name="Sample6" parent="MusicComposer/MusicManager" unique_id=93231934 instance=ExtResource("10_66o3w")]
 stream = ExtResource("15_5uw5m")
 play_range = 50.0
+fade_in = false
+fade_out = false
 fight_mode = 1
 
 [node name="Sample7" parent="MusicComposer/MusicManager" unique_id=1591371354 instance=ExtResource("10_66o3w")]
 stream = ExtResource("17_dbge3")
 play_range = 100.0
-fade_in = true
-fade_out = true
 fight_mode = 2
 
 [node name="Sample8" parent="MusicComposer/MusicManager" unique_id=1627106123 instance=ExtResource("10_66o3w")]
 stream = ExtResource("12_yvjhb")
 volume_db = -10.0
 play_range = 50.0
+fade_in = false
+fade_out = false
 
 [node name="Sample9" parent="MusicComposer/MusicManager" unique_id=1095317135 instance=ExtResource("10_66o3w")]
 stream = ExtResource("21_pwfdc")
 play_range = 20.0
-fade_out = true
 fight_mode = 2
 
 [node name="Sample10" parent="MusicComposer/MusicManager" unique_id=2034146568 instance=ExtResource("10_66o3w")]
 stream = ExtResource("22_pwfdc")
 volume_db = -30.0
-play_at = 2.0
 play_range = 30.0
+fade_out = false
 fight_mode = 1
-
-[node name="Bloop" parent="." unique_id=1169646561 instance=ExtResource("23_pwfdc")]
-transform = Transform3D(-0.471468, 0, -0.8818833, 0, 1, 0, 0.8818833, 0, -0.471468, 7.0546837, 30.211771, 18.7615)

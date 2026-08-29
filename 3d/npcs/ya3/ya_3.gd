@@ -49,7 +49,7 @@ func _ready() -> void:
 
 func apply_damage(dmg):
 	print(dmg, "ouchies")
-	DialogManager.interrupt()
+	DialogManager.quit()
 	$AnimationPlayer.play("RESET")
 	$AudioStreamPlayer3D.play()
 	await get_tree().create_timer(2.0).timeout
@@ -65,6 +65,10 @@ func set_emotion(emotion: String) -> void:
 		"sad":
 			$AnimationPlayer.play("sad")
 		"ba":
+			if $AnimatedSprite3D2.visible:
+				$AnimatedSprite3D2.visible = false
+				$RaytracedAudioPlayer3D.stop()
+				return
 			$AnimatedSprite3D2.visible = true
 			$RaytracedAudioPlayer3D.play(4.0)
 			$AnimatedSprite3D2.play()
@@ -112,10 +116,10 @@ func _on_dialog_finished(id: int) -> void:
 			main_index += 1
 			talk(main_dialogs, main_index, 743)
 		walkawayid:
-			walkaway_index += 1
+			walkaway_index += 1 if walkaway_index < walkaway_dialogs.size() -1 else 0
 		returnid:
 			talk(main_dialogs, main_index, 743)
-			return_index += 1
+			
 		
 
 #useless helpers

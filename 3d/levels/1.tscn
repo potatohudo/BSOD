@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bwtlur2b0570"]
+[gd_scene format=3 uid="uid://bwtlur2b0570"]
 
 [ext_resource type="ArrayMesh" uid="uid://c16bkg7pn88ll" path="res://3d/levels/untitled.obj" id="1_dqcxw"]
 [ext_resource type="ArrayMesh" uid="uid://cqbk5br00yu1p" path="res://3d/levels/untitled1.obj" id="3_1rbcf"]
@@ -45,100 +45,88 @@ volumetric_fog_detail_spread = 1.7411
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_iq0op"]
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D" type="Node3D" unique_id=2135078805]
 
-[node name="Map1" type="MeshInstance3D" parent="."]
+[node name="Map1" type="MeshInstance3D" parent="." unique_id=440074166]
 mesh = ExtResource("1_dqcxw")
 
-[node name="Map2" type="MeshInstance3D" parent="."]
+[node name="Map2" type="MeshInstance3D" parent="." unique_id=1548802543]
 visible = false
 mesh = ExtResource("3_1rbcf")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=954583165]
+visible = false
 
-[node name="Collision" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="Collision" type="CollisionShape3D" parent="StaticBody3D" unique_id=596460764]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.71207, 0)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1446439215]
 environment = SubResource("Environment_mth5x")
 
-[node name="HiddenArea" type="Area3D" parent="." groups=["hidden"]]
+[node name="HiddenArea" type="Area3D" parent="." unique_id=2087524433 groups=["hidden"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.86359, 3.54745, -41.788)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="HiddenArea" groups=["enemy", "hidden", "threat"]]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HiddenArea" unique_id=1961638354 groups=["enemy", "hidden", "threat"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2983055, -12.610465, 37.906326)
 mesh = SubResource("BoxMesh_2bb1d")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="HiddenArea/MeshInstance3D" groups=["enemy", "threat"]]
+[node name="StaticBody3D" type="StaticBody3D" parent="HiddenArea/MeshInstance3D" unique_id=557396226 groups=["enemy", "threat"]]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="HiddenArea/MeshInstance3D/StaticBody3D" groups=["enemy", "threat"]]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HiddenArea/MeshInstance3D/StaticBody3D" unique_id=1728971666 groups=["enemy", "threat"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16.32734, 0)
 shape = SubResource("ConcavePolygonShape3D_iq0op")
 
-[node name="Marker3D" type="Marker3D" parent="." groups=["playerspawn"]]
+[node name="Marker3D" type="Marker3D" parent="." unique_id=1490063377 groups=["playerspawn"]]
 
-[node name="MusicComposer" parent="." instance=ExtResource("4_ae3yl")]
-intro = Array[NodePath]([NodePath("MusicManager")])
+[node name="MusicComposer" parent="." unique_id=1122386960 instance=ExtResource("4_ae3yl")]
+main = Array[NodePath]([NodePath("MusicManager")])
+enable_intro = false
+enable_outro = false
 
-[node name="MusicManager" parent="MusicComposer" instance=ExtResource("5_xd06m")]
+[node name="MusicManager" parent="MusicComposer" unique_id=1521817823 instance=ExtResource("5_xd06m")]
 loop_length = 8.229
 
-[node name="Sample" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample" parent="MusicComposer/MusicManager" unique_id=1254171843 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("6_iq0op")
-range = 40.0
 
-[node name="Sample2" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample2" parent="MusicComposer/MusicManager" unique_id=1832069074 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("7_4n06m")
-range = 40.0
 
-[node name="Sample3" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample3" parent="MusicComposer/MusicManager" unique_id=7882461 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("8_4kkyh")
-range = 40.0
 
-[node name="Sample4" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample4" parent="MusicComposer/MusicManager" unique_id=1864889831 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("9_5jhty")
-range = 40.0
 
-[node name="Sample5" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample5" parent="MusicComposer/MusicManager" unique_id=613149529 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("10_42lcw")
-range = 40.0
 
-[node name="Sample6" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample6" parent="MusicComposer/MusicManager" unique_id=532078599 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("11_858jc")
-range = 40.0
 
-[node name="Sample7" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample7" parent="MusicComposer/MusicManager" unique_id=1124698777 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("12_ipl5w")
-range = 40.0
 
-[node name="Sample8" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample8" parent="MusicComposer/MusicManager" unique_id=127633015 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("13_csdti")
-range = 40.0
 
-[node name="Sample9" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample9" parent="MusicComposer/MusicManager" unique_id=531281444 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("14_be1fn")
-range = 40.0
 
-[node name="Sample10" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample10" parent="MusicComposer/MusicManager" unique_id=357587176 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("15_hywij")
-range = 40.0
 
-[node name="Sample11" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample11" parent="MusicComposer/MusicManager" unique_id=1466096065 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("16_1m014")
-range = 40.0
 
-[node name="Sample12" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample12" parent="MusicComposer/MusicManager" unique_id=691379152 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("17_eu6o3")
-range = 40.0
 
-[node name="Sample13" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample13" parent="MusicComposer/MusicManager" unique_id=2095278632 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("18_vwc6x")
-range = 40.0
 
-[node name="Sample14" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample14" parent="MusicComposer/MusicManager" unique_id=581703581 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("19_5eno5")
-range = 40.0
 
-[node name="Sample15" parent="MusicComposer/MusicManager" instance=ExtResource("6_y5dtp")]
+[node name="Sample15" parent="MusicComposer/MusicManager" unique_id=1208819822 instance=ExtResource("6_y5dtp")]
 stream = ExtResource("20_d3oas")
-range = 40.0

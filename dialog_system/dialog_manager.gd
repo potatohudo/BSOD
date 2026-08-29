@@ -13,7 +13,6 @@ var _current_bubble: Control = null
 var _stored_bubble: Control = null
 var _stored_id: int = -1
 
-# id -> { "node": Node, "example": Control }
 var _characters: Dictionary = {}
 
 

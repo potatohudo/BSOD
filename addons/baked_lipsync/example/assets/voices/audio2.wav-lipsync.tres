@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="AudioStreamLipsync" load_steps=5 format=3 uid="uid://b1xs2x0hmwn3d"]
+[gd_resource type="Resource" script_class="AudioStreamLipsync" format=3 uid="uid://b1xs2x0hmwn3d"]
 
 [ext_resource type="AudioStream" uid="uid://dcyqtajmjo1dj" path="res://addons/baked_lipsync/example/assets/voices/audio2.wav" id="1_pk6pv"]
 [ext_resource type="Script" uid="uid://bfi5hlhgr5yl0" path="res://addons/baked_lipsync/resources/audio_stream_lipsync.gd" id="2_hw3hm"]

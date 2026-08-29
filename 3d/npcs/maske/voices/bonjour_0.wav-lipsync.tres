@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="AudioStreamLipsync" load_steps=5 format=3 uid="uid://dy3ge7b2xfi2o"]
+[gd_resource type="Resource" script_class="AudioStreamLipsync" format=3 uid="uid://dy3ge7b2xfi2o"]
 
 [ext_resource type="AudioStream" uid="uid://b68sr3k4s3u1e" path="res://3d/npcs/maske/voices/bonjour_0.wav" id="1_814je"]
 [ext_resource type="Script" uid="uid://bfi5hlhgr5yl0" path="res://addons/baked_lipsync/resources/audio_stream_lipsync.gd" id="2_1rqa3"]

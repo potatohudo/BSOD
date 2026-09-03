@@ -24,8 +24,8 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	last_tick = Time.get_ticks_usec()
-	cpu_label.visible = true
-	gpu_label.visible = true
+	cpu_label.visible = false
+	gpu_label.visible = false
 	mem_label.visible = false
 	hardware_label.visible = false
 
@@ -48,6 +48,11 @@ func _process(delta: float) -> void:
 	if frame_times_total.size() > HISTORY_NUM_FRAMES:
 		frame_times_total.pop_front()
 
+	if show_detailed:
+		fps_label.text = "FPS: %d | Min: %d | Max: %d" % [fps, min_fps, max_fps]
+	else:
+		fps_label.text = "FPS: %d" % fps
+		return
 	var viewport_rid := get_viewport().get_viewport_rid()
 	var frametime_cpu := (RenderingServer.viewport_get_measured_render_time_cpu(viewport_rid) + RenderingServer.get_frame_setup_time_cpu()) * 1000.0
 	frame_times_cpu.push_back(frametime_cpu)
@@ -58,12 +63,6 @@ func _process(delta: float) -> void:
 	frame_times_gpu.push_back(frametime_gpu)
 	if frame_times_gpu.size() > HISTORY_NUM_FRAMES:
 		frame_times_gpu.pop_front()
-
-	if show_detailed:
-		fps_label.text = "FPS: %d | Min: %d | Max: %d" % [fps, min_fps, max_fps]
-	else:
-		fps_label.text = "FPS: %d" % fps
-
 	var avg_total := _avg(frame_times_total)
 	var avg_cpu := _avg(frame_times_cpu)
 	var avg_gpu := _avg(frame_times_gpu)
@@ -93,6 +92,8 @@ func _input(event: InputEvent) -> void:
 		show_detailed = !show_detailed
 		mem_label.visible = show_detailed
 		hardware_label.visible = show_detailed
+		cpu_label.visible =show_detailed
+		gpu_label.visible = show_detailed
 
 func _avg(arr: Array[float]) -> float:
 	if arr.is_empty():

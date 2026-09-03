@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://37qpo1n6vwa7"
+path="res://.godot/imported/rover auditon 2.mp3-61bbdd3846f78f8dfa597dc6bca54840.mp3str"
+
+[deps]
+
+source_file="res://3d/npcs/ya3/voice/UNCOMPRESSED/rover auditon 2.mp3"
+dest_files=["res://.godot/imported/rover auditon 2.mp3-61bbdd3846f78f8dfa597dc6bca54840.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

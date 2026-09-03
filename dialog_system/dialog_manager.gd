@@ -34,12 +34,13 @@ func unregister_character(character: Node) -> void:
 
 func _character_id(c: Node) -> String:
 	return str(c.get_path())
-
+var audio = null
 # PUBLIC API
 func play(
 	text: String,
 	character: Node,
 	id: int,
+	example_audio: AudioStreamPlayer3D = null,
 	example_override: Control = null
 ) -> void:
 	if not active:
@@ -53,6 +54,7 @@ func play(
 
 	var entry = _characters[char_id]
 	var example: Control = example_override if example_override else entry.example
+	audio = example_audio
 	if not is_instance_valid(example):
 		return
 
@@ -73,9 +75,11 @@ func play(
 	_current_bubble = bubble
 
 	emit_signal("dialog_started", id)
-
+	if audio: audio.play()
+	
 	# Run playback ONCE
 	call_deferred("_run_bubble", bubble, id)
+	
 	
 func is_playing() -> bool:
 	return state == State.PLAYING
@@ -87,7 +91,7 @@ func interrupt() -> void:
 
 	if not is_instance_valid(_current_bubble):
 		return
-
+	
 	_stored_bubble = _current_bubble
 	_stored_id = -1
 
@@ -96,6 +100,7 @@ func interrupt() -> void:
 
 	#_current_bubble.visible = false
 	_current_bubble = null
+	if audio: audio.pause()
 	state = State.PAUSED
 
 
@@ -114,18 +119,20 @@ func resume() -> void:
 
 	if _current_bubble.has_method("resume_dialog"):
 		_current_bubble.resume_dialog()
-
+	if audio: audio.play()
 	state = State.PLAYING
 
 
 func quit(free_stored = true) -> void:
 	var bubble := _current_bubble if is_instance_valid(_current_bubble) else _stored_bubble
+	audio = null
 
 	if is_instance_valid(bubble):
 		if bubble.has_method("force_stop"):
 			bubble.force_stop()
 		bubble.queue_free()
 
+	if audio: audio.stop()
 	_current_bubble = null
 	if free_stored:
 		_stored_bubble = null
@@ -164,8 +171,16 @@ func _run_bubble(bubble: Control, id: int) -> void:
 		_finish(id)
 		return
 	while state == State.PLAYING:
-		await bubble.play()
+		if audio and audio.stream and bubble: 
+			bubble.play() 
+			await get_tree().create_timer(audio.stream.get_length()).timeout
+			audio = null
+		elif bubble:
+			await bubble.play() 
+		else:
+			return
 		_finish(id)
+		
 	print(state)
 
 func _finish(id: int) -> void:

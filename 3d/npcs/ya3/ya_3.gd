@@ -1,6 +1,9 @@
 extends Node3D
 
 @onready var example := $DialogBubble
+@onready var voice_main := []
+@onready var voice_walkaway := []
+@onready var voice_return := []
 
 enum Mode { NONE, MAIN, WALKAWAY, RETURN }
 
@@ -17,6 +20,7 @@ var return_played := []
 var player_inside := false
 var needs_return := false
 
+var locked = false
 
 var main_dialogs := [
 	["[emotion=0:happy]Oh, hey! I didn't expect anyone to visit me."],
@@ -41,19 +45,28 @@ var walkaway_dialogs := [
 var return_dialogs := [
 	["[emotion=0:happy]Oh, you're back! [emotion=0:sad] Look- I won't bore you again! I swear I can do better... please... Don't leave me like you did last time..."]
 ]
-
 func _ready() -> void:
 	await get_tree().process_frame
 	DialogManager.register_character(self, example)
 	DialogManager.connect("dialog_finished", _on_dialog_finished)
+	for child in $yap/main.get_children():
+		voice_main.append(child)
+	for child in $yap/walkaway.get_children():
+		voice_walkaway.append(child)
+	for child in $yap/return.get_children():
+		voice_return.append(child)
+		
+
+
 
 func apply_damage(dmg):
-	print(dmg, "ouchies")
 	DialogManager.quit()
+	print(dmg, "ouchies")
 	$AnimationPlayer.play("RESET")
 	$AudioStreamPlayer3D.play()
 	await get_tree().create_timer(2.0).timeout
 	set_emotion("ba")
+	locked = true
 
 	
 func set_emotion(emotion: String) -> void:
@@ -67,10 +80,10 @@ func set_emotion(emotion: String) -> void:
 		"ba":
 			if $AnimatedSprite3D2.visible:
 				$AnimatedSprite3D2.visible = false
-				$RaytracedAudioPlayer3D.stop()
+				$AudioStreamPlayer3D.stop()
 				return
 			$AnimatedSprite3D2.visible = true
-			$RaytracedAudioPlayer3D.play(4.0)
+			$AudioStreamPlayer3D.play(4.0)
 			$AnimatedSprite3D2.play()
 			$AnimationPlayer.play("RESET")
 		"s":
@@ -81,11 +94,13 @@ func set_emotion(emotion: String) -> void:
 
 
 
-func talk(dialog, index, id):
+func talk(dialog, index, id, voice):
+	if locked: return
 	if index >= dialog.size():
 		return
 	var segment = array_to_string(dialog[index])
-	DialogManager.play(segment, self, id + index)
+	DialogManager.play(segment, self, id + index, voice[index])
+	
 	
 
 #AREA BS
@@ -95,16 +110,16 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 	if not body.is_in_group("player"):
 		return
 	if started:
-		talk(return_dialogs, return_index, 74300)
+		talk(return_dialogs, return_index, 74300, voice_return)
 		return
-	talk(main_dialogs, main_index, 743)
+	talk(main_dialogs, main_index, 743, voice_main)
 	started = true
 
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
 	if not body.is_in_group("player"):
 		return
-	talk(walkaway_dialogs, walkaway_index, 7430)
+	talk(walkaway_dialogs, walkaway_index, 7430, voice_walkaway)
 
 
 func _on_dialog_finished(id: int) -> void:
@@ -114,11 +129,11 @@ func _on_dialog_finished(id: int) -> void:
 	match id:
 		mainid:
 			main_index += 1
-			talk(main_dialogs, main_index, 743)
+			talk(main_dialogs, main_index, 743, voice_main)
 		walkawayid:
 			walkaway_index += 1 if walkaway_index < walkaway_dialogs.size() -1 else 0
 		returnid:
-			talk(main_dialogs, main_index, 743)
+			talk(main_dialogs, main_index, 743, voice_main)
 			
 		
 

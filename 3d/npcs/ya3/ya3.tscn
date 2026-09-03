@@ -1,4 +1,4 @@
-[gd_scene load_steps=1127 format=4 uid="uid://b2iud4rbm8fp6"]
+[gd_scene format=4 uid="uid://b2iud4rbm8fp6"]
 
 [ext_resource type="Script" uid="uid://c3ibyffc6yil1" path="res://3d/npcs/ya3/ya_3.gd" id="1_lj0lm"]
 [ext_resource type="PackedScene" uid="uid://b1c5ps0ocnxoy" path="res://3d/npcs/ya3/revor.glb" id="1_pgqkd"]
@@ -18,9 +18,19 @@
 [ext_resource type="Texture2D" uid="uid://tiodwbh4t6jb" path="res://3d/npcs/ya3/ya3_smile.png" id="16_p1tia"]
 [ext_resource type="Texture2D" uid="uid://p1sb0i35wt6p" path="res://3d/npcs/ya3/ya3_smile_openmouth.png" id="17_yxtmu"]
 [ext_resource type="Texture2D" uid="uid://b12ebx2n4xsi6" path="res://3d/npcs/ya3/Untitled-1.png" id="18_wapkt"]
-[ext_resource type="AudioStream" uid="uid://c8j4h3o51o4dk" path="res://3d/npcs/ya3/Bad Apple but its low quality.wav" id="19_c7qc6"]
-[ext_resource type="AudioStream" uid="uid://dimtvq0kmhumm" path="res://3d/npcs/ya3/TF2 Frying Pan Hit Sound Effect [Download].mp3" id="21_1j2yx"]
+[ext_resource type="AudioStream" uid="uid://qqvoyvr545og" path="res://3d/npcs/ya3/voice/yap_1.wav" id="19_bvbla"]
+[ext_resource type="AudioStream" uid="uid://b63q1tpu6psdd" path="res://3d/npcs/ya3/voice/yap_2.wav" id="20_p1tia"]
 [ext_resource type="PackedScene" uid="uid://b8i2y52nvs1kh" path="res://dialog_system/dialog_bubble.tscn" id="21_7j2ys"]
+[ext_resource type="AudioStream" uid="uid://dlr15c8it0shk" path="res://3d/npcs/ya3/voice/yap_3.wav" id="21_yxtmu"]
+[ext_resource type="AudioStream" uid="uid://btr48t551cgve" path="res://3d/npcs/ya3/voice/yap_4.wav" id="22_l3b1d"]
+[ext_resource type="AudioStream" uid="uid://bbdlu87smom71" path="res://3d/npcs/ya3/voice/yap_3.5.wav" id="22_p1tia"]
+[ext_resource type="AudioStream" uid="uid://0dkuunshv5np" path="res://3d/npcs/ya3/voice/yap_5.wav" id="23_88s7j"]
+[ext_resource type="AudioStream" uid="uid://da0eja2fe5iks" path="res://3d/npcs/ya3/voice/yap_6.wav" id="24_o2qqr"]
+[ext_resource type="AudioStream" uid="uid://cvxiqbe06goh6" path="res://3d/npcs/ya3/voice/walkaway_1.wav" id="25_2vf6s"]
+[ext_resource type="AudioStream" uid="uid://biq6lv6pg2uec" path="res://3d/npcs/ya3/voice/walkaway_2.wav" id="26_8vphc"]
+[ext_resource type="AudioStream" uid="uid://cqdhugf663hno" path="res://3d/npcs/ya3/voice/walkaway_3.wav" id="27_15cmh"]
+[ext_resource type="AudioStream" uid="uid://4fdab3qxiwt2" path="res://3d/npcs/ya3/voice/return_1.wav" id="28_k7w0m"]
+[ext_resource type="AudioStream" uid="uid://c8j4h3o51o4dk" path="res://3d/npcs/ya3/Bad Apple but its low quality.wav" id="30_yxtmu"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_pgqkd"]
 data = PackedVector3Array(0.7324, 0.7324, 0.9657, 1, -1, 1, 0.7324, -0.73249996, 0.9657, 0.7324, 0.7324, 0.9657, 1, 1, 1, 1, -1, 1, -0.8419, 0.7324, 0.9657, 1, 1, 1, 0.7324, 0.7324, 0.9657, -0.8419, 0.7324, 0.9657, -1.1093999, 1, 1, 1, 1, 1, 1, -1, 0.7855, -1.1093999, -1, 1, 1, -1, 1, 1, -1, 0.7855, 1.8021, -1, 0.7855, 1.8021, -1, -0.37129998, 1, -1, 0.7855, 1.8021, -1, -0.37129998, 1, -1, -0.37129998, 1, -1, -0.37129998, -1.1093999, -1, 1, 1, -1, 0.7855, -1.1093999, -1, 1, 1, -1, -0.37129998, 0.8523, -1, -1, 0.8523, -1, -1, 1, -1, -0.37129998, 1, -1, -1, -1.1093999, -1, 1, 0.8523, -1, -1, -0.90309995, -1, -1, -1.1093999, -1, 1, -0.90309995, -1, -1, -1.1093999, -1, -1, 0.8523, -1, -1, -0.90309995, -1, -1.5314, -0.90309995, -1, -1, 0.8523, -1, -1, 0.8523, -1, -1.5314, -0.90309995, -1, -1.5314, 1, 1, -1, 0.8523, -1, -1, 1, -1, -1, 1, 1, -1, 0.8523, 0.70019996, -1, 0.8523, -1, -1, 1, 1, -1, -0.90309995, 0.70019996, -1, 0.8523, 0.70019996, -1, 1, 1, -1, -1.1093999, 1, -1, -0.90309995, 0.70019996, -1, -0.90309995, 0.70019996, -1, -1.1093999, 1, -1, -0.90309995, -1, -1, -0.90309995, -1, -1, -1.1093999, 1, -1, -1.1093999, -1, -1, 1, 0.6946, 0.7855, 1.8021, -1, 0.7855, 1, -1, 0.7855, 1, 0.6946, 0.7855, 1.8021, 0.6946, 0.7855, 1.8021, -1, 0.7855, 1.8021, -1, -0.37129998, 1.8021, 0.6946, 0.7855, 1.8021, 0.6946, -0.37129998, 1.8021, -1, -0.37129998, 1.8021, -1, 0.7855, 1.8021, 0.6946, 0.7855, 1, 0.6946, -0.37129998, 1.8021, 0.6946, 0.7855, 1, 0.6946, 0.7855, 1, 0.6946, -0.37129998, 1.8021, 0.6946, -0.37129998, 1.8021, 0.6946, 0.7855, 1, -1, -0.37129998, 1.8021, 0.6946, -0.37129998, 1, 0.6946, -0.37129998, 1, -1, -0.37129998, 1.8021, -1, -0.37129998, 1.8021, 0.6946, -0.37129998, -0.8419, -0.73249996, 0.9657, -1.1093999, 1, 1, -0.8419, 0.7324, 0.9657, -0.8419, -0.73249996, 0.9657, -1.1093999, -1, 1, -1.1093999, 1, 1, -1.1093999, 1, -1, 1, 1, 1, -1.1093999, 1, 1, -1.1093999, 1, -1, 1, 1, -1, 1, 1, 1, 0.7324, -0.73249996, 0.9657, -1.1093999, -1, 1, -0.8419, -0.73249996, 0.9657, 0.7324, -0.73249996, 0.9657, 1, -1, 1, -1.1093999, -1, 1, 1, -1, 1, 1, 0.6946, 0.7855, 1, -1, 0.7855, 1, 1, 1, 1, 0.6946, 0.7855, 1, -1, 1, 1, 1, 1, 1, 0.6946, -0.37129998, 1, 0.6946, 0.7855, 1, 0.6946, -0.37129998, 1, 1, 1, 1, 1, -1, 1, 0.6946, -0.37129998, 1, 1, -1, 1, -1, -1, 1, 0.6946, -0.37129998, 1, -1, -1, 1, -1, -0.37129998, 0.8523, 0.70019996, -1, 0.8523, -1, -1.5314, 0.8523, -1, -1, 0.8523, 0.70019996, -1, 0.8523, 0.41459998, -1.5314, 0.8523, -1, -1.5314, -1.1093999, 1, -1, -1.1093999, -1, 1, -1.1093999, -1, -1, -1.1093999, 1, -1, -1.1093999, 1, 1, -1.1093999, -1, 1, -0.90309995, -1, -1.5314, 0.8523, 0.41459998, -1.5314, -0.90309995, 0.41459998, -1.5314, -0.90309995, -1, -1.5314, 0.8523, -1, -1.5314, 0.8523, 0.41459998, -1.5314, -0.90309995, 0.70019996, -1, 0.8523, 0.41459998, -1.5314, 0.8523, 0.70019996, -1, -0.90309995, 0.70019996, -1, -0.90309995, 0.41459998, -1.5314, 0.8523, 0.41459998, -1.5314, -0.90309995, -1, -1, -0.90309995, 0.41459998, -1.5314, -0.90309995, 0.70019996, -1, -0.90309995, -1, -1, -0.90309995, -1, -1.5314, -0.90309995, 0.41459998, -1.5314)
@@ -123,7 +133,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("17_yxtmu")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
@@ -7754,7 +7764,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_43wmq")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
@@ -7847,38 +7857,40 @@ _data = {
 &"smile": SubResource("Animation_c7qc6")
 }
 
+[sub_resource type="AudioStream" id="AudioStream_n8wo2"]
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_c7qc6"]
 radius = 10.1163845
 
-[node name="Node3D" type="Node3D" groups=["enemy"]]
+[node name="ya3" type="Node3D" unique_id=850193392 groups=["enemy"]]
 script = ExtResource("1_lj0lm")
 
-[node name="revor" parent="." instance=ExtResource("1_pgqkd")]
+[node name="revor" parent="." unique_id=1320359713 instance=ExtResource("1_pgqkd")]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube" index="0"]
+[node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube" index="0" unique_id=177491636]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube/StaticBody3D" groups=["enemy"]]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube/StaticBody3D" unique_id=584374134 groups=["enemy"]]
 shape = SubResource("ConcavePolygonShape3D_pgqkd")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube_001" index="0"]
+[node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube_001" index="0" unique_id=207585944]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube_001/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube_001/StaticBody3D" unique_id=475613552]
 shape = SubResource("ConcavePolygonShape3D_lpywo")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube_002" index="0"]
+[node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube_002" index="0" unique_id=582947839]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube_002/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube_002/StaticBody3D" unique_id=104792701]
 shape = SubResource("ConcavePolygonShape3D_lj0lm")
 
 [node name="Cube_003" parent="revor" index="5"]
 mesh = SubResource("ArrayMesh_7j2ys")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube_003" index="0"]
+[node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube_003" index="0" unique_id=788411528]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube_003/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube_003/StaticBody3D" unique_id=912989088]
 shape = SubResource("ConcavePolygonShape3D_uqvsu")
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=43650786]
 transform = Transform3D(1.085601, 0, 0, 0, 1.1375413, 0, 0, 0, 0.21052107, -0.112536475, 0.7616551, 0.6937102)
 cast_shadow = 0
 gi_mode = 0
@@ -7886,7 +7898,7 @@ double_sided = false
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_lj0lm")
 
-[node name="AnimatedSprite3D2" type="AnimatedSprite3D" parent="."]
+[node name="AnimatedSprite3D2" type="AnimatedSprite3D" parent="." unique_id=1954513242]
 transform = Transform3D(1.0329934, 0, 0, 0, 1.318289, 0, 0, 0, 1, -0.13932157, 0.7601541, 0.6916936)
 visible = false
 modulate = Color(0.9137255, 0.9019608, 0.8392157, 1)
@@ -7894,105 +7906,118 @@ sprite_frames = SubResource("SpriteFrames_krfyh")
 frame = 13
 frame_progress = 0.5118151
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=521255132]
 root_node = NodePath("../AnimatedSprite3D")
-libraries = {
-&"": SubResource("AnimationLibrary_c7qc6")
-}
+libraries/ = SubResource("AnimationLibrary_c7qc6")
 
-[node name="RaytracedAudioPlayer3D" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("19_c7qc6")
+[node name="yap" type="Node3D" parent="." unique_id=1989944876]
+
+[node name="main" type="Node3D" parent="yap" unique_id=494385731]
+
+[node name="main1" type="AudioStreamPlayer3D" parent="yap/main" unique_id=1975510562]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("19_bvbla")
 attenuation_model = 1
+volume_db = 27.294
 unit_size = 2.69
 
-[node name="Dialogs" type="Node" parent="."]
+[node name="main2" type="AudioStreamPlayer3D" parent="yap/main" unique_id=383730400]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("20_p1tia")
+attenuation_model = 1
+volume_db = 27.294
+unit_size = 2.69
 
-[node name="DialogBubble" parent="Dialogs" instance=ExtResource("21_7j2ys")]
-visible = false
-anchors_preset = -1
-anchor_left = 0.002
-anchor_top = 0.609
-anchor_right = 1.006
-anchor_bottom = 0.99700004
-offset_left = 0.5999999
-offset_top = -0.2000122
-offset_right = -0.20007324
-offset_bottom = -0.6000366
-speaker_name = "pc"
-character_nodes = Array[NodePath]([NodePath("../..")])
-wait_time = 1.07
+[node name="main3" type="AudioStreamPlayer3D" parent="yap/main" unique_id=629591589]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("21_yxtmu")
+attenuation_model = 1
+volume_db = 27.294
+unit_size = 2.69
 
-[node name="ztutzu" parent="Dialogs" instance=ExtResource("21_7j2ys")]
-visible = false
-anchors_preset = -1
-anchor_left = 0.002
-anchor_top = 0.609
-anchor_right = 1.006
-anchor_bottom = 0.99700004
-offset_left = -2.4
-offset_top = 46.799988
-offset_right = -3.2000732
-offset_bottom = 46.399963
-speaker_name = "ya3"
-character_nodes = Array[NodePath]([NodePath("../..")])
+[node name="main3_5" type="AudioStreamPlayer3D" parent="yap/main" unique_id=855704665]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("22_p1tia")
+attenuation_model = 1
+volume_db = 27.294
+unit_size = 2.69
 
-[node name="DialogBubble2" parent="Dialogs" instance=ExtResource("21_7j2ys")]
-visible = false
-anchors_preset = -1
-anchor_left = 0.002
-anchor_top = 0.609
-anchor_right = 1.006
-anchor_bottom = 0.99700004
-offset_left = 0.5999999
-offset_top = -0.2000122
-offset_right = -0.20007324
-offset_bottom = -0.6000366
-speaker_name = "ya3"
-character_nodes = Array[NodePath]([NodePath("../..")])
+[node name="main4" type="AudioStreamPlayer3D" parent="yap/main" unique_id=1569416003]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("22_l3b1d")
+attenuation_model = 1
+volume_db = 27.294
+unit_size = 2.69
 
-[node name="ba" parent="Dialogs" instance=ExtResource("21_7j2ys")]
-visible = false
-anchors_preset = -1
-anchor_left = 0.002
-anchor_top = 0.609
-anchor_right = 1.006
-anchor_bottom = 0.99700004
-offset_left = 0.5999999
-offset_top = -0.2000122
-offset_right = -0.20007324
-offset_bottom = -0.6000366
-speaker_name = "ya3"
-character_nodes = Array[NodePath]([NodePath("../..")])
+[node name="main4-silence1" type="AudioStreamPlayer3D" parent="yap/main" unique_id=2083744798]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = SubResource("AudioStream_n8wo2")
+attenuation_model = 1
+volume_db = 27.294
+unit_size = 2.69
 
-[node name="DialogBubble3" parent="Dialogs" instance=ExtResource("21_7j2ys")]
-visible = false
-anchors_preset = -1
-anchor_left = 0.002
-anchor_top = 0.609
-anchor_right = 1.006
-anchor_bottom = 0.99700004
-offset_left = 0.5999999
-offset_top = -0.2000122
-offset_right = -0.20007324
-offset_bottom = -0.6000366
-speaker_name = "pc"
-character_nodes = Array[NodePath]([NodePath("../..")])
-wait_time = 1.07
+[node name="main4-silence2" type="AudioStreamPlayer3D" parent="yap/main" unique_id=475604185]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+attenuation_model = 1
+volume_db = 27.294
+unit_size = 2.69
 
-[node name="DialogBubble4" parent="Dialogs" instance=ExtResource("21_7j2ys")]
-visible = false
-offset_top = 164.0
+[node name="main5" type="AudioStreamPlayer3D" parent="yap/main" unique_id=1159013488]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("23_88s7j")
+attenuation_model = 1
+volume_db = 27.294
+unit_size = 2.69
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="main6" type="AudioStreamPlayer3D" parent="yap/main" unique_id=1372099408]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("24_o2qqr")
+attenuation_model = 1
+volume_db = 27.294
+unit_size = 2.69
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="walkaway" type="Node3D" parent="yap" unique_id=2009986494]
+
+[node name="walkaway1" type="AudioStreamPlayer3D" parent="yap/walkaway" unique_id=1793803436]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("25_2vf6s")
+attenuation_model = 1
+volume_db = 25.412
+unit_size = 2.69
+
+[node name="walkaway2" type="AudioStreamPlayer3D" parent="yap/walkaway" unique_id=594743004]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("26_8vphc")
+attenuation_model = 1
+volume_db = 25.412
+unit_size = 2.69
+
+[node name="walkaway3" type="AudioStreamPlayer3D" parent="yap/walkaway" unique_id=309121512]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("27_15cmh")
+attenuation_model = 1
+volume_db = 25.412
+unit_size = 2.69
+
+[node name="return" type="Node3D" parent="yap" unique_id=848747988]
+
+[node name="return1" type="AudioStreamPlayer3D" parent="yap/return" unique_id=1869725165]
+transform = Transform3D(-0.71403205, 1.5959861e-08, -0.700113, 0.036881298, 0.9986115, -0.03761452, 0.6991409, -0.05267905, -0.71304065, 0.95832515, 0.681967, 0)
+stream = ExtResource("28_k7w0m")
+attenuation_model = 1
+volume_db = 26.353
+unit_size = 2.69
+
+[node name="Area3D" type="Area3D" parent="." unique_id=316835100]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1850497223]
 shape = SubResource("SphereShape3D_c7qc6")
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("21_1j2yx")
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=2016825402]
+stream = ExtResource("30_yxtmu")
 volume_db = -28.571
 
-[node name="DialogBubble" parent="." instance=ExtResource("21_7j2ys")]
+[node name="DialogBubble" parent="." unique_id=1113296621 instance=ExtResource("21_7j2ys")]
 visible = false
 anchors_preset = -1
 anchor_left = 0.002
@@ -8005,11 +8030,11 @@ offset_right = -0.20007324
 offset_bottom = -0.6000366
 speaker_name = "pc"
 character_nodes = Array[NodePath]([NodePath("..")])
-wait_time = 1.07
+typing_speed = 0.055
+wait_time = 0.3
 
 [connection signal="animation_finished" from="AnimatedSprite3D2" to="." method="_on_animated_sprite_3d_2_animation_finished"]
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
 
 [editable path="revor"]
-[editable path="DialogBubble"]

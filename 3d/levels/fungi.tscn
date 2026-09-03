@@ -749,4 +749,4 @@ play_range = 30.0
 fight_mode = 1
 
 [node name="Bloop" parent="." unique_id=1169646561 instance=ExtResource("23_pwfdc")]
-transform = Transform3D(-0.471468, 0, -0.8818833, 0, 1, 0, 0.8818833, 0, -0.471468, 7.0546837, 30.211771, 18.7615)
+transform = Transform3D(-0.471468, 0, -0.8818833, 0, 1, 0, 0.8818833, 0, -0.471468, -20.897663, 30.211771, 1.7557554)

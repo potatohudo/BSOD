@@ -1,20 +1,41 @@
 extends Node3D
 var moving = false
-var markermoving = false
-#move lookatmodifier by z axis 
-#check if its tied to the body
-# Called when the node enters the scene tree for the first time.
+var dragging = false
+
+const SPEED := 1
+@onready var speed := 2
+@onready var dragging_speed := 1
+@onready var dir := Vector3.BACK #flipped because the model is turned around
+
+@onready var markers_global := $Markers
+@onready var markers_local := $bloop/Markers
+
 func _ready() -> void:
-	await get_tree().create_timer(10).timeout
-	moving = true
-	await get_tree().create_timer(1).timeout
-	markermoving = true
+	for child in markers_global.get_children():
+		var copy := child.duplicate()
+		markers_local.add_child(copy)
+	
+	await get_tree().create_timer(5).timeout
+	move()
 
 
-var t = 0.0
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	for i in range(markers_global.get_child_count()):
+		var local_child = markers_local.get_child(i)
+		var global_child = markers_global.get_child(i)
+		
+		global_child.global_position = global_child.global_position.lerp(
+			local_child.global_position, 
+			delta * dragging_speed
+		)
 	if not moving: return
-	t += delta * 0.00001
-	$bloop.position = $bloop.position.lerp($Marker3D.position, t)
-	if markermoving:$MarkerOrgy/Marker3D2.position = $MarkerOrgy/Marker3D2.position.lerp($Marker3D.position, t)
+	$bloop.position += dir * speed * delta
+	#$bloop/LookAt2.position += dir * speed * delta #if is not commented, moves just fine; but without it, LookAt refuses to follow LookAt2
+	
+
+func move(boo = true):
+	moving = boo
+	await get_tree().create_timer(5).timeout
+	moving = false
+	

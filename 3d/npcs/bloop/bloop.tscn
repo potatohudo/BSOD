@@ -3,20 +3,33 @@
 [ext_resource type="PackedScene" uid="uid://btievm3gehrp5" path="res://3d/npcs/bloop/bloop.glb" id="1_datg5"]
 [ext_resource type="Script" uid="uid://deice7uihb6i6" path="res://3d/npcs/bloop/bloop.gd" id="1_rrpks"]
 
-[node name="Bloop" type="Node3D" unique_id=1169646561]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ppncm"]
+shading_mode = 0
+albedo_color = Color(0.16078432, 0.16078432, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_dvye3"]
+
+[node name="Bloop" type="Node3D" unique_id=124521739]
 script = ExtResource("1_rrpks")
 
-[node name="MarkerOrgy" type="Node3D" parent="." unique_id=308993663]
+[node name="Markers" type="Node3D" parent="." unique_id=308993663]
 
-[node name="Marker3D2" type="Marker3D" parent="MarkerOrgy" unique_id=1648646757]
-transform = Transform3D(0.76017904, 0, 0, 0, 0.941924, 0, 0, 0, 0.57149684, -1.1172403, -0.5280168, -0.23525749)
+[node name="LookAt" type="Marker3D" parent="Markers" unique_id=1648646757]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1172403, -2.024492, -0.23525749)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Markers/LookAt" unique_id=2022973801]
+transform = Transform3D(0.60394186, 0, 0, 0, 0.6387292, 0, 0, 0, 0.67197686, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_ppncm")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_dvye3")
 
 [node name="bloop" parent="." unique_id=1204701233 instance=ExtResource("1_datg5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016785622, 1.4122291, 0.29438972)
+
+[node name="Markers" type="Node3D" parent="bloop" unique_id=1261048255]
 
 [node name="LookAtModifier3D" type="LookAtModifier3D" parent="bloop/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1204701233, 2123851623) index="7" unique_id=626934995]
 transform = Transform3D(0.7601793, 0, 0, 0, 0.9419231, 0, 0, 0, 0.5714969, -0.9016564, -1.8732762, -0.350569)
-target_node = NodePath("../../../../MarkerOrgy/Marker3D2")
+target_node = NodePath("../../../../Markers/LookAt")
 bone_name = "Bone_3"
 bone = 8
 forward_axis = 2

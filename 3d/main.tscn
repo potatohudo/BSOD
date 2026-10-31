@@ -1,34 +1,47 @@
-[gd_scene load_steps=131 format=3 uid="uid://fk0ie8pjbpln"]
+[gd_scene format=3 uid="uid://fk0ie8pjbpln"]
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" uid="uid://btd68ay3n2lrg" path="res://3d/main3d.gd" id="1_h31h8"]
-[ext_resource type="Script" uid="uid://scmx6nxgvl62" path="res://3d/camera_3d.gd" id="2_e55b0"]
-[ext_resource type="Shader" uid="uid://jrqafnutuaex" path="res://3d/glitch.gdshader" id="3_ktawk"]
-[ext_resource type="Shader" uid="uid://8pjeammggl1t" path="res://3d/levels/merc.gdshader" id="4_36mum"]
-[ext_resource type="Script" uid="uid://bjpmu5sklv5h8" path="res://addons/raytraced_audio/raytraced_audio_listener.gd" id="4_v7286"]
-[ext_resource type="Texture2D" uid="uid://c6awahg47ubah" path="res://3d/sprites/por/slide.png" id="5_81jb4"]
-[ext_resource type="Script" uid="uid://cv44kxiyjtgl0" path="res://3d/slope.gd" id="5_087wm"]
+[ext_resource type="Shader" uid="uid://8pjeammggl1t" path="res://3d/levels/merc/merc.gdshader" id="4_36mum"]
 [ext_resource type="Script" uid="uid://dpimfoycynwov" path="res://3d/p_console.gd" id="5_uhvg7"]
+[ext_resource type="Shader" uid="uid://brg403txabo5v" path="res://3d/interlacedcamera.gdshader" id="6_pgui2"]
 [ext_resource type="Script" uid="uid://dmqencd36j1g8" path="res://3d/settings.gd" id="7_4qtkp"]
 [ext_resource type="Shader" uid="uid://ckwv2lo1vnbxh" path="res://3d/freaky.gdshader" id="7_6cqs6"]
-[ext_resource type="AudioStream" uid="uid://cyas5gyubatuc" path="res://3d/sounds/slide_fail.mp3" id="7_fuas2"]
-[ext_resource type="Texture2D" uid="uid://dk30ciya5qldy" path="res://3d/sprites/catexp/Untitled-3.png" id="7_jkdwh"]
 [ext_resource type="Shader" uid="uid://bv5p83ewet33l" path="res://3d/datamoshing.gdshader" id="7_y4vo8"]
-[ext_resource type="Texture2D" uid="uid://c71qsc7g5edx" path="res://3d/sprites/por/grab_hands.png" id="8_3l2s8"]
-[ext_resource type="Texture2D" uid="uid://gc66jmxju5g5" path="res://3d/sprites/por/star_sprite.png" id="8_54vq2"]
-[ext_resource type="Script" uid="uid://tnb1cbtsjnik" path="res://3d/sprites.gd" id="9_m56cn"]
 [ext_resource type="Script" uid="uid://dxcngl7co3js4" path="res://3d/level_manager.gd" id="9_rlvy5"]
 [ext_resource type="Shader" uid="uid://fj2uc0wdyytq" path="res://3d/low_health.gdshader" id="9_vf5oh"]
 [ext_resource type="AudioStream" uid="uid://cfyc0gmsnnx4r" path="res://3d/sounds/hurt_test.mp3" id="13_drwl6"]
-[ext_resource type="Texture2D" uid="uid://p7g5csfulnmq" path="res://3d/sprites/por/porsword.png" id="13_p61ww"]
 [ext_resource type="AudioStream" uid="uid://dp116jp7otldi" path="res://3d/sounds/Track3_VoiceAudio.wav" id="14_em0p2"]
-[ext_resource type="Texture2D" uid="uid://kej5iqewk8fj" path="res://3d/sprites/por/rovpor.png" id="14_tf4kn"]
-[ext_resource type="Script" uid="uid://exatvhmch4" path="res://3d/texture_rect.gd" id="17_ocwrj"]
 [ext_resource type="AudioStream" uid="uid://cx0nx5fojogdv" path="res://3d/sounds/lobotomy.mp3" id="19_gqa5e"]
-[ext_resource type="Texture2D" uid="uid://dim6f2dw8kyf" path="res://3d/sprites/por/slash.png" id="19_rucir"]
-[ext_resource type="Material" uid="uid://dg1dkawqqqtwb" path="res://3d/main.tres" id="19_vs7pb"]
 [ext_resource type="Script" uid="uid://b4042cbjuk71h" path="res://3d/label.gd" id="20_iqmpm"]
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="20_xlvs1"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_pgui2"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dvye3"]
+resource_local_to_scene = true
+shader = ExtResource("6_pgui2")
+shader_parameter/line_thickness = 6.0000002375
+shader_parameter/delayed_screen = SubResource("ViewportTexture_pgui2")
+
+[sub_resource type="GDScript" id="GDScript_dvye3"]
+script/source = "## GDSCRIPT
+extends ColorRect
+
+@export var interlace_viewport : SubViewport
+@onready var interlacing_material : ShaderMaterial = self.material
+@export var interlacing_timer : Timer
+
+####### Connect the interlacing timer's timeout signal here #########
+func _on_interlacer_timer_timeout() -> void:
+	var viewport_img : ImageTexture = ImageTexture.create_from_image(
+		interlace_viewport.get_texture().get_image()
+	)
+
+	interlacing_material.set_shader_parameter(\"delayed_screen\", viewport_img)
+	interlacing_timer.start()
+"
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rmvd8"]
 size = Vector3(10, 1, 10)
@@ -62,650 +75,7 @@ shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
 
 [sub_resource type="SphereMesh" id="SphereMesh_entm2"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_v7tut"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(0, 0, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5yo4e"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(480, 0, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yxhu4"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(960, 0, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d7ga1"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(1440, 0, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7p0kb"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(1920, 0, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1u7hm"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(2400, 0, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7csue"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(2880, 0, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_gm0wn"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(3360, 0, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vknuu"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(0, 442, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4khqd"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(480, 442, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_a0awv"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(960, 442, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ha0vx"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(1440, 442, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ra8s8"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(1920, 442, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_w76qw"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(2400, 442, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dotvi"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(2880, 442, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_485td"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(3360, 442, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jvh4r"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(0, 884, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vxe87"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(480, 884, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ffqs2"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(960, 884, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fkujo"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(1440, 884, 480, 442)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_caov4"]
-atlas = ExtResource("7_jkdwh")
-region = Rect2(1920, 884, 480, 442)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_6s88e"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_v7tut")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5yo4e")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yxhu4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d7ga1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7p0kb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1u7hm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7csue")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_gm0wn")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vknuu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4khqd")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_a0awv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ha0vx")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ra8s8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_w76qw")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dotvi")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_485td")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jvh4r")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vxe87")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ffqs2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fkujo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_caov4")
-}],
-"loop": false,
-"name": &"default",
-"speed": 15.0
-}]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_uyuk1"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(0, 0, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_n07kn"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(250, 0, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_gscqp"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(500, 0, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ngx6y"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(750, 0, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dtjhc"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(0, 251, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1j77p"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(250, 251, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ru0fu"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(500, 251, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4nkmn"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(750, 251, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sm18c"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(0, 502, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lwpf7"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(250, 502, 250, 251)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_vmomf"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_uyuk1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_n07kn")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_gscqp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ngx6y")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dtjhc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1j77p")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ru0fu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4nkmn")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sm18c")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_lwpf7")
-}],
-"loop": true,
-"name": &"default",
-"speed": 15.0
-}]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_x87uw"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(0, 0, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_egxub"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(250, 0, 250, 251)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hn0uk"]
-atlas = ExtResource("8_54vq2")
-region = Rect2(500, 0, 250, 251)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_mtpr1"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_x87uw")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_egxub")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hn0uk")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fs5nf"]
-atlas = ExtResource("13_p61ww")
-region = Rect2(0, 0, 837, 641)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2m288"]
-atlas = ExtResource("13_p61ww")
-region = Rect2(837, 0, 837, 641)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ugklc"]
-atlas = ExtResource("13_p61ww")
-region = Rect2(0, 641, 837, 641)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_02ela"]
-atlas = ExtResource("13_p61ww")
-region = Rect2(837, 641, 837, 641)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_4n16f"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fs5nf")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2m288")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ugklc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_02ela")
-}],
-"loop": true,
-"name": &"default",
-"speed": 8.0
-}]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ja4hc"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(0, 0, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8h0ks"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(720, 0, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hhosc"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(1440, 0, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jww67"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(2160, 0, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_s4my4"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(2880, 0, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5re8b"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(0, 480, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_irj1n"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(720, 480, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ulmgu"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(1440, 480, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2xhx4"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(2160, 480, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jlnel"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(2880, 480, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_n24ig"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(0, 960, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jroxr"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(720, 960, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j3ujp"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(1440, 960, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_c7s28"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(2160, 960, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_evaew"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(2880, 960, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bn53i"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(0, 1440, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7bknh"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(720, 1440, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qfw2u"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(1440, 1440, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hbtyb"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(2160, 1440, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_n1fla"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(2880, 1440, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_27dje"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(0, 1920, 720, 480)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_aq4io"]
-atlas = ExtResource("14_tf4kn")
-region = Rect2(720, 1920, 720, 480)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_xdad6"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ja4hc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8h0ks")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hhosc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jww67")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_s4my4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5re8b")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_irj1n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ulmgu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2xhx4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jlnel")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_n24ig")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jroxr")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j3ujp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_c7s28")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_evaew")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bn53i")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7bknh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qfw2u")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hbtyb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_n1fla")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_27dje")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_aq4io")
-}],
-"loop": false,
-"name": &"default",
-"speed": 24.0
-}]
-
-[sub_resource type="Animation" id="Animation_mmgan"]
-resource_name = "POR_hand_transition"
-step = 0.125
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = false
-tracks/0/path = NodePath("../POR_Transition:sprite_frames")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(1),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [SubResource("SpriteFrames_xdad6")]
-}
-
-[sub_resource type="Animation" id="Animation_a2npg"]
-resource_name = "POR_sword_post-transition"
-step = 0.125
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Idle:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 1,
-"values": [0.261799, 0.352557, 0.205949, -0.0235204, -0.000594807]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Idle:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 1,
-"values": [Vector2(400, 350), Vector2(400, 281.935), Vector2(360.77, 200), Vector2(308, 189), Vector2(308, 189)]
-}
-
-[sub_resource type="Animation" id="Animation_bsq1f"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Idle:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Idle:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(861.765, 565.155)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("../POR_Transition:sprite_frames")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [SubResource("SpriteFrames_xdad6")]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_al43o"]
-_data = {
-&"POR_hand_transition": SubResource("Animation_mmgan"),
-&"POR_sword_transition": SubResource("Animation_a2npg"),
-&"RESET": SubResource("Animation_bsq1f")
-}
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4u02j"]
-atlas = ExtResource("19_rucir")
-region = Rect2(1923, 1077, 1923, 1077)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_le8s2"]
-atlas = ExtResource("19_rucir")
-region = Rect2(3846, 0, 1923, 1077)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8f61r"]
-atlas = ExtResource("19_rucir")
-region = Rect2(1923, 0, 1923, 1077)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4qxdx"]
-atlas = ExtResource("19_rucir")
-region = Rect2(0, 0, 1923, 1077)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ir3ky"]
-atlas = ExtResource("19_rucir")
-region = Rect2(5769, 0, 1923, 1077)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6oclv"]
-atlas = ExtResource("19_rucir")
-region = Rect2(0, 1077, 1923, 1077)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_wr0ba"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4u02j")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_le8s2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8f61r")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4qxdx")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4qxdx")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ir3ky")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ir3ky")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6oclv")
-}],
-"loop": false,
-"name": &"default",
-"speed": 24.0
-}]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_ddcy3"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("5_81jb4")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_mk1hg"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_15u6t"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sv75o"]
-resource_local_to_scene = true
-shader = ExtResource("7_6cqs6")
-shader_parameter/screen_texture = SubResource("ViewportTexture_15u6t")
-shader_parameter/motion_vectors = SubResource("ViewportTexture_mk1hg")
-shader_parameter/strength = 0.0
-shader_parameter/triggered = true
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_ih1cd"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_84lxs"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_k5hur"]
-resource_local_to_scene = true
-shader = ExtResource("7_y4vo8")
-shader_parameter/motion_vectors = SubResource("ViewportTexture_84lxs")
-shader_parameter/datamosh_strength = 0.0
-shader_parameter/strength = 0.0
-shader_parameter/block_size = 1.0
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_frh6j"]
 
 [sub_resource type="Theme" id="Theme_jpke2"]
 resource_local_to_scene = true
@@ -723,9 +93,6 @@ variation_transform = Transform2D(1.095, 0, 0.02, 1.035, 0.085, 0)
 spacing_glyph = 1
 spacing_top = 6
 baseline_offset = 0.435
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1hbw6"]
-shader = ExtResource("3_ktawk")
 
 [sub_resource type="Gradient" id="Gradient_s4t7x"]
 offsets = PackedFloat32Array(0, 0.98895025, 1)
@@ -777,50 +144,107 @@ shader_parameter/noise_mask = SubResource("NoiseTexture2D_s4t7x")
 [sub_resource type="ViewportTexture" id="ViewportTexture_3l2s8"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
-[node name="Main" type="Node"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_frh6j"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_bpc1q"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sv75o"]
+resource_local_to_scene = true
+shader = ExtResource("7_6cqs6")
+shader_parameter/screen_texture = SubResource("ViewportTexture_bpc1q")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_frh6j")
+shader_parameter/strength = 0.0
+shader_parameter/triggered = true
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_bnhvn"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_84lxs"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k5hur"]
+resource_local_to_scene = true
+shader = ExtResource("7_y4vo8")
+shader_parameter/motion_vectors = SubResource("ViewportTexture_84lxs")
+shader_parameter/datamosh_strength = 0.0
+shader_parameter/strength = 0.0
+shader_parameter/block_size = 1.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ih1cd"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[node name="Main" type="Node" unique_id=404909581]
 process_mode = 1
 script = ExtResource("1_h31h8")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-process_mode = 3
-texture_filter = 1
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1091348022]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer2" unique_id=219507464 node_paths=PackedStringArray("interlace_viewport", "interlacing_timer")]
+material = SubResource("ShaderMaterial_dvye3")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 size_flags_vertical = 3
-stretch = true
-stretch_shrink = 3
+color = Color(1, 1, 1, 0)
+script = SubResource("GDScript_dvye3")
+interlace_viewport = NodePath("../../SubViewportContainer/SubViewport")
+interlacing_timer = NodePath("Timer")
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+[node name="Timer" type="Timer" parent="CanvasLayer2/ColorRect" unique_id=364871920]
+wait_time = 0.001
+autostart = true
+
+[node name="SettingsManager" type="Node" parent="." unique_id=1577931534]
 process_mode = 3
-handle_input_locally = false
-canvas_item_default_texture_filter = 0
-audio_listener_enable_3d = true
-size = Vector2i(400, 266)
-render_target_update_mode = 4
+process_priority = 1
+script = ExtResource("7_4qtkp")
 
-[node name="Node3D" type="Node3D" parent="SubViewportContainer/SubViewport"]
+[node name="SettingsMenu" type="Control" parent="." unique_id=318642082]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 91.0
+offset_top = 55.0
+offset_right = 705.0
+offset_bottom = 410.0
 
-[node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Node3D"]
+[node name="LevelManager" type="Node" parent="." unique_id=705308911]
+script = ExtResource("9_rlvy5")
+
+[node name="Hurt0" type="AudioStreamPlayer" parent="." unique_id=1963159003]
+stream = ExtResource("13_drwl6")
+volume_db = -11.954
+
+[node name="Hurt1" type="AudioStreamPlayer" parent="." unique_id=2135062364]
+stream = ExtResource("19_gqa5e")
+volume_db = -15.54
+
+[node name="Hurt2" type="AudioStreamPlayer" parent="." unique_id=785446203]
+stream = ExtResource("14_em0p2")
+
+[node name="Node3D" type="Node3D" parent="." unique_id=2121105770]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Node3D" unique_id=650088047]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.76837e-07, 5.91055, 1.78135)
 
-[node name="floor" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Node3D"]
+[node name="floor" type="StaticBody3D" parent="Node3D" unique_id=797704188]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/floor" unique_id=557146407]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
 shape = SubResource("BoxShape3D_rmvd8")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/floor" unique_id=1460640686]
 mesh = SubResource("BoxMesh_xu3bg")
 
-[node name="PlayerSpawn" type="Marker3D" parent="SubViewportContainer/SubViewport/Node3D/floor"]
+[node name="PlayerSpawn" type="Marker3D" parent="Node3D/floor" unique_id=908086223]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.59684, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D" unique_id=462499655]
 transform = Transform3D(1.9, 0, 0, 0, 1.9, 0, 0, 0, 1.9, 0, 1.90665, 3.97217)
 visible = false
 material_override = SubResource("ShaderMaterial_cfp0m")
@@ -828,121 +252,16 @@ cast_shadow = 0
 mesh = SubResource("SphereMesh_entm2")
 skeleton = NodePath("../LevelHolder")
 
-[node name="CharacterBody3D" parent="SubViewportContainer/SubViewport/Node3D" groups=["player"] instance=ExtResource("1_arn5h")]
-process_mode = 1
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.74464154, 0)
-
-[node name="Marker3D" type="Marker3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D"]
-
-[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3842247, -0.027345762)
-script = ExtResource("2_e55b0")
-
-[node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.231125, -0.776971)
-visible = false
-light_energy = 0.0
-light_indirect_energy = 8.162
-light_volumetric_fog_energy = 5.724
-shadow_enabled = true
-spot_range = 56.486
-spot_angle = 31.4611
-spot_angle_attenuation = 0.15932
-
-[node name="RaytracedAudioListener" type="AudioListener3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
-current = true
-script = ExtResource("4_v7286")
-max_raycast_dist = 1000.0
-max_bounces = 7
-
-[node name="Sprites" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"]
-process_priority = -1
-process_physics_priority = -1
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2958846, -2.2290213, -0.792174)
-script = ExtResource("9_m56cn")
-
-[node name="cat" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
-visible = false
-position = Vector2(218.66666, 131)
-scale = Vector2(1.2597224, 0.6319759)
-sprite_frames = SubResource("SpriteFrames_6s88e")
-
-[node name="DashSprite" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
-visible = false
-position = Vector2(195.66666, 133.66667)
-scale = Vector2(0.33777776, 0.3316667)
-texture = ExtResource("8_3l2s8")
-
-[node name="POR" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
-
-[node name="POR_Full" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR"]
-visible = false
-position = Vector2(200, 0)
-scale = Vector2(0.244, 0.244)
-sprite_frames = SubResource("SpriteFrames_vmomf")
-autoplay = "default"
-
-[node name="POR_Idle" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR"]
-top_level = true
-position = Vector2(200, 0.46)
-scale = Vector2(0.244, 0.244)
-sprite_frames = SubResource("SpriteFrames_mtpr1")
-autoplay = "default"
-
-[node name="POR_Sword" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
-
-[node name="Idle" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword"]
-top_level = true
-position = Vector2(861.765, 565.155)
-scale = Vector2(0.3262569, 0.31392917)
-sprite_frames = SubResource("SpriteFrames_4n16f")
-frame_progress = 0.282052
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword"]
-libraries = {
-&"": SubResource("AnimationLibrary_al43o")
-}
-movie_quit_on_finish = true
-
-[node name="Slash" type="AnimatedSprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword"]
-transform = Transform3D(0.13298967, 0.097444385, -0.10413134, 0, 0.14238164, 0.13323839, 0.14261396, -0.09086836, 0.09710404, 0.468, 2.198, -0.775)
-visible = false
-flip_h = true
-sprite_frames = SubResource("SpriteFrames_wr0ba")
-
-[node name="POR_Transition" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites"]
-visible = false
-position = Vector2(199.04199, 132.5)
-scale = Vector2(0.5520834, 0.5520834)
-sprite_frames = SubResource("SpriteFrames_xdad6")
-frame = 21
-frame_progress = 1.0
-
-[node name="slope" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46614337, 0)
-visible = false
-script = ExtResource("5_087wm")
-
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
-transform = Transform3D(1, 0, 0, 0, 0.0164926, 0.999864, 0, -0.999864, 0.0164926, 0, 0.132142, 1.00321)
-sprite_frames = SubResource("SpriteFrames_ddcy3")
-
-[node name="AnimatedSprite3D2" type="AnimatedSprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
-transform = Transform3D(0.751243, 0, 0, 0, 0.0144115, 0.641093, 0, -0.873694, 0.0105748, 0, 0.30516, 0.753502)
-sprite_frames = SubResource("SpriteFrames_ddcy3")
-
-[node name="AnimatedSprite3D3" type="AnimatedSprite3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
-transform = Transform3D(0.59633, 0, 0, 0, 0.0119755, 0.64288, 0, -0.72601, 0.0106042, 0, 0.398926, 0.753502)
-sprite_frames = SubResource("SpriteFrames_ddcy3")
-
-[node name="Fail" type="AudioStreamPlayer3D" parent="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/slope"]
-stream = ExtResource("7_fuas2")
-volume_db = -5.517
-
-[node name="LevelHolder" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D"]
+[node name="Player" parent="Node3D" unique_id=502571989 groups=["player"] instance=ExtResource("1_arn5h")]
 process_mode = 1
 
-[node name="HScrollBar" type="HScrollBar" parent="SubViewportContainer/SubViewport/Node3D/LevelHolder"]
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Node3D/Player/Marker3D/Camera3D" parent_id_path=PackedInt32Array(502571989, 1343936358) index="4" unique_id=1022234193]
+remote_path = NodePath("../../../../../SubViewportContainer/SubViewport/Camera3D")
+
+[node name="LevelHolder" type="Node3D" parent="Node3D" unique_id=294841906]
+process_mode = 1
+
+[node name="HScrollBar" type="HScrollBar" parent="Node3D/LevelHolder" unique_id=1110837266]
 visible = false
 anchors_preset = -1
 anchor_right = 0.489
@@ -953,61 +272,52 @@ offset_right = 289.4
 offset_bottom = -33.22
 scale = Vector2(0.425, 0.425)
 
-[node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
-visible = false
-texture_filter = 1
-material = SubResource("ShaderMaterial_sv75o")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = SubResource("ViewportTexture_ih1cd")
-
-[node name="Datamoshing" type="ColorRect" parent="SubViewportContainer/SubViewport/Freaky"]
-visible = false
-texture_filter = 1
-material = SubResource("ShaderMaterial_k5hur")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Freaky2" type="TextureRect" parent="SubViewportContainer/SubViewport/Freaky"]
-visible = false
-texture_filter = 1
-material = SubResource("ShaderMaterial_sv75o")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = SubResource("ViewportTexture_ih1cd")
-
-[node name="PauseMenu" type="Panel" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=186777439]
 process_mode = 3
-visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_frh6j")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 3
+stretch = true
+stretch_shrink = 3
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1714146211]
+process_mode = 3
+handle_input_locally = false
+use_occlusion_culling = true
+scaling_3d_mode = 5
+anisotropic_filtering_level = 0
+canvas_item_default_texture_filter = 0
+audio_listener_enable_3d = true
+size = Vector2i(400, 266)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=1953750702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3842247, -0.027345762)
+
+[node name="PauseMenu" type="Panel" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1187227587]
+process_mode = 3
 anchors_preset = -1
 anchor_left = 0.08
 anchor_top = 0.08
 anchor_right = 0.08
 anchor_bottom = 0.091
-offset_right = 700.0
-offset_bottom = 600.0
+offset_left = -22.0
+offset_top = -11.279999
+offset_right = 228.0
+offset_bottom = 135.794
+grow_horizontal = 2
+grow_vertical = 2
 theme = SubResource("Theme_jpke2")
 script = ExtResource("5_uhvg7")
 metadata/_edit_use_anchors_ = true
 
-[node name="Panel" type="Panel" parent="PauseMenu"]
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=389877241]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1019,7 +329,7 @@ size_flags_vertical = 3
 focus_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ctc50")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="PauseMenu"]
+[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=204224700]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.021
@@ -1034,7 +344,7 @@ bbcode_enabled = true
 scroll_active = false
 scroll_following = true
 
-[node name="TextEdit" type="TextEdit" parent="PauseMenu"]
+[node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=1459283994]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.066
@@ -1053,68 +363,14 @@ theme_override_fonts/font = SubResource("FontVariation_futfl")
 caret_blink = true
 caret_draw_when_editable_disabled = true
 
-[node name="SettingsManager" type="Node" parent="."]
-process_mode = 3
-process_priority = 1
-script = ExtResource("7_4qtkp")
-
-[node name="SettingsMenu" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 91.0
-offset_top = 55.0
-offset_right = 705.0
-offset_bottom = 410.0
-
-[node name="LevelManager" type="Node" parent="."]
-script = ExtResource("9_rlvy5")
-
-[node name="health" type="HSlider" parent="."]
-offset_left = 422.0
-offset_top = 762.0
-offset_right = 895.0
-offset_bottom = 778.0
+[node name="HealthBar" type="HSlider" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1847954615]
+offset_left = 8.666667
+offset_top = 248.33334
+offset_right = 140.0
+offset_bottom = 264.33334
 editable = false
 
-[node name="Hurt0" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("13_drwl6")
-volume_db = -11.954
-
-[node name="Hurt1" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("19_gqa5e")
-volume_db = -15.54
-
-[node name="Hurt2" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("14_em0p2")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-visible = false
-follow_viewport_enabled = true
-
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
-material = SubResource("ShaderMaterial_1hbw6")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -2.0
-offset_bottom = -2.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Node" type="Node" parent="."]
-
-[node name="TextureRect" type="TextureRect" parent="Node"]
-visible = false
-material = ExtResource("19_vs7pb")
-offset_right = 1200.0
-offset_bottom = 799.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("17_ocwrj")
-
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1210440429]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -1122,7 +378,7 @@ offset_bottom = 40.0
 theme = ExtResource("20_xlvs1")
 script = ExtResource("20_iqmpm")
 
-[node name="FPS" type="Label" parent="Control"]
+[node name="FPS" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=1924617332]
 layout_mode = 0
 offset_left = 17.0
 offset_top = 14.0
@@ -1130,7 +386,7 @@ offset_right = 165.0
 offset_bottom = 37.0
 text = "fps"
 
-[node name="CPU" type="Label" parent="Control"]
+[node name="CPU" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=469784283]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -1141,7 +397,7 @@ offset_right = 15.0
 offset_bottom = 37.0
 text = "cpu"
 
-[node name="GPU" type="Label" parent="Control"]
+[node name="GPU" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=112655432]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 61.0
@@ -1149,7 +405,7 @@ offset_right = 56.0
 offset_bottom = 77.0
 text = "gpu"
 
-[node name="Hardware" type="Label" parent="Control"]
+[node name="Hardware" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=2079772230]
 visible = false
 layout_mode = 0
 offset_left = 14.0
@@ -1158,7 +414,7 @@ offset_right = 73.0
 offset_bottom = 122.0
 text = "hardware"
 
-[node name="Memory" type="Label" parent="Control"]
+[node name="Memory" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=1564864515]
 visible = false
 layout_mode = 0
 offset_left = 14.0
@@ -1167,7 +423,8 @@ offset_right = 63.0
 offset_bottom = 102.0
 text = "Memory"
 
-[node name="Speed" type="Label" parent="Control"]
+[node name="Speed" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=124627185]
+visible = false
 layout_mode = 0
 offset_left = 1145.0
 offset_top = 9.0
@@ -1175,7 +432,7 @@ offset_right = 1193.0
 offset_bottom = 796.0
 text = "SPEED"
 
-[node name="LowHealth" type="TextureRect" parent="."]
+[node name="LowHealth" type="TextureRect" parent="SubViewportContainer/SubViewport" unique_id=1369385170]
 visible = false
 material = SubResource("ShaderMaterial_xtxmy")
 anchors_preset = 15
@@ -1187,6 +444,45 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 texture = SubResource("ViewportTexture_3l2s8")
 
-[connection signal="animation_finished" from="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword/AnimationPlayer" to="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites" method="_on_animation_player_animation_finished"]
-[connection signal="animation_finished" from="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Sword/Slash" to="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites" method="_on_slash_animation_finished"]
-[connection signal="animation_finished" from="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites/POR_Transition" to="SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D/Sprites" method="_on_por_transition_animation_finished"]
+[node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport" unique_id=1644817431]
+texture_filter = 1
+material = SubResource("ShaderMaterial_sv75o")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource("ViewportTexture_bnhvn")
+
+[node name="Datamoshing" type="ColorRect" parent="SubViewportContainer/SubViewport/Freaky" unique_id=1124846103]
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_k5hur")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Freaky2" type="TextureRect" parent="SubViewportContainer/SubViewport/Freaky" unique_id=896679961]
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_sv75o")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource("ViewportTexture_ih1cd")
+
+[connection signal="timeout" from="CanvasLayer2/ColorRect/Timer" to="CanvasLayer2/ColorRect" method="_on_interlacer_timer_timeout"]
+
+[editable path="Node3D/Player"]

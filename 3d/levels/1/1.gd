@@ -20,7 +20,7 @@ extends Node3D
 @export var column_material: ShaderMaterial
 
 # Rotation stuff (no gravity anywhere)
-@onready var player = get_node_or_null("../../CharacterBody3D")
+
 var sphere_center = Vector3.ZERO
 var last_player_pos: Vector3
 var _have_last := false
@@ -29,9 +29,12 @@ var _have_last := false
 @onready var pivot = $Pivot
 @export var invert_orientation: bool = false
 const ORIENT_EPS: float = 1e-6
-
+@onready var player
 
 func _ready():
+	var players = get_tree().get_nodes_in_group("player")
+	if players.size() > 0:
+		player = players[0] 
 	# Find the player by path
 	#player = get_node_or_null("../../CharacterBody3D")
 	if not player:

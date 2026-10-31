@@ -22,18 +22,14 @@ func register_character(character: Node, example_bubble: Control) -> void:
 	if not is_instance_valid(example_bubble):
 		return
 
-	var id := _character_id(character)
-	_characters[id] = {
+	_characters[str(character.get_path())] = {
 		"node": character,
 		"example": example_bubble
 	}
 
 func unregister_character(character: Node) -> void:
-	var id := _character_id(character)
-	_characters.erase(id)
+	_characters.erase(str(character.get_path()))
 
-func _character_id(c: Node) -> String:
-	return str(c.get_path())
 var audio = null
 # PUBLIC API
 func play(
@@ -47,7 +43,7 @@ func play(
 		return
 	quit()
 
-	var char_id := _character_id(character)
+	var char_id := str(character.get_path())
 	if not _characters.has(char_id):
 		push_warning("Character not registered: %s" % char_id)
 		return
@@ -82,7 +78,9 @@ func play(
 	
 	
 func is_playing() -> bool:
+	print(state)
 	return state == State.PLAYING
+	
 
 func interrupt() -> void:
 	if state != State.PLAYING:
@@ -125,6 +123,7 @@ func resume() -> void:
 
 func quit(free_stored = true) -> void:
 	var bubble := _current_bubble if is_instance_valid(_current_bubble) else _stored_bubble
+	if audio: audio.stop() 
 	audio = null
 
 	if is_instance_valid(bubble):
@@ -138,7 +137,7 @@ func quit(free_stored = true) -> void:
 		_stored_bubble = null
 		_stored_id = -1
 	state = State.INACTIVE
-
+	print(state)
 	emit_signal("dialog_interrupted", -1)
 
 #HIDE.
@@ -173,7 +172,7 @@ func _run_bubble(bubble: Control, id: int) -> void:
 	while state == State.PLAYING:
 		if audio and audio.stream and bubble: 
 			bubble.play() 
-			await get_tree().create_timer(audio.stream.get_length()).timeout
+			await audio.finished
 			audio = null
 		elif bubble:
 			await bubble.play() 

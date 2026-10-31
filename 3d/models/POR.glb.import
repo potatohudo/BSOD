@@ -3,21 +3,26 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://njshibhdq8wc"
-path="res://.godot/imported/lt_2.glb-d1bf71861ab324e6a6e6256831ba940e.scn"
+uid="uid://cxy4c6pxjmtot"
+path="res://.godot/imported/POR.glb-8124acf0b416b7e431c54e1282bda4ae.scn"
 
 [deps]
 
-source_file="res://3d/levels/lt_2.glb"
-dest_files=["res://.godot/imported/lt_2.glb-d1bf71861ab324e6a6e6256831ba940e.scn"]
+source_file="res://3d/models/POR.glb"
+dest_files=["res://.godot/imported/POR.glb-8124acf0b416b7e431c54e1282bda4ae.scn"]
 
 [params]
 
 nodes/root_type=""
 nodes/root_name=""
+nodes/root_script=null
+mesh_library/use_node_names_as_mesh_names=false
+array_mesh/deduplicate_surfaces=true
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
 meshes/generate_lods=true
 meshes/create_shadow_meshes=true
@@ -31,6 +36,10 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
 _subresources={}
-gltf/naming_version=1
+gltf/naming_version=2
 gltf/embedded_image_handling=1
+gltf/texture_map_mode=1

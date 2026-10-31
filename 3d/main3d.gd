@@ -11,20 +11,23 @@ var level_manager: Node = null
 
 var subviewport_container
 @onready var settings_manager = preload("res://3d/settings.gd").new() 
-@onready var camera = $"SubViewportContainer/SubViewport/Node3D/CharacterBody3D/Marker3D/Camera3D"
-@onready var health = $SubViewportContainer/SubViewport/Node3D/CharacterBody3D.health
+@onready var camera = $"Node3D/Player/Marker3D/Camera3D"
+@onready var health = $Node3D/Player.health
 @onready var freaky = $SubViewportContainer/SubViewport/Freaky
 @onready var datamoshing = $SubViewportContainer/SubViewport/Freaky/Datamoshing
 @onready var freaky2 = $SubViewportContainer/SubViewport/Freaky/Freaky2
+@onready var player: CharacterBody3D = $Node3D/Player
+
+
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	pause_menu = $PauseMenu
-	command_input = $PauseMenu/TextEdit
-	command_output = $PauseMenu/RichTextLabel
+	pause_menu = $SubViewportContainer/SubViewport/Camera3D/PauseMenu
+	command_input = $SubViewportContainer/SubViewport/Camera3D/PauseMenu/TextEdit
+	command_output = $SubViewportContainer/SubViewport/Camera3D/PauseMenu/RichTextLabel
 	
 	
 	pause_menu.visible = false
@@ -35,7 +38,7 @@ func _ready() -> void:
 	settings_manager.set_main_reference(self)
 	DisplayServer.window_set_size(Vector2i(1280, 800))
 	#
-	handle_command("load fungi")
+	handle_command("load track")
 
 
 func get_subviewport_container():
@@ -78,7 +81,7 @@ func _process(_delta):
 func handle_command(command: String):
 	var parts = command.split(" ", false) 
 	if parts.size() == 2 and parts[0].to_lower() == "load":
-		var level_path = "res://3d/levels/" + parts[1] + ".tscn"
+		var level_path = "res://3d/levels/" + parts[1] + "/" + parts[1] +".tscn"
 		if ResourceLoader.exists(level_path):  
 			command_output.append_text("\nLoading level: %s..." % parts[1])
 			$LevelManager.load_level(level_path)
@@ -112,7 +115,7 @@ func handle_reset_confirmation(command: String):
 		"y", "yes":
 			command_output.append_text("\nResetting...")
 			is_confirming_reset = false
-			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.apply_damage(health)
+			player.apply_damage(health)
 			get_tree().paused = false
 		"n", "no":
 			command_output.append_text("\nReset canceled.")
@@ -142,16 +145,16 @@ func handle_bonus_command(command: String):
 			command_output.append_text("\nCheat activated! (does nothing for now)")
 		"cat":
 			play_cat_animation()
-			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.die()
+			player.die()
 		"dmg": 
 			toggle_pause()
-			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.apply_damage(15)
+			player.apply_damage(15)
 			await get_tree().create_timer(3).timeout
-			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.apply_damage(30)
+			player.apply_damage(30)
 			await get_tree().create_timer(3).timeout
-			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.apply_damage(40)
+			player.apply_damage(40)
 		"heal":
-			$SubViewportContainer/SubViewport/Node3D/CharacterBody3D.apply_damage(-30)
+			player.apply_damage(-30)
 			
 		
 		"exit":
@@ -168,14 +171,12 @@ func play_cat_animation():
 		cat_sprite.visible = true
 		if cat_sprite.has_method("play"):
 			cat_sprite.play()  
-		else:
-			print("Error: Cat node does not support animations.")
 	health = 0
 	get_tree().paused = false
 
 # **Other Functions**
 func save_game():
-	command_output.append_text("\nGame saved!")
+	command_output.append_text("\nplaceholder")
 
 ##glitch effects and shader logic
 

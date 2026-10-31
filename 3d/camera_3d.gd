@@ -37,7 +37,7 @@ func _custom_mouse_input(event: InputEvent) -> void:
 
 	if event is InputEventMouseMotion:
 		# Horizontal rotation affects marker (yaw)
-		marker.rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
+		character.rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
 
 		# Vertical rotation affects camera (pitch)
 		camera_anglev = clamp(camera_anglev - event.relative.y * mouse_sens, -70, 80)

@@ -2,3 +2,4 @@
 /android/
 /.godot/
 /.godot/editor/
+*.import

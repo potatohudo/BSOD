@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://jvmksi87ndvi" path="res://3d/player.tscn" id="1_arn5h"]
 [ext_resource type="Script" uid="uid://btd68ay3n2lrg" path="res://3d/main3d.gd" id="1_h31h8"]
+[ext_resource type="Shader" uid="uid://co7s2t8a0rcup" path="res://3d/vhs.gdshader" id="2_bpc1q"]
 [ext_resource type="Shader" uid="uid://8pjeammggl1t" path="res://3d/levels/merc/merc.gdshader" id="4_36mum"]
 [ext_resource type="Script" uid="uid://dpimfoycynwov" path="res://3d/p_console.gd" id="5_uhvg7"]
 [ext_resource type="Shader" uid="uid://brg403txabo5v" path="res://3d/interlacedcamera.gdshader" id="6_pgui2"]
@@ -43,56 +44,45 @@ func _on_interlacer_timer_timeout() -> void:
 	interlacing_timer.start()
 "
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_rmvd8"]
-size = Vector3(10, 1, 10)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ppncm"]
+shader = ExtResource("2_bpc1q")
+shader_parameter/wiggle = 0.03
+shader_parameter/wiggle_speed = 25.0
+shader_parameter/smear = 1.0
+shader_parameter/blur_samples = 15
 
-[sub_resource type="BoxMesh" id="BoxMesh_xu3bg"]
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_26mjl"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cfp0m"]
-resource_local_to_scene = true
-render_priority = 0
-shader = ExtResource("4_36mum")
-shader_parameter/base_color = Color(0.6, 0.6, 0.6, 1)
-shader_parameter/distortion_strength = 0.3
-shader_parameter/wave_speed = 2.0
-shader_parameter/wave_scale = 10.0
-shader_parameter/shimmer_speed = 1.5
-shader_parameter/shimmer_strength = 0.08
-shader_parameter/matcap = SubResource("ViewportTexture_26mjl")
-shader_parameter/flip_horizontal = false
-shader_parameter/uv_offset = Vector2(0, 0)
-shader_parameter/uv_scale = Vector2(1, 1)
-shader_parameter/refraction_split = 2.0
-shader_parameter/refraction_split_power = 1.0
-shader_parameter/refraction_affect = 0.6
-shader_parameter/gradient_basis = Vector3(3, 3, 3)
-shader_parameter/min_energy_multiplier = 1.0
-shader_parameter/max_energy_multiplier = 5.0
-shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
-
-[sub_resource type="SphereMesh" id="SphereMesh_entm2"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_frh6j"]
-
-[sub_resource type="Theme" id="Theme_jpke2"]
-resource_local_to_scene = true
-HBoxContainer/colors/body_color = Color(0, 0, 0, 1)
-MarginContainer/colors/body_color = Color(0, 0, 0, 1)
+[sub_resource type="GDScript" id="GDScript_frh6j"]
+script/source = "extends SubViewportContainer
+#func _ready():
+	#set_process_unhandled_input(true)
+#func _input(event):
+	## fix by ArdaE https://github.com/godotengine/godot/issues/17326#issuecomment-431186323
+	#for child in get_children():
+		#if event is InputEventMouse:
+			#var mouseEvent = event.duplicate()
+			#mouseEvent.position = get_global_transform_with_canvas().affine_inverse() * event.position
+			#child.unhandled_input(mouseEvent)
+		#else:
+			#child.unhandled_input(event)
+"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ctc50"]
 bg_color = Color(0, 0, 0, 1)
 
+[sub_resource type="Theme" id="Theme_bpc1q"]
+default_font_size = 15
+
 [sub_resource type="Theme" id="Theme_xda12"]
 default_font_size = 13
 
-[sub_resource type="FontVariation" id="FontVariation_futfl"]
-variation_transform = Transform2D(1.095, 0, 0.02, 1.035, 0.085, 0)
-spacing_glyph = 1
-spacing_top = 6
-baseline_offset = 0.435
+[sub_resource type="GDScript" id="GDScript_bpc1q"]
+script/source = "extends Control
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	DialogManager.sprite_holder = self
+"
 
 [sub_resource type="Gradient" id="Gradient_s4t7x"]
 offsets = PackedFloat32Array(0, 0.98895025, 1)
@@ -175,11 +165,44 @@ shader_parameter/block_size = 1.0
 [sub_resource type="ViewportTexture" id="ViewportTexture_ih1cd"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_rmvd8"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xu3bg"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_26mjl"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cfp0m"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("4_36mum")
+shader_parameter/base_color = Color(0.6, 0.6, 0.6, 1)
+shader_parameter/distortion_strength = 0.3
+shader_parameter/wave_speed = 2.0
+shader_parameter/wave_scale = 10.0
+shader_parameter/shimmer_speed = 1.5
+shader_parameter/shimmer_strength = 0.08
+shader_parameter/matcap = SubResource("ViewportTexture_26mjl")
+shader_parameter/flip_horizontal = false
+shader_parameter/uv_offset = Vector2(0, 0)
+shader_parameter/uv_scale = Vector2(1, 1)
+shader_parameter/refraction_split = 2.0
+shader_parameter/refraction_split_power = 1.0
+shader_parameter/refraction_affect = 0.6
+shader_parameter/gradient_basis = Vector3(3, 3, 3)
+shader_parameter/min_energy_multiplier = 1.0
+shader_parameter/max_energy_multiplier = 5.0
+shader_parameter/fake_light_dir = Vector3(0.3, 1, 0.2)
+
+[sub_resource type="SphereMesh" id="SphereMesh_entm2"]
+
 [node name="Main" type="Node" unique_id=404909581]
 process_mode = 1
 script = ExtResource("1_h31h8")
 
 [node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1091348022]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer2" unique_id=219507464 node_paths=PackedStringArray("interlace_viewport", "interlacing_timer")]
 material = SubResource("ShaderMaterial_dvye3")
@@ -190,7 +213,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color(1, 1, 1, 0)
+mouse_filter = 2
 script = SubResource("GDScript_dvye3")
 interlace_viewport = NodePath("../../SubViewportContainer/SubViewport")
 interlacing_timer = NodePath("Timer")
@@ -198,6 +221,17 @@ interlacing_timer = NodePath("Timer")
 [node name="Timer" type="Timer" parent="CanvasLayer2/ColorRect" unique_id=364871920]
 wait_time = 0.001
 autostart = true
+ignore_time_scale = true
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer2" unique_id=1754982295]
+texture_filter = 1
+material = SubResource("ShaderMaterial_ppncm")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="SettingsManager" type="Node" parent="." unique_id=1577931534]
 process_mode = 3
@@ -226,6 +260,310 @@ volume_db = -15.54
 [node name="Hurt2" type="AudioStreamPlayer" parent="." unique_id=785446203]
 stream = ExtResource("14_em0p2")
 
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=186777439]
+process_mode = 3
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 3
+stretch = true
+stretch_shrink = 3
+script = SubResource("GDScript_frh6j")
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1714146211]
+process_mode = 3
+transparent_bg = true
+handle_input_locally = false
+use_occlusion_culling = true
+scaling_3d_mode = 5
+anisotropic_filtering_level = 0
+canvas_item_default_texture_filter = 0
+audio_listener_enable_3d = true
+size = Vector2i(400, 266)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=1953750702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3842247, -0.027345762)
+
+[node name="PauseMenu" type="Panel" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1187227587]
+process_mode = 3
+anchors_preset = -1
+anchor_top = 0.017543862
+anchor_right = 0.89
+anchor_bottom = 1.0964913
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -140.0
+offset_bottom = -106.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("20_xlvs1")
+script = ExtResource("5_uhvg7")
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=389877241]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ctc50")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=204224700]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.042000003
+anchor_top = -0.062000003
+anchor_right = 1.5510001
+anchor_bottom = 1.723
+offset_left = 12.166667
+offset_top = 15.966668
+offset_right = -151.41669
+offset_bottom = -157.63301
+theme = SubResource("Theme_bpc1q")
+bbcode_enabled = true
+scroll_active = false
+scroll_following = true
+
+[node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=1459283994]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_top = 0.358
+anchor_right = 1.4310001
+anchor_bottom = 1.1810001
+offset_left = -0.06399536
+offset_top = 75.44467
+offset_right = -106.11934
+offset_bottom = -31.81668
+theme = SubResource("Theme_xda12")
+theme_override_colors/selection_color = Color(2.5028e-06, 0, 0.695364, 1)
+theme_override_colors/background_color = Color(0, 0, 0, 1)
+theme_override_constants/caret_width = 6
+wrap_mode = 1
+caret_blink = true
+caret_draw_when_editable_disabled = true
+
+[node name="Panel2" type="TabContainer" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=650830791]
+layout_mode = 0
+offset_left = 222.33334
+offset_top = -17.333334
+offset_right = 380.0
+offset_bottom = 240.6667
+theme_override_constants/side_margin = 0
+theme_override_font_sizes/font_size = 9
+current_tab = 1
+
+[node name="POR" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2" unique_id=2136901829]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR" unique_id=190283866]
+layout_mode = 2
+tooltip_text = "when TRUE, godot tries to predict where the collision will land next. 
+has negative impact on performance, but increaces percision.
+TLDR, the sword will not clip through walls if the setting is on"
+focus_mode = 1
+button_pressed = true
+text = "continuous cd"
+
+[node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR" unique_id=286743397]
+layout_mode = 2
+tooltip_text = "wether the sword sticks to walls when thrown"
+text = "stick to walls"
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR" unique_id=508879344]
+layout_mode = 2
+tooltip_text = "how fast the sword is pulled back to rover.
+the default value is 1x"
+mouse_filter = 1
+text = "pull strength multiplier"
+
+[node name="HSlider" type="HSlider" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR" unique_id=19120059]
+layout_mode = 2
+max_value = 10.0
+step = 0.2
+value = 1.0
+allow_greater = true
+allow_lesser = true
+tick_count = 10
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR" unique_id=1975768801]
+layout_mode = 2
+text = "throw strength multiplier"
+
+[node name="HSlider2" type="HSlider" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR" unique_id=808863510]
+layout_mode = 2
+max_value = 10.0
+step = 0.2
+value = 1.0
+tick_count = 10
+
+[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR" unique_id=1143753618]
+layout_mode = 2
+text = "bouncyness"
+
+[node name="HSlider5" type="HSlider" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR" unique_id=943018995]
+layout_mode = 2
+max_value = 10.0
+step = 0.2
+allow_greater = true
+
+[node name="player" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2" unique_id=637748172]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/player" unique_id=56763858]
+layout_mode = 2
+text = "health"
+
+[node name="HSlider3" type="HSlider" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/player" unique_id=53166878]
+layout_mode = 2
+value = 100.0
+tick_count = 10
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/player" unique_id=1951339993]
+layout_mode = 2
+text = "speed multiplier"
+
+[node name="HSlider2" type="HSlider" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/player" unique_id=1487282076]
+layout_mode = 2
+max_value = 10.0
+step = 0.2
+value = 1.0
+tick_count = 10
+
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/player" unique_id=837007942]
+layout_mode = 2
+text = "jump multiplier"
+
+[node name="HSlider4" type="HSlider" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/player" unique_id=2057205421]
+layout_mode = 2
+max_value = 10.0
+step = 0.2
+value = 1.0
+tick_count = 10
+
+[node name="HealthBar" type="HSlider" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1847954615]
+offset_left = 8.666667
+offset_top = 248.33334
+offset_right = 140.0
+offset_bottom = 264.33334
+editable = false
+
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1210440429]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme = ExtResource("20_xlvs1")
+script = ExtResource("20_iqmpm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=185569863]
+layout_mode = 0
+offset_left = 17.666668
+offset_top = 21.0
+offset_right = 215.33336
+offset_bottom = 186.0
+
+[node name="FPS" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control/VBoxContainer" unique_id=1924617332]
+layout_mode = 2
+text = "fps"
+
+[node name="Hardware" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control/VBoxContainer" unique_id=2079772230]
+visible = false
+layout_mode = 2
+text = "hardware"
+
+[node name="Memory" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control/VBoxContainer" unique_id=1564864515]
+visible = false
+layout_mode = 2
+text = "Memory"
+
+[node name="Speed" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=124627185]
+layout_mode = 0
+offset_left = 369.0
+offset_top = 1.3333321
+offset_right = 397.6667
+offset_bottom = 68.33333
+text = "SPEED"
+
+[node name="SpriteHolder" type="Control" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1555080630]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = SubResource("GDScript_bpc1q")
+
+[node name="LowHealth" type="TextureRect" parent="SubViewportContainer/SubViewport" unique_id=1369385170]
+visible = false
+material = SubResource("ShaderMaterial_xtxmy")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+texture = SubResource("ViewportTexture_3l2s8")
+
+[node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport" unique_id=1644817431]
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_sv75o")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+texture = SubResource("ViewportTexture_bnhvn")
+
+[node name="Datamoshing" type="ColorRect" parent="SubViewportContainer/SubViewport/Freaky" unique_id=1124846103]
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_k5hur")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Freaky2" type="TextureRect" parent="SubViewportContainer/SubViewport/Freaky" unique_id=896679961]
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_sv75o")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+texture = SubResource("ViewportTexture_ih1cd")
+
 [node name="Node3D" type="Node3D" parent="." unique_id=2121105770]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Node3D" unique_id=650088047]
@@ -233,6 +571,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.76837e-07, 5.91055, 1.78135
 
 [node name="floor" type="StaticBody3D" parent="Node3D" unique_id=797704188]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/floor" unique_id=557146407]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.48403, 0)
@@ -272,217 +612,14 @@ offset_right = 289.4
 offset_bottom = -33.22
 scale = Vector2(0.425, 0.425)
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=186777439]
-process_mode = 3
-texture_filter = 1
-material = SubResource("ShaderMaterial_frh6j")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 6
-size_flags_vertical = 3
-stretch = true
-stretch_shrink = 3
-
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1714146211]
-process_mode = 3
-handle_input_locally = false
-use_occlusion_culling = true
-scaling_3d_mode = 5
-anisotropic_filtering_level = 0
-canvas_item_default_texture_filter = 0
-audio_listener_enable_3d = true
-size = Vector2i(400, 266)
-render_target_update_mode = 4
-
-[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=1953750702]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3842247, -0.027345762)
-
-[node name="PauseMenu" type="Panel" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1187227587]
-process_mode = 3
-anchors_preset = -1
-anchor_left = 0.08
-anchor_top = 0.08
-anchor_right = 0.08
-anchor_bottom = 0.091
-offset_left = -22.0
-offset_top = -11.279999
-offset_right = 228.0
-offset_bottom = 135.794
-grow_horizontal = 2
-grow_vertical = 2
-theme = SubResource("Theme_jpke2")
-script = ExtResource("5_uhvg7")
-metadata/_edit_use_anchors_ = true
-
-[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=389877241]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-focus_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_ctc50")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=204224700]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.021
-anchor_top = 0.79
-anchor_right = 0.021
-anchor_bottom = 0.79
-offset_left = -4.11267
-offset_top = -375.59
-offset_right = 746.887
-offset_bottom = 3.41037
-bbcode_enabled = true
-scroll_active = false
-scroll_following = true
-
-[node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Camera3D/PauseMenu" unique_id=1459283994]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.066
-anchor_top = 0.878
-anchor_right = 0.066
-anchor_bottom = 0.878
-offset_left = -0.0639954
-offset_top = -11.242
-offset_right = 688.936
-offset_bottom = 31.758
-theme = SubResource("Theme_xda12")
-theme_override_colors/selection_color = Color(2.5028e-06, 0, 0.695364, 1)
-theme_override_colors/background_color = Color(0, 0, 0, 1)
-theme_override_constants/caret_width = 6
-theme_override_fonts/font = SubResource("FontVariation_futfl")
-caret_blink = true
-caret_draw_when_editable_disabled = true
-
-[node name="HealthBar" type="HSlider" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1847954615]
-offset_left = 8.666667
-offset_top = 248.33334
-offset_right = 140.0
-offset_bottom = 264.33334
-editable = false
-
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1210440429]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-theme = ExtResource("20_xlvs1")
-script = ExtResource("20_iqmpm")
-
-[node name="FPS" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=1924617332]
-layout_mode = 0
-offset_left = 17.0
-offset_top = 14.0
-offset_right = 165.0
-offset_bottom = 37.0
-text = "fps"
-
-[node name="CPU" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=469784283]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 0.4
-offset_left = 15.0
-offset_top = 37.0
-offset_right = 15.0
-offset_bottom = 37.0
-text = "cpu"
-
-[node name="GPU" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=112655432]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 61.0
-offset_right = 56.0
-offset_bottom = 77.0
-text = "gpu"
-
-[node name="Hardware" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=2079772230]
-visible = false
-layout_mode = 0
-offset_left = 14.0
-offset_top = 106.0
-offset_right = 73.0
-offset_bottom = 122.0
-text = "hardware"
-
-[node name="Memory" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=1564864515]
-visible = false
-layout_mode = 0
-offset_left = 14.0
-offset_top = 86.0
-offset_right = 63.0
-offset_bottom = 102.0
-text = "Memory"
-
-[node name="Speed" type="Label" parent="SubViewportContainer/SubViewport/Camera3D/Control" unique_id=124627185]
-visible = false
-layout_mode = 0
-offset_left = 1145.0
-offset_top = 9.0
-offset_right = 1193.0
-offset_bottom = 796.0
-text = "SPEED"
-
-[node name="LowHealth" type="TextureRect" parent="SubViewportContainer/SubViewport" unique_id=1369385170]
-visible = false
-material = SubResource("ShaderMaterial_xtxmy")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = SubResource("ViewportTexture_3l2s8")
-
-[node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport" unique_id=1644817431]
-texture_filter = 1
-material = SubResource("ShaderMaterial_sv75o")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = SubResource("ViewportTexture_bnhvn")
-
-[node name="Datamoshing" type="ColorRect" parent="SubViewportContainer/SubViewport/Freaky" unique_id=1124846103]
-visible = false
-texture_filter = 1
-material = SubResource("ShaderMaterial_k5hur")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Freaky2" type="TextureRect" parent="SubViewportContainer/SubViewport/Freaky" unique_id=896679961]
-visible = false
-texture_filter = 1
-material = SubResource("ShaderMaterial_sv75o")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = SubResource("ViewportTexture_ih1cd")
-
 [connection signal="timeout" from="CanvasLayer2/ColorRect/Timer" to="CanvasLayer2/ColorRect" method="_on_interlacer_timer_timeout"]
+[connection signal="toggled" from="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR/CheckBox" to="SubViewportContainer/SubViewport/Camera3D/PauseMenu" method="_on_check_box_toggled"]
+[connection signal="toggled" from="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR/CheckBox2" to="SubViewportContainer/SubViewport/Camera3D/PauseMenu" method="_on_check_box_2_toggled"]
+[connection signal="value_changed" from="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR/HSlider" to="Node3D/Player/POR2" method="_on_h_slider_value_changed"]
+[connection signal="value_changed" from="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR/HSlider2" to="Node3D/Player/POR2" method="_on_h_slider_2_value_changed"]
+[connection signal="value_changed" from="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/POR/HSlider5" to="Node3D/Player/POR2" method="_on_h_slider_5_value_changed"]
+[connection signal="value_changed" from="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/player/HSlider3" to="Node3D/Player" method="_on_h_slider_3_value_changed"]
+[connection signal="value_changed" from="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/player/HSlider2" to="Node3D/Player" method="_on_h_slider_2_value_changed"]
+[connection signal="value_changed" from="SubViewportContainer/SubViewport/Camera3D/PauseMenu/Panel2/player/HSlider4" to="Node3D/Player" method="_on_h_slider_4_value_changed"]
 
 [editable path="Node3D/Player"]

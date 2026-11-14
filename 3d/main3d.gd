@@ -28,7 +28,7 @@ func _ready() -> void:
 	pause_menu = $SubViewportContainer/SubViewport/Camera3D/PauseMenu
 	command_input = $SubViewportContainer/SubViewport/Camera3D/PauseMenu/TextEdit
 	command_output = $SubViewportContainer/SubViewport/Camera3D/PauseMenu/RichTextLabel
-	
+	$CanvasLayer2.visible = true
 	
 	pause_menu.visible = false
 	
@@ -38,7 +38,7 @@ func _ready() -> void:
 	settings_manager.set_main_reference(self)
 	DisplayServer.window_set_size(Vector2i(1280, 800))
 	#
-	handle_command("load track")
+	#handle_command("load frutigeraero")
 
 
 func get_subviewport_container():
@@ -50,6 +50,10 @@ func _input(event):
 		camera._custom_mouse_input(event)  
 
 	if event.is_action_pressed("ui_cancel"):
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		toggle_pause()
 
 func toggle_pause():
@@ -85,7 +89,7 @@ func handle_command(command: String):
 		if ResourceLoader.exists(level_path):  
 			command_output.append_text("\nLoading level: %s..." % parts[1])
 			$LevelManager.load_level(level_path)
-			get_tree().paused = false  
+			 
 		else:
 			command_output.append_text("\nError: Wrong path (%s)" % level_path)
 	match command.to_lower():

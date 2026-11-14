@@ -9,7 +9,8 @@ var level_lookup: Dictionary = {
 	"11.11.1": "1",
 	"00.00.2": "level_test_2",
 	"64.27.1": "merc",
-	"14.80.0": "fungi"
+	"14.80.0": "fungi",
+	"456.007.278" : "frutigeraero"
 	#"00.00.5": "corridor_w5" 
 	
 }
@@ -19,6 +20,8 @@ func get_usage() -> Vector2:
 
 func _ready() -> void:
 	await get_tree().process_frame
+	DisplayServer.window_set_size(Vector2i(1000, 450))
+	
 
 func _process(_delta):
 
@@ -31,7 +34,8 @@ func _process(_delta):
 func tp(coordinates: String) -> void:
 	if level_lookup.has(coordinates):
 		var level_name = level_lookup[coordinates]
-		var level_path = "res://3d/levels/%s.tscn" % level_name
+		var level_path1 = "res://3d/levels/%s" % level_name
+		var level_path = level_path1+"/%s.tscn" % level_name
 		print("Teleporting to: ", level_path)
 		await get_tree().create_timer(0.5).timeout
 		$AudioStreamPlayer.play()

@@ -1,23 +1,12 @@
 extends Panel
-
-var initial_size = Vector2(804, 539)  # Initial size of the panel
-var initial_positionn = Vector2(66, 55)  # Example initial position
-
-func _ready():
-	size = initial_size
-	position = initial_positionn
-
-func expand_to_fullscreen():
-	var window_size = DisplayServer.window_get_size()
-	position = Vector2.ZERO
-	size = window_size
-
-func reset_to_initial_size():
-	size = initial_size
-	position = initial_positionn
+@onready var player: CharacterBody3D = $"../../../../Node3D/Player"
+@onready var por: RigidBody3D = $"../../../../Node3D/Player/POR2"
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass
+func _on_check_box_toggled(toggled_on: bool) -> void:
+	por.continuous_cd = toggled_on
+
+
+func _on_check_box_2_toggled(toggled_on: bool) -> void:
+	por.stick_to_surfaces = toggled_on
 	

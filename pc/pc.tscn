@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b5yvv32x8oiti"]
+[gd_scene format=3 uid="uid://b5yvv32x8oiti"]
 
 [ext_resource type="Script" uid="uid://bp4r015dgi6lr" path="res://pc/pc.gd" id="1_ullek"]
 [ext_resource type="Theme" uid="uid://cavhfpcrouqti" path="res://pc/PC.tres" id="2_urj55"]
@@ -42,7 +42,7 @@ shader_parameter/block_size = 1.0
 [sub_resource type="ViewportTexture" id="ViewportTexture_flsyp"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
-[node name="Main" type="Control"]
+[node name="Main" type="Control" unique_id=445222136]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -55,7 +55,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_ullek")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1882253128]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -68,7 +68,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cdfbd")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1967513539]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -81,7 +81,7 @@ grow_horizontal = 2
 grow_vertical = 2
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=525619576]
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
 size = Vector2i(952, 794)
@@ -89,14 +89,14 @@ size_2d_override = Vector2i(800, 600)
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
-[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport"]
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport" unique_id=1563016929]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Explorer" type="Control" parent="SubViewportContainer/SubViewport"]
+[node name="Explorer" type="Control" parent="SubViewportContainer/SubViewport" unique_id=471727155]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -105,7 +105,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_urj55")
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Explorer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Explorer" unique_id=1150157345]
 layout_mode = 0
 offset_left = 527.0
 offset_top = 22.0
@@ -113,26 +113,26 @@ offset_right = 777.0
 offset_bottom = 54.0
 text = "[filepath]"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Explorer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Explorer" unique_id=1998714231]
 layout_mode = 0
 offset_left = 39.0
 offset_top = 27.0
 offset_right = 167.0
 offset_bottom = 131.0
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer" unique_id=344228608]
 layout_mode = 2
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer" unique_id=1263826775]
 layout_mode = 2
 
-[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer"]
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer" unique_id=393968319]
 layout_mode = 2
 
-[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer"]
+[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer" unique_id=448558669]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Explorer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Explorer" unique_id=1880922339]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -144,7 +144,7 @@ offset_bottom = -35.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Tree" type="Tree" parent="SubViewportContainer/SubViewport/Explorer/HBoxContainer"]
+[node name="Tree" type="Tree" parent="SubViewportContainer/SubViewport/Explorer/HBoxContainer" unique_id=2141612846]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.57
@@ -154,11 +154,11 @@ hide_root = true
 scroll_horizontal_enabled = false
 scroll_vertical_enabled = false
 
-[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Explorer/HBoxContainer"]
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Explorer/HBoxContainer" unique_id=1295452042]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Explorer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Explorer" unique_id=1473565492]
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -172,18 +172,18 @@ grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer2"]
+[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer2" unique_id=857462983]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer2"]
+[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Explorer/VBoxContainer2" unique_id=1739392919]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 text = "[INFO]bhnhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
 fit_content = true
 
-[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Explorer"]
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Explorer" unique_id=223699195]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 53.0
@@ -191,7 +191,7 @@ offset_right = 349.0
 offset_bottom = 517.0
 script = ExtResource("3_efrs8")
 
-[node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Explorer/Panel"]
+[node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Explorer/Panel" unique_id=989108187]
 layout_mode = 0
 offset_left = -0.285
 offset_top = 470.0
@@ -201,7 +201,7 @@ wrap_mode = 1
 scroll_past_end_of_file = true
 scroll_fit_content_height = true
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Explorer/Panel"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Explorer/Panel" unique_id=1691879205]
 visible = false
 layout_mode = 0
 offset_left = 4.0
@@ -210,7 +210,7 @@ offset_right = 208.0
 offset_bottom = 96.0
 text = "_______________________"
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Explorer/Panel"]
+[node name="RichTextLabel2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Explorer/Panel" unique_id=1385690558]
 clip_contents = false
 layout_mode = 0
 offset_left = 8.0
@@ -220,7 +220,7 @@ offset_bottom = 451.0
 scroll_active = false
 scroll_following = true
 
-[node name="TaskPanel" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Explorer"]
+[node name="TaskPanel" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Explorer" unique_id=182020031]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -230,17 +230,17 @@ offset_top = -27.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Explorer/TaskPanel"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Explorer/TaskPanel" unique_id=1549699791]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "cmd
 "
 
-[node name="Bar" type="Panel" parent="SubViewportContainer/SubViewport/Explorer/TaskPanel"]
+[node name="Bar" type="Panel" parent="SubViewportContainer/SubViewport/Explorer/TaskPanel" unique_id=1887204449]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Explorer/TaskPanel/Bar"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Explorer/TaskPanel/Bar" unique_id=852501608]
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -249,12 +249,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Loader" type="Control" parent="SubViewportContainer/SubViewport/Explorer"]
+[node name="Loader" type="Control" parent="SubViewportContainer/SubViewport/Explorer" unique_id=1135809258]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="TPButton" type="Button" parent="SubViewportContainer/SubViewport/Explorer"]
+[node name="TPButton" type="Button" parent="SubViewportContainer/SubViewport/Explorer" unique_id=354011569]
 layout_mode = 0
 offset_left = 758.0
 offset_top = 1.0
@@ -263,7 +263,7 @@ offset_bottom = 39.0
 icon = ExtResource("4_skdsj")
 flat = true
 
-[node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport"]
+[node name="Freaky" type="TextureRect" parent="SubViewportContainer/SubViewport" unique_id=397307731]
 texture_filter = 1
 material = SubResource("ShaderMaterial_1fbyj")
 use_parent_material = true
@@ -282,7 +282,7 @@ mouse_filter = 2
 texture = SubResource("ViewportTexture_ooye2")
 expand_mode = 1
 
-[node name="Datamoshing" type="ColorRect" parent="SubViewportContainer/SubViewport/Freaky"]
+[node name="Datamoshing" type="ColorRect" parent="SubViewportContainer/SubViewport/Freaky" unique_id=422065224]
 texture_filter = 1
 material = SubResource("ShaderMaterial_b5vbf")
 layout_mode = 1
@@ -295,7 +295,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="Freaky2" type="TextureRect" parent="SubViewportContainer/SubViewport/Freaky"]
+[node name="Freaky2" type="TextureRect" parent="SubViewportContainer/SubViewport/Freaky" unique_id=72251835]
 visible = false
 texture_filter = 1
 material = SubResource("ShaderMaterial_1fbyj")
@@ -310,7 +310,7 @@ size_flags_vertical = 3
 mouse_filter = 2
 texture = SubResource("ViewportTexture_flsyp")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1793265794]
 stream = ExtResource("7_e2ov3")
 volume_db = -4.685
 autoplay = true

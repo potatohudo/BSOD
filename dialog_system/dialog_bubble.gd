@@ -10,7 +10,7 @@ extends Control
 @export var speaker_name: String = ""
 @export var style: Dictionary = {}
 
-@export var character_nodes: Array[NodePath] = []# nodes to call start/stop speaking and set_emotion on
+@export var character_node: Node
 
 
 
@@ -37,9 +37,6 @@ extends Control
 @export var fade_in := true
 @export var fade_out := true
 @export_range(0.1, 5.0, 0.1) var fade_duration := 0.5
- 
-var _active_character: Node = null
-
 
 var _current_segment: int = 0
 var _is_showing := false
@@ -175,7 +172,6 @@ func _process_triggers_and_split(orig_text: String) -> Array:
 
 	for s_index in range(segments_raw.size()):
 		var seg := segments_raw[s_index]
-		var offset := 0
 		# process emotion tags first
 		var regex_em := RegEx.new()
 		regex_em.compile("\\[emotion=(\\d+):([^\\]]+)\\]")
@@ -199,27 +195,6 @@ func _process_triggers_and_split(orig_text: String) -> Array:
 			shift += removed_len
 
 			r = regex_em.search(seg)
-
-		# process speech tags [INDEX:s] or [INDEX:sp]
-		var regex_sp := RegEx.new()
-		regex_sp.compile("\\[(\\d+):(s|sp)\\]")
-		r = regex_sp.search(seg)
-		while r:
-			var start := r.get_start() - offset
-			var end := r.get_end() - offset
-			var idx := int(r.get_string(1))
-			var val := r.get_string(2)
-			triggers.append({
-				"segment": s_index,
-				"pos": start,
-				"type": "speech",
-				"index": idx,
-				"value": val
-			})
-			var removed_len := end - start
-			seg = seg.erase(start, removed_len)
-			offset += removed_len
-			r = regex_sp.search(seg)
 
 		segments_clean.append(seg)
 
@@ -251,7 +226,6 @@ func force_stop() -> void:
 
 	_fire_all_remaining_triggers(_current_segment)
 
-	_active_character = null
 	_trigger_queue.clear()
 
 
@@ -267,9 +241,9 @@ func _show_segment(segment_index: int, seg_text: String) -> void:
 	_skip_requested = false
 	_typing_done = false
 
-	if _active_character:
-		_active_character.start_speaking()
-		_active_character = null
+
+	character_node.start_speaking()
+
 
 	for i in range(label.get_total_character_count() + 1):
 		while _paused:
@@ -287,7 +261,6 @@ func _show_segment(segment_index: int, seg_text: String) -> void:
 		label.visible_characters = i
 		await get_tree().create_timer(typing_speed).timeout
 
-	_active_character = null
 	_typing_done = true
 
 	if wait_time > 0.0:
@@ -299,17 +272,6 @@ func _show_segment(segment_index: int, seg_text: String) -> void:
 func _process_trigger(t: Dictionary) -> void:
 	if t.type == "emotion":
 		_apply_emotion(t.index, str(t.value))
-	elif t.type == "speech":
-		var char := _get_character_node(int(t.index))
-		if not char:
-			return
-
-		# stop previous speaker
-		if _active_character and _active_character != char:
-			if _active_character.has_method("stop_speaking"):
-				_active_character.stop_speaking()
-
-		_active_character = char
 
 
 func _fire_all_remaining_triggers(segment_index: int) -> void:
@@ -317,36 +279,17 @@ func _fire_all_remaining_triggers(segment_index: int) -> void:
 		if t.segment == segment_index:
 			_process_trigger(t)
 
-# Character helpers
-func _get_character_node(index: int) -> Node:
-	if index < 0 or index >= character_nodes.size():
-		return null
-
-	var path := character_nodes[index]
-	if path == NodePath("") or str(path) == "":
-		return null
-
-	var n := get_node_or_null(path)
-	if n:
-		return n
-
-	return get_tree().get_root().get_node_or_null(path)
-
-
-
 # Emotion application 
 func _apply_emotion(index: int, emotion: String) -> void:
-	#if index < 0 or index >= character_nodes.size():
-		#push_warning("Emotion index %d out of range on %s" % [index, self.name])
-		#return
-	var char := _get_character_node(index)
-	if char == null:
+
+	if character_node == null:
 		push_warning("Character at index %d not found on %s" % [index, self.name])
 		return
-	if not char.has_method("set_emotion"):
+	if not character_node.has_method("set_emotion"):
 		push_warning("Character at index %d has no set_emotion() method on %s" % [index, self.name])
+		print(character_node)
 		return
-	char.set_emotion(emotion)
+	character_node.set_emotion(emotion)
 
 # Style / effects helpers
 

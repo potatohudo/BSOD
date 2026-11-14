@@ -5,10 +5,6 @@ extends Node3D
 @onready var voice_walkaway := []
 @onready var voice_return := []
 
-enum Mode { NONE, MAIN, WALKAWAY, RETURN }
-
-var mode: Mode = Mode.NONE
-
 var main_index := 0
 var walkaway_index := 0
 var return_index := 0
@@ -133,6 +129,7 @@ func _on_dialog_finished(id: int) -> void:
 		walkawayid:
 			walkaway_index += 1 if walkaway_index < walkaway_dialogs.size() -1 else 0
 		returnid:
+			main_index += 1
 			talk(main_dialogs, main_index, 743, voice_main)
 			
 		
@@ -146,7 +143,9 @@ func array_to_string(arr: Array) -> String:
 	return s
 
 func start_speaking():
-	$AnimationPlayer.play()
+	#$AnimationPlayer.play()
+	pass
 
 func stop_speaking():
-	$AnimationPlayer.stop()
+	#$AnimationPlayer.stop()
+	pass

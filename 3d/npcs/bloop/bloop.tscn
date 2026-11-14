@@ -151,6 +151,9 @@ bind/0/pose = Transform3D(1, -2.2202585e-16, -2.1985381e-16, 2.220338e-16, 0.009
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_owtnd"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_ppncm"]
+radius = 0.7
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8vsga"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_sesof"]
@@ -359,6 +362,14 @@ bind/2/name = &"Bone.002"
 bind/2/bone = -1
 bind/2/pose = Transform3D(1, -2.3815434e-07, -1.1221935e-08, 0, 0.047068212, -0.99889165, 2.3841858e-07, 0.9988917, 0.04706821, -5.283549e-09, -0.7756251, 0.022160815)
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_dvye3"]
+radius = 1.8512198
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rrpks"]
+radius = 1.1621768
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_owtnd"]
+
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_rrpks"]
 points = PackedVector3Array(-1.8549943, 1.2384083, -0.6163586, 1.8529018, 1.0462191, 0.34195685, 1.8507103, 0.72847366, 0.3413524, 0.6459463, 0.4712821, -2.0834482, -0.56369454, -0.47639886, 1.0377418, -0.056223758, 2.6331203, 0.5307285, 0.51285577, 2.3730934, -1.3041698, -0.18366945, 0.98269254, 1.8701395, -0.18368627, -0.48211956, -1.4402874, 1.2730157, -0.28294072, 0.40187967, -0.754794, 1.7445909, -1.8181969, -1.4533772, 1.2997109, 1.1028956, -1.579753, 0.030583836, -0.67488027, -1.1337855, 2.3774567, -0.48407957, 1.4781557, 0.47051483, -1.4461031, 1.1450623, 2.1204274, 0.78092086, 0.83761674, 0.47142372, 1.6847668, -0.81937253, 0.41064328, -2.0104363, 1.4540582, 2.0525706, -0.6073386, -1.4481579, 0.41346568, 1.0983572, -0.62480366, 2.0572128, 1.2864105, 0.7037975, -0.53718466, -0.8633904, 0.7660182, 1.7416627, -1.8112742, -0.05649511, -0.2924024, 1.5535871, 0.7060373, 1.7448853, 1.4846929, 0.45108545, 2.6948552, -0.35694242, -1.4446733, 2.056072, 0.2746705, 0.5187283, -0.296391, -1.7655507, -1.1349748, -0.4137228, 0.2134335, 0.3258795, -0.61216366, 0.5340365, -1.856342, 0.5964718, 0.28248382, 1.5856868, 0.03601431, -0.6721652)
 
@@ -369,6 +380,9 @@ albedo_color = Color(0.16078432, 0.16078432, 1, 1)
 [sub_resource type="SphereMesh" id="SphereMesh_dvye3"]
 
 [node name="bloop" type="CharacterBody3D" unique_id=983162676]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.20145416, 0)
+collision_layer = 3
+collision_mask = 3
 motion_mode = 1
 wall_min_slide_angle = 0.0
 platform_on_leave = 2
@@ -376,6 +390,7 @@ safe_margin = 0.05
 script = ExtResource("1_rrpks")
 
 [node name="Armature" type="Node3D" parent="." unique_id=594147882]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
 
 [node name="Skeleton3D" type="Skeleton3D" parent="Armature" unique_id=581925970]
 bones/0/name = "Bone"
@@ -787,6 +802,46 @@ settings/0/exclude_collision_count = 0
 [node name="SpringBoneCollisionPlane3D2" type="SpringBoneCollisionPlane3D" parent="Armature/Skeleton3D/Leg6" unique_id=1112896222]
 transform = Transform3D(1, 0, 0, 0, -0.43820727, 0.898874, 0, -0.898874, -0.43820727, -0.613327, -0.72177476, 1.4900643)
 
+[node name="ModifierBoneTarget3D" type="ModifierBoneTarget3D" parent="Armature/Skeleton3D" unique_id=914759659]
+transform = Transform3D(1, 2.1129116e-16, 2.3841855e-07, -2.384154e-07, -0.0051546134, 0.9999866, 1.2289556e-09, -0.9999866, -0.0051546134, -6.2728957e-16, 0.01991164, 0.2990746)
+bone_name = "Bone.001"
+bone = 1
+
+[node name="middle" type="RemoteTransform3D" parent="Armature/Skeleton3D/ModifierBoneTarget3D" unique_id=1904440140]
+transform = Transform3D(0.99690044, -2.175573e-07, 7.7853046e-10, -4.493524e-10, -0.004704873, -0.9999868, 2.3767842e-07, 0.91249704, -0.005155974, -0.03771974, 0.31596622, 0.068764314)
+remote_path = NodePath("../../../Body/Node3D/StaticBody3D")
+update_scale = false
+
+[node name="ModifierBoneTarget3D2" type="ModifierBoneTarget3D" parent="Armature/Skeleton3D" unique_id=698836839]
+transform = Transform3D(1, 2.2203309e-16, -2.1984497e-16, -2.2202503e-16, 0.009866953, -0.99995124, -2.1985307e-16, 0.99995136, 0.009866952, -3.413167e-16, 0.062846296, 1.1478376)
+bone_name = "Bone_9"
+bone = 20
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Armature/Skeleton3D/ModifierBoneTarget3D2" unique_id=288457652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52919793, -4.656613e-10)
+remote_path = NodePath("../../../Head/StaticBody3D")
+update_scale = false
+
+[node name="ModifierBoneTarget3D3" type="ModifierBoneTarget3D" parent="Armature/Skeleton3D" unique_id=746744235]
+transform = Transform3D(1, 8.881784e-16, 2.3841855e-07, -2.3815434e-07, 0.047068138, 0.9988915, -1.1221917e-08, -0.9988915, 0.047068138, -3.895184e-16, 0.014370958, -0.7758085)
+bone_name = "Bone.002"
+bone = 2
+
+[node name="back" type="RemoteTransform3D" parent="Armature/Skeleton3D/ModifierBoneTarget3D3" unique_id=405557793]
+transform = Transform3D(1, 0, 0, 0, 0.7010996, 0.7130634, 0, -0.7130634, 0.7010996, 0.019134039, -0.7946056, 0.08750339)
+remote_path = NodePath("../../../Body/Node3D/StaticBody3D3")
+update_scale = false
+
+[node name="ModifierBoneTarget3D4" type="ModifierBoneTarget3D" parent="Armature/Skeleton3D" unique_id=1142942807]
+transform = Transform3D(1, -2.2172554e-16, -2.339442e-16, 2.217257e-16, -0.053590298, 0.998563, -2.3394404e-16, -0.998563, -0.053590298, -4.0556403e-16, 0.073501945, 1.2976377)
+bone_name = "Bone"
+bone = 0
+
+[node name="front" type="RemoteTransform3D" parent="Armature/Skeleton3D/ModifierBoneTarget3D4" unique_id=1453508704]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7577588e-24, 1.2638849, 0.041372165)
+remote_path = NodePath("../../../Body/Node3D/StaticBody3D2")
+update_scale = false
+
 [node name="Tail" type="MeshInstance3D" parent="Armature" unique_id=74792200]
 mesh = SubResource("ArrayMesh_urytv")
 skin = SubResource("Skin_wse4j")
@@ -831,6 +886,16 @@ transform = Transform3D(1, 0, 0, 0, -1.4691505, 0.9861049, 0, -8.720795, -0.1661
 [node name="Bottom" type="RayCast3D" parent="Armature/Head/RaysVertical" unique_id=635182320]
 transform = Transform3D(1, 0, 0, 0, 0.7556852, 0.9924092, 0, -6.098218, 0.12297827, 0, -1.2590058, 0.049393207)
 
+[node name="StaticBody3D" type="StaticBody3D" parent="Armature/Head" unique_id=1552769174]
+transform = Transform3D(1, 2.221659e-16, -2.1992091e-16, -2.2202502e-16, 0.009872854, -1.0002966, -2.1985305e-16, 1.0005494, 0.00987036, -2.2381723e-16, 0.06806786, 1.6770097)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Armature/Head/StaticBody3D" unique_id=867242935]
+transform = Transform3D(1, 0, -6.2038546e-24, 0, 1, 0, -5.9970594e-24, 0, 1, 0, 0, 0)
+shape = SubResource("SphereShape3D_ppncm")
+debug_color = Color(0.4595753, 0.53097546, 5.7756904e-07, 0.41960785)
+
 [node name="Legs" type="Node3D" parent="Armature" unique_id=1254706352]
 
 [node name="Leg" type="MeshInstance3D" parent="Armature/Legs" unique_id=1288234148]
@@ -868,6 +933,39 @@ material_override = SubResource("ORMMaterial3D_datg5")
 mesh = SubResource("ArrayMesh_al676")
 skin = SubResource("Skin_2lwga")
 skeleton = NodePath("../Skeleton3D")
+
+[node name="Node3D" type="Node3D" parent="Armature/Body" unique_id=125397263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.7681427, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Armature/Body/Node3D" unique_id=398265057]
+transform = Transform3D(0.9969435, -1.0729693e-12, -4.482152e-10, 1.1369174e-12, 0.90654767, -1.3520855e-06, 4.4937185e-10, 1.2324174e-06, 0.99437714, -0.037719727, 0.85518897, -0.017241836)
+collision_layer = 2
+collision_mask = 2
+
+[node name="middle" type="CollisionShape3D" parent="Armature/Body/Node3D/StaticBody3D" unique_id=278570848]
+transform = Transform3D(0.965, 0, 0, 0, 1.0499384, -0.011769744, 0, 0.011369761, 1.0868742, 0.066766135, 1.1780931, -0.1044963)
+shape = SubResource("SphereShape3D_dvye3")
+debug_color = Color(0.21813402, 0.639102, 0, 0.41960785)
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="Armature/Body/Node3D" unique_id=1704650696]
+transform = Transform3D(0.99999315, -1.6999037e-07, 1.6713825e-07, -2.381527e-07, -0.6792048, 0.7338107, -1.1221839e-08, -0.7338107, -0.6792048, 0.01913406, 0.8325194, 0.022034883)
+collision_layer = 2
+collision_mask = 2
+
+[node name="back" type="CollisionShape3D" parent="Armature/Body/Node3D/StaticBody3D3" unique_id=363065033]
+transform = Transform3D(1.5016936, 0, 0, 0, 1.4132384, 0.17321226, 0, -0.1955083, 1.2520707, -3.9850927e-15, -0.20935227, 1.2750716)
+shape = SubResource("SphereShape3D_rrpks")
+debug_color = Color(0.33333334, 1, 0, 0.41960785)
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="Armature/Body/Node3D" unique_id=466943406]
+transform = Transform3D(1.0000113, -2.2371157e-16, -2.3450382e-16, 2.217282e-16, -0.05407031, 1.0009516, -2.3394666e-16, -1.0075072, -0.05371849, -6.9547837e-16, 0.81522536, 0.03335178)
+collision_layer = 2
+collision_mask = 2
+
+[node name="front" type="CollisionShape3D" parent="Armature/Body/Node3D/StaticBody3D2" unique_id=432345748]
+transform = Transform3D(3.712212, 4.623325e-23, -1.3701603e-24, -7.888609e-31, 2.4206996, 1.0178066, -2.9778502e-23, -0.83601385, 2.947085, -7.187096e-23, -0.6160801, 1.0010815)
+shape = SubResource("SphereShape3D_owtnd")
+debug_color = Color(0.2784314, 0.6313726, 0, 1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=311783137]
 shape = SubResource("ConvexPolygonShape3D_rrpks")

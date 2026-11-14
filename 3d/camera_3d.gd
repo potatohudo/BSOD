@@ -40,7 +40,7 @@ func _custom_mouse_input(event: InputEvent) -> void:
 		character.rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
 
 		# Vertical rotation affects camera (pitch)
-		camera_anglev = clamp(camera_anglev - event.relative.y * mouse_sens, -70, 80)
+		camera_anglev = clamp(camera_anglev - event.relative.y * mouse_sens, -80, 90)
 		rotation_degrees.x = camera_anglev
 
 func toggle_pause() -> void:

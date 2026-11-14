@@ -1,10 +1,9 @@
 extends Control
 
-@onready var fps_label: Label = $FPS
-@onready var cpu_label: Label = $CPU
-@onready var gpu_label: Label = $GPU
-@onready var hardware_label: Label = $Hardware
-@onready var mem_label: Label = $Memory
+@onready var fps_label: Label = $VBoxContainer/FPS
+
+@onready var hardware_label: Label =$VBoxContainer/Hardware
+@onready var mem_label: Label = $VBoxContainer/Memory
 @onready var speed: Label = $Speed
 
 
@@ -20,14 +19,10 @@ var frame_times_gpu: Array[float] = []
 var last_tick := 0
 var update_timer := 0.0
 
-func _enter_tree() -> void:
-	# Enable CPU/GPU timing as soon as the viewport exists
-	RenderingServer.viewport_set_measure_render_time(get_viewport().get_viewport_rid(), true)
 
 func _ready() -> void:
 	last_tick = Time.get_ticks_usec()
-	cpu_label.visible = false
-	gpu_label.visible = false
+
 	mem_label.visible = false
 	hardware_label.visible = false
 
@@ -65,16 +60,13 @@ func _process(delta: float) -> void:
 	frame_times_gpu.push_back(frametime_gpu)
 	if frame_times_gpu.size() > HISTORY_NUM_FRAMES:
 		frame_times_gpu.pop_front()
-	var avg_total := _avg(frame_times_total)
 	var avg_cpu := _avg(frame_times_cpu)
 	var avg_gpu := _avg(frame_times_gpu)
 
-	var cpu_percent: float = (avg_cpu / avg_total) * 100.0 if avg_total > 0.0 else 0.0
-	var gpu_percent: float = (avg_gpu / avg_total) * 100.0 if avg_total > 0.0 else 0.0
+
 
 	if show_detailed:
-		cpu_label.text = "CPU: %.1f%% | Avg=%.2f ms | Last=%.2f ms" % [cpu_percent, avg_cpu, frametime_cpu]
-		gpu_label.text = "GPU: %.1f%% | Avg=%.2f ms | Last=%.2f ms" % [gpu_percent, avg_gpu, frametime_gpu]
+
 
 		var static_mem: float = float(Performance.get_monitor(Performance.MEMORY_STATIC))
 		var static_max: float = float(Performance.get_monitor(Performance.MEMORY_STATIC_MAX))
@@ -85,17 +77,14 @@ func _process(delta: float) -> void:
 			OS.get_processor_name(),
 			OS.get_processor_count()
 		]
-	else:
-		cpu_label.text = "CPU: %.1f%%" % cpu_percent
-		gpu_label.text = "GPU: %.1f%%" % gpu_percent
+
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("dbg"):
 		show_detailed = !show_detailed
 		mem_label.visible = show_detailed
 		hardware_label.visible = show_detailed
-		cpu_label.visible =show_detailed
-		gpu_label.visible = show_detailed
+
 
 func _avg(arr: Array[float]) -> float:
 	if arr.is_empty():

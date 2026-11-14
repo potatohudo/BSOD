@@ -7859,6 +7859,8 @@ _data = {
 
 [sub_resource type="AudioStream" id="AudioStream_n8wo2"]
 
+[sub_resource type="AudioStream" id="AudioStream_dvye3"]
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_c7qc6"]
 radius = 10.1163845
 
@@ -7868,6 +7870,8 @@ script = ExtResource("1_lj0lm")
 [node name="revor" parent="." unique_id=1320359713 instance=ExtResource("1_pgqkd")]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="revor/Cube" index="0" unique_id=177491636]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="revor/Cube/StaticBody3D" unique_id=584374134 groups=["enemy"]]
 shape = SubResource("ConcavePolygonShape3D_pgqkd")
@@ -8008,7 +8012,12 @@ attenuation_model = 1
 volume_db = 26.353
 unit_size = 2.69
 
+[node name="return1-silence" type="AudioStreamPlayer3D" parent="yap/return" unique_id=606761592]
+stream = SubResource("AudioStream_dvye3")
+
 [node name="Area3D" type="Area3D" parent="." unique_id=316835100]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1850497223]
 shape = SubResource("SphereShape3D_c7qc6")
@@ -8017,7 +8026,7 @@ shape = SubResource("SphereShape3D_c7qc6")
 stream = ExtResource("30_yxtmu")
 volume_db = -28.571
 
-[node name="DialogBubble" parent="." unique_id=1113296621 instance=ExtResource("21_7j2ys")]
+[node name="DialogBubble" parent="." unique_id=1113296621 node_paths=PackedStringArray("character_node") instance=ExtResource("21_7j2ys")]
 visible = false
 anchors_preset = -1
 anchor_left = 0.002
@@ -8029,7 +8038,7 @@ offset_top = -0.2000122
 offset_right = -0.20007324
 offset_bottom = -0.6000366
 speaker_name = "pc"
-character_nodes = Array[NodePath]([NodePath("..")])
+character_node = NodePath("..")
 typing_speed = 0.055
 wait_time = 0.3
 

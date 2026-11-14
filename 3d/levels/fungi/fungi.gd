@@ -24,7 +24,7 @@ extends Node3D
 # -------- Shared materials (keep shared to avoid dups) --------
 @export var vine_material: Material
 @export var impostor_material: Material
-@onready var bloop = $Node3D
+
 
 var player: CharacterBody3D
 

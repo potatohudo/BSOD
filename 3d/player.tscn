@@ -637,27 +637,49 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2utdr"]
+
 [sub_resource type="GDScript" id="GDScript_8catc"]
 resource_name = "sword"
 script/source = "
 extends RigidBody3D
 
 @export var target: Node3D
-const STRENGTH = 100.0
-@onready var strength: float = STRENGTH
+@export var slope_target = Node3D
+const STRENGTH = 500.0 
+const THROW_STRENGTH = 200.0
+@onready var throw_strength = THROW_STRENGTH
+@onready var strength: float = STRENGTH 
 @export var active = true
+@onready var target_initial_pos
+@onready var stick_to_surfaces = false
+@onready var platform_hitbox: CollisionShape3D = $StaticBody3D/PlatformHitbox
+var current_target
+var is_sliding = false
+@onready var front = -global_transform.basis.z
+
+func _ready() -> void:
+	target_initial_pos = target.position
+	body_entered.connect(_on_body_entered)
+	current_target = target
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	
+	
 	if not active:
+		platform_hitbox.global_position = position
 		return
+	
+	var pos_error = current_target.global_position - state.transform.origin
+	state.linear_velocity = pos_error * strength * state.step + pos_error
+	if is_sliding:
+		front = -global_transform.basis.z
+		return
+	
+	var target_rot = current_target.global_basis.get_rotation_quaternion().normalized()
+	var current_rot = state.transform.basis.get_rotation_quaternion().normalized()
 
-	var pos_error = target.global_position - state.transform.origin
-	state.linear_velocity += pos_error * strength * state.step
-
-	var target_rot = target.global_basis.get_rotation_quaternion()
-	var current_rot = state.transform.basis.get_rotation_quaternion()
-
-	var rot_error = target_rot * current_rot.inverse()
+	var rot_error = (target_rot * current_rot.inverse()).normalized()
 
 	if rot_error.w < 0.0:
 		rot_error = Quaternion(
@@ -667,26 +689,120 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			-rot_error.w
 		)
 
-	state.angular_velocity += (
-		rot_error.get_axis()
-		* rot_error.get_angle()
-		* strength
-		* state.step
-	)
+	var angle = rot_error.get_angle()
+	var axis = rot_error.get_axis()
+
+	var rotation_gain = 10.0
+	var max_angular_speed = 15.0
+
+	var desired_angular_velocity = axis * angle * rotation_gain
+
+	state.angular_velocity = desired_angular_velocity.limit_length(max_angular_speed)
+
+var current_joint
 func launch(camera):
+	print(current_joint)
 	var dir = -camera.global_basis.z
-	apply_central_impulse(dir)
-func attack():
-	pass
+	active = !active
+	platform_hitbox.disabled = active
+	if current_joint:
+		current_joint.node_a = \"\"
+		current_joint.node_b = \"\"
+		current_joint.queue_free()
+	#$LaunchHitbox.disabled = !$LaunchHitbox.disabled
+		
+	apply_central_impulse(dir*throw_strength)
+
+
+func attack() -> void:
+	if not active:
+		top_level = true
+		current_target = target
+		return
+
+	top_level = false
+
+	position.x = 0.0
+	position.z = current_target.position.z - 1.0
+
+
+func release() -> void:
+	# Cancel both attack and slide states.
+	is_sliding = false
+	gravity_scale = 0.0
+	angular_velocity.y = 0.0
+
+	top_level = true
+	current_target = target
+
+
+func slide() -> void:
+	if is_sliding:
+		return
+
+	var slope_position: Vector3 = slope_target.global_position
+	var sword_position: Vector3 = global_position
+
+	is_sliding = true
+	top_level = true
+
+	sword_position.x = slope_position.x
+	sword_position.z = slope_position.z
+	global_position = sword_position
+
+	gravity_scale = 30.0
+	current_target = slope_target
+
+
+
+func end_slide() -> void:
+	if not is_sliding:
+		return
+
+	is_sliding = false
+	gravity_scale = 0.0
+	angular_velocity.y = 0.0
+	axis_lock_angular_x = false
+	axis_lock_angular_z = false
+
+	current_target = target
+
+	attack()
+
+func _on_body_entered(target_body: Node3D) -> void:
+	if not stick_to_surfaces or active: 
+		return
+	angular_velocity = Vector3.ZERO
+	var joint = PinJoint3D.new()
+	joint.name = \"WallJoint\"
+	if current_joint:
+		current_joint.queue_free()
+	current_joint = joint
+	
+	target_body.get_parent().add_child(joint)
+	
+	joint.global_transform.origin = global_transform.origin
+	
+	joint.node_a = get_path()
+	joint.node_b = target_body.get_path()
+
+func _on_h_slider_value_changed(value: float) -> void:
+	strength = STRENGTH*value
+
+
+func _on_h_slider_2_value_changed(value: float) -> void:
+	throw_strength = THROW_STRENGTH * value
+
+
+func _on_h_slider_5_value_changed(value: float) -> void:
+	physics_material_override.bounce = value
 "
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jh1kh"]
-radius = 1.1928711
-height = 8.380127
+[sub_resource type="BoxShape3D" id="BoxShape3D_hxqcx"]
+size = Vector3(12.725342, 1.7683105, 2.4430237)
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_uwutp"]
-radius = 0.27490234
-height = 0.55792236
+[sub_resource type="BoxShape3D" id="BoxShape3D_8catc"]
+size = Vector3(0.47216797, 3.2010498, 0.35089874)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8catc"]
 shading_mode = 0
@@ -729,20 +845,30 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_thfr1")
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dvye3"]
+radius = 0.8125
+height = 3.4714355
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dvye3"]
+size = Vector3(1, 2.3608124, 1)
+
 [node name="Player" type="CharacterBody3D" unique_id=529190500]
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_nu400")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=76487132]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0562412, 1.53719, -0.0170562)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.537, 0)
 shape = SubResource("CapsuleShape3D_njrmr")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1138686449]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0533017, 1.56553, -0.0171906)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.566, 0)
 mesh = SubResource("CapsuleMesh_qeb6d")
 
 [node name="Marker3D" type="Marker3D" parent="." unique_id=134658405]
 
 [node name="Camera3D" type="Camera3D" parent="Marker3D" unique_id=1343936358]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3842247, -0.027345762)
 script = ExtResource("2_hxqcx")
 
@@ -820,8 +946,9 @@ position = Vector2(199.04199, 132.5)
 scale = Vector2(0.5520834, 0.5520834)
 sprite_frames = SubResource("SpriteFrames_xdad6")
 
-[node name="Marker3D2" type="Marker3D" parent="Marker3D/Camera3D" unique_id=693454547]
+[node name="HandleTarget" type="Marker3D" parent="Marker3D/Camera3D" unique_id=693454547]
 transform = Transform3D(1, 0, 0, 0, 0.37460664, 0.92718387, 0, -0.92718387, 0.37460664, 0.87670505, -0.8795376, -1.3296505)
+gizmo_extents = 2.8
 
 [node name="slope" type="Node3D" parent="." unique_id=103453645]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46614337, 0)
@@ -844,31 +971,61 @@ sprite_frames = SubResource("SpriteFrames_xayye")
 stream = ExtResource("14_v5x1r")
 volume_db = -5.517
 
-[node name="POR2" type="RigidBody3D" parent="." unique_id=336497663 node_paths=PackedStringArray("target") groups=["sword"]]
+[node name="POR2" type="RigidBody3D" parent="." unique_id=336497663 node_paths=PackedStringArray("target", "slope_target") groups=["sword"]]
 transform = Transform3D(0.9843328, -0.15530221, 0.08348851, -0.047269013, 0.22374277, 0.9735013, -0.16986683, -0.9621957, 0.21289636, 0.8694862, 1.4064605, -1.2516797)
 top_level = true
-collision_layer = 2
-mass = 0.001
+physics_material_override = SubResource("PhysicsMaterial_2utdr")
 gravity_scale = 0.0
 center_of_mass_mode = 1
-linear_damp = 10.0
-angular_damp = 10.0
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 1
 script = SubResource("GDScript_8catc")
-target = NodePath("../Marker3D/Camera3D/Marker3D2")
+target = NodePath("../Marker3D/Camera3D/HandleTarget")
+slope_target = NodePath("../SlopeTarget")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="POR2" unique_id=684420564]
-transform = Transform3D(0.11672994, -2.2351742e-08, 3.9115548e-08, -1.8626451e-09, 0.34194773, 7.4505806e-08, -1.3969839e-09, -7.450581e-09, 0.19563116, -0.010394335, 1.0056168, 0.02949214)
-shape = SubResource("CapsuleShape3D_jh1kh")
+transform = Transform3D(0.1167026, -0.0073239356, 0.0009607258, 0.0024995338, 0.34186924, 0.00021382794, -0.00057622837, -0.00033747405, 0.19563086, 0.034481287, -0.12661219, 0.066623926)
+shape = SubResource("BoxShape3D_hxqcx")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="POR2" unique_id=2064721388]
-transform = Transform3D(-0.0127263665, -0.9967256, -0.07985148, 0.94738126, -0.037564814, 0.3178983, -0.31985623, -0.07160464, 0.9447643, 0.008605599, -0.0922426, 0.026025891)
-shape = SubResource("CapsuleShape3D_uwutp")
+transform = Transform3D(1.0000006, 4.7683716e-07, 2.2351742e-08, 2.9802322e-08, 1.0000001, -1.1920929e-07, -3.7252903e-09, 3.1292439e-07, 1.0000101, -0.008728027, 1.0082834, 0.06202519)
+shape = SubResource("BoxShape3D_8catc")
 
 [node name="Cube" type="MeshInstance3D" parent="POR2" unique_id=1876296391]
 transform = Transform3D(0.38786405, -0.009244345, -0.039701372, 0.009016387, 0.38988656, -0.0026973635, 0.039753765, 0.0017647371, 0.38796464, 0.03516537, 0.019022226, 0.0686717)
 material_override = SubResource("StandardMaterial3D_8catc")
 mesh = SubResource("ArrayMesh_qatfa")
 skeleton = NodePath("")
+
+[node name="LaunchHitbox" type="CollisionShape3D" parent="POR2" unique_id=1594007988]
+transform = Transform3D(0.9998484, -0.017140582, 0.0039321184, 0.01713784, 0.99985456, 0.0008658767, -0.0039470345, -0.0007979572, 0.99999595, 0.021272182, 1.0324092, 0.0018045902)
+shape = SubResource("CapsuleShape3D_dvye3")
+disabled = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="POR2" unique_id=408757851]
+transform = Transform3D(0.9843328, -0.15530221, 0.08348853, -0.047269028, 0.2237428, 0.97350156, -0.16986683, -0.9621957, 0.2128964, 0.8694862, 1.4064605, -1.2516797)
+top_level = true
+collision_layer = 2
+collision_mask = 2
+
+[node name="PlatformHitbox" type="CollisionShape3D" parent="POR2/StaticBody3D" unique_id=974851233]
+transform = Transform3D(2.5361767, -0.012786873, -0.430108, -0.40014222, 0.060524266, -2.4362688, 0.21511197, 0.26333994, 0.5390542, -1.0125476, -1.3340819, -0.9580656)
+shape = SubResource("BoxShape3D_dvye3")
+disabled = true
+debug_color = Color(0.8727149, 0.34822473, 5.7756904e-07, 0.41960785)
+
+[node name="RayCast3D" type="RayCast3D" parent="POR2" unique_id=1468574037]
+transform = Transform3D(0.9997011, 0.02433078, 0.002974186, 0.024293467, -0.99963254, 0.012048796, 0.0032660812, -0.011973083, -0.9999242, 0.04269862, 1.462776, -0.005494714)
+target_position = Vector3(0, -1.38, 0)
+
+[node name="SlopeTarget" type="Marker3D" parent="." unique_id=1272099675]
+transform = Transform3D(1, 0, 0, 0, 0.0070218025, 0.9999753, 0, -0.9999753, 0.0070218025, 0, 0.008966267, 0)
+
+[node name="GroundRay" type="RayCast3D" parent="." unique_id=1465874321]
+transform = Transform3D(1.0000018, 0, 0, 0, 1.0000002, 0, 0, 0, 1.000002, 0, -0.17333028, 0.019)
+target_position = Vector3(0, -0.5, 0)
+debug_shape_thickness = 5
 
 [connection signal="animation_finished" from="Marker3D/Camera3D/Sprites/POR_Sword/AnimationPlayer" to="Marker3D/Camera3D/Sprites" method="_on_animation_player_animation_finished"]
 [connection signal="animation_finished" from="Marker3D/Camera3D/Sprites/POR_Sword/Slash" to="Marker3D/Camera3D/Sprites" method="_on_slash_animation_finished"]

@@ -7,6 +7,7 @@ signal dialog_interrupted(id: int)
 enum State { INACTIVE, PLAYING, PAUSED }
 
 @export var active := true
+@onready var sprite_holder
 
 var state: State = State.INACTIVE
 var _current_bubble: Control = null
@@ -31,7 +32,7 @@ func unregister_character(character: Node) -> void:
 	_characters.erase(str(character.get_path()))
 
 var audio = null
-# PUBLIC API
+
 func play(
 	text: String,
 	character: Node,
@@ -54,13 +55,10 @@ func play(
 	if not is_instance_valid(example):
 		return
 
-	# Duplicate bubble
 	var bubble: Control = example.duplicate()
-	example.get_parent().add_child(bubble)
+	sprite_holder.add_child(bubble)
 
 	bubble.visible = true
-
-	# replace text BEFORE playing
 
 	bubble.text = String(text)
 	#else:
@@ -71,6 +69,7 @@ func play(
 	_current_bubble = bubble
 
 	emit_signal("dialog_started", id)
+	print("audio started")
 	if audio: audio.play()
 	
 	# Run playback ONCE
@@ -122,6 +121,7 @@ func resume() -> void:
 
 
 func quit(free_stored = true) -> void:
+	print("quit")
 	var bubble := _current_bubble if is_instance_valid(_current_bubble) else _stored_bubble
 	if audio: audio.stop() 
 	audio = null
@@ -140,7 +140,6 @@ func quit(free_stored = true) -> void:
 	print(state)
 	emit_signal("dialog_interrupted", -1)
 
-#HIDE.
 func hide(characters: Array) -> void:
 	for id in _characters.keys():
 		var entry = _characters[id]
@@ -169,18 +168,23 @@ func _run_bubble(bubble: Control, id: int) -> void:
 		push_warning("Bubble has no play()")
 		_finish(id)
 		return
-	while state == State.PLAYING:
-		if audio and audio.stream and bubble: 
-			bubble.play() 
-			await audio.finished
-			audio = null
-		elif bubble:
-			await bubble.play() 
-		else:
-			return
-		_finish(id)
-		
-	print(state)
+
+	var voice = audio
+
+	if voice and voice.stream:
+		bubble.play()
+		await voice.finished
+	else:
+		await bubble.play()
+
+	if not is_instance_valid(bubble):
+		return
+
+	if _current_bubble != bubble or state != State.PLAYING:
+		return
+
+	# Finish this dialog exactly once.
+	_finish(id)
 
 func _finish(id: int) -> void:
 	if is_instance_valid(_current_bubble):
@@ -189,4 +193,4 @@ func _finish(id: int) -> void:
 	_current_bubble = null
 	state = State.INACTIVE
 	emit_signal("dialog_finished", id)
-	print(state)
+	print("dialog finished, state: ",state)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=89 format=4 uid="uid://cb17cskcpkb7q"]
+[gd_scene format=4 uid="uid://cb17cskcpkb7q"]
 
 [ext_resource type="Texture2D" uid="uid://cq7ftvy6mk75s" path="res://3d/npcs/maske/maske_textures_blehhhhh.png" id="1_a8dny"]
 [ext_resource type="Script" uid="uid://c75kftpwc4bet" path="res://3d/npcs/maske/maske.gd" id="1_xg7xt"]
@@ -280,7 +280,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ar712")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 24.0
 }]
@@ -549,7 +549,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ukujs")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 24.0
 }]
@@ -630,24 +630,24 @@ albedo_color = Color(0.9137255, 0.87058824, 0.85882354, 1)
 [sub_resource type="SphereShape3D" id="SphereShape3D_slrq7"]
 radius = 4.282785
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D" type="Node3D" unique_id=44283561]
 script = ExtResource("1_xg7xt")
 
-[node name="PrefixLipsync" type="AudioStreamPlayer3D" parent="."]
+[node name="PrefixLipsync" type="AudioStreamPlayer3D" parent="." unique_id=247092039]
 autoplay = true
 script = ExtResource("3_07q03")
 mouth_shape_set = 1
 metadata/_custom_type_script = "uid://bc6lg2mma8qg8"
 
-[node name="SuffixLipsync" type="AudioStreamPlayer3D" parent="."]
+[node name="SuffixLipsync" type="AudioStreamPlayer3D" parent="." unique_id=2143939006]
 script = ExtResource("3_07q03")
 metadata/_custom_type_script = "uid://bc6lg2mma8qg8"
 
-[node name="maske" type="Node3D" parent="."]
+[node name="maske" type="Node3D" parent="." unique_id=748160377]
 
-[node name="Armature" type="Node3D" parent="maske"]
+[node name="Armature" type="Node3D" parent="maske" unique_id=189104594]
 
-[node name="Skeleton3D" type="Skeleton3D" parent="maske/Armature"]
+[node name="Skeleton3D" type="Skeleton3D" parent="maske/Armature" unique_id=2051987920]
 bones/0/name = "Bone"
 bones/0/parent = -1
 bones/0/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16728638, 0.079568684, -1.1855823)
@@ -656,11 +656,11 @@ bones/0/position = Vector3(0.16728638, 0.079568684, -1.1855823)
 bones/0/rotation = Quaternion(0, 0, 0, 1)
 bones/0/scale = Vector3(1, 1, 1)
 
-[node name="Cube_001" type="MeshInstance3D" parent="maske/Armature/Skeleton3D"]
+[node name="Cube_001" type="MeshInstance3D" parent="maske/Armature/Skeleton3D" unique_id=392103618]
 mesh = SubResource("ArrayMesh_wnv26")
 skin = SubResource("Skin_8eeto")
 
-[node name="SoftBody3D" type="SoftBody3D" parent="maske/Armature/Skeleton3D/Cube_001"]
+[node name="SoftBody3D" type="SoftBody3D" parent="maske/Armature/Skeleton3D/Cube_001" unique_id=929417567]
 mesh = ExtResource("4_g2eny")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_u41pc")
@@ -674,20 +674,20 @@ attachments/1/point_index = 1
 attachments/1/spatial_attachment_path = NodePath("..")
 attachments/1/offset = Vector3(0.124129, -0.3158381, -1.172494)
 
-[node name="Cube_005" type="MeshInstance3D" parent="maske/Armature/Skeleton3D"]
+[node name="Cube_005" type="MeshInstance3D" parent="maske/Armature/Skeleton3D" unique_id=1062892490]
 mesh = SubResource("ArrayMesh_p78ad")
 skin = SubResource("Skin_8eeto")
 
-[node name="Plane" type="MeshInstance3D" parent="maske/Armature/Skeleton3D"]
+[node name="Plane" type="MeshInstance3D" parent="maske/Armature/Skeleton3D" unique_id=1432381885]
 visible = false
 mesh = SubResource("ArrayMesh_vctsj")
 skin = SubResource("Skin_8eeto")
 
-[node name="Sphere" type="MeshInstance3D" parent="maske/Armature/Skeleton3D"]
+[node name="Sphere" type="MeshInstance3D" parent="maske/Armature/Skeleton3D" unique_id=708818107]
 mesh = SubResource("ArrayMesh_srra3")
 skin = SubResource("Skin_8eeto")
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="maske/Armature/Skeleton3D"]
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="maske/Armature/Skeleton3D" unique_id=447046620]
 transform = Transform3D(-1.3113417e-08, 0, 0.3, 0, 0.3, 0, -0.3, 0, -1.3113417e-08, 0.2087459, 0, -1.8070567)
 shaded = true
 texture_filter = 0
@@ -696,15 +696,17 @@ autoplay = "default"
 frame = 21
 frame_progress = 0.47864315
 
-[node name="StaticBody3D" type="StaticBody3D" parent="maske/Armature"]
+[node name="StaticBody3D" type="StaticBody3D" parent="maske/Armature" unique_id=949620683]
+collision_layer = 3
+collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="maske/Armature/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="maske/Armature/StaticBody3D" unique_id=1546525927]
 transform = Transform3D(0.38306677, 0, 0, 0, 1.7490191, 0, 0, 0, 0.7094425, 0.121040344, 0.09586018, -1.2511187)
 shape = SubResource("SphereShape3D_qelk4")
 
-[node name="Armature_001" type="Node3D" parent="maske"]
+[node name="Armature_001" type="Node3D" parent="maske" unique_id=353562858]
 
-[node name="Skeleton3D" type="Skeleton3D" parent="maske/Armature_001"]
+[node name="Skeleton3D" type="Skeleton3D" parent="maske/Armature_001" unique_id=564139106]
 bones/0/name = "Bone"
 bones/0/parent = -1
 bones/0/rest = Transform3D(1, 0, 0, 0, 0.99999994, 5.9604645e-08, 0, -5.9604645e-08, 0.99999994, 0.17100611, 0.083682515, 1.1973815)
@@ -713,11 +715,11 @@ bones/0/position = Vector3(0.17100611, 0.083682515, 1.1973815)
 bones/0/rotation = Quaternion(-2.9802326e-08, 0, 0, 1)
 bones/0/scale = Vector3(1, 0.99999994, 0.99999994)
 
-[node name="Cube_002" type="MeshInstance3D" parent="maske/Armature_001/Skeleton3D"]
+[node name="Cube_002" type="MeshInstance3D" parent="maske/Armature_001/Skeleton3D" unique_id=299293731]
 mesh = SubResource("ArrayMesh_8hh01")
 skin = SubResource("Skin_l6ghb")
 
-[node name="SoftBody3D" type="SoftBody3D" parent="maske/Armature_001/Skeleton3D/Cube_002"]
+[node name="SoftBody3D" type="SoftBody3D" parent="maske/Armature_001/Skeleton3D/Cube_002" unique_id=1462249792]
 material_override = SubResource("StandardMaterial3D_o0dwt")
 mesh = ExtResource("5_o0dwt")
 skeleton = NodePath("../../../../Armature_002/Skeleton3D")
@@ -731,20 +733,20 @@ attachments/1/point_index = 3
 attachments/1/spatial_attachment_path = NodePath("..")
 attachments/1/offset = Vector3(0.125046, -0.31749487, 1.274722)
 
-[node name="Cube_004" type="MeshInstance3D" parent="maske/Armature_001/Skeleton3D"]
+[node name="Cube_004" type="MeshInstance3D" parent="maske/Armature_001/Skeleton3D" unique_id=1987087006]
 mesh = SubResource("ArrayMesh_yjrwb")
 skin = SubResource("Skin_l6ghb")
 
-[node name="Plane_001" type="MeshInstance3D" parent="maske/Armature_001/Skeleton3D"]
+[node name="Plane_001" type="MeshInstance3D" parent="maske/Armature_001/Skeleton3D" unique_id=1345176771]
 visible = false
 mesh = SubResource("ArrayMesh_ctnhr")
 skin = SubResource("Skin_l6ghb")
 
-[node name="Sphere_001" type="MeshInstance3D" parent="maske/Armature_001/Skeleton3D"]
+[node name="Sphere_001" type="MeshInstance3D" parent="maske/Armature_001/Skeleton3D" unique_id=1825616492]
 mesh = SubResource("ArrayMesh_jb6rn")
 skin = SubResource("Skin_l6ghb")
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="maske/Armature_001/Skeleton3D"]
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="maske/Armature_001/Skeleton3D" unique_id=1005416166]
 transform = Transform3D(-1.3113417e-08, 0, 0.3, 0, 0.3, 0, -0.3, 0, -1.3113417e-08, 0.20949054, -0.00264436, 1.8199284)
 shaded = true
 texture_filter = 0
@@ -753,15 +755,17 @@ autoplay = "default"
 frame = 23
 frame_progress = 1.0
 
-[node name="StaticBody3D" type="StaticBody3D" parent="maske/Armature_001"]
+[node name="StaticBody3D" type="StaticBody3D" parent="maske/Armature_001" unique_id=1332623533]
+collision_layer = 3
+collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="maske/Armature_001/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="maske/Armature_001/StaticBody3D" unique_id=1003097602]
 transform = Transform3D(1, 0, 0, 0, 2.3435526, 0, 0, 0, 0.9882661, 0.14202145, 0.07465264, 1.2764994)
 shape = SubResource("SphereShape3D_cb6wl")
 
-[node name="Armature_002" type="Node3D" parent="maske"]
+[node name="Armature_002" type="Node3D" parent="maske" unique_id=1844111178]
 
-[node name="Skeleton3D" type="Skeleton3D" parent="maske/Armature_002"]
+[node name="Skeleton3D" type="Skeleton3D" parent="maske/Armature_002" unique_id=715410114]
 bones/0/name = "Bone"
 bones/0/parent = -1
 bones/0/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
@@ -770,15 +774,15 @@ bones/0/position = Vector3(0, 0.3, 0)
 bones/0/rotation = Quaternion(0, 0, 0, 1)
 bones/0/scale = Vector3(1, 1, 1)
 
-[node name="Cube" type="MeshInstance3D" parent="maske/Armature_002/Skeleton3D"]
+[node name="Cube" type="MeshInstance3D" parent="maske/Armature_002/Skeleton3D" unique_id=769094940]
 mesh = SubResource("ArrayMesh_c21c7")
 skin = SubResource("Skin_niy5b")
 
-[node name="Cube_003" type="MeshInstance3D" parent="maske/Armature_002/Skeleton3D"]
+[node name="Cube_003" type="MeshInstance3D" parent="maske/Armature_002/Skeleton3D" unique_id=29168017]
 mesh = SubResource("ArrayMesh_jhpm6")
 skin = SubResource("Skin_niy5b")
 
-[node name="CheesePull" type="SoftBody3D" parent="maske/Armature_002/Skeleton3D"]
+[node name="CheesePull" type="SoftBody3D" parent="maske/Armature_002/Skeleton3D" unique_id=185949734]
 transform = Transform3D(-0.07173421, 0.052501496, 0.996041, 0.5921757, 0.80580884, 0.00017377082, -0.8026096, 0.58984375, -0.088894166, 2.1772447, -0.11774312, -0.75096995)
 material_override = SubResource("StandardMaterial3D_sgwef")
 cast_shadow = 0
@@ -817,7 +821,7 @@ attachments/9/point_index = 31
 attachments/9/spatial_attachment_path = NodePath("../../../Armature_001/Skeleton3D/Cube_002")
 attachments/9/offset = Vector3(0.13567948, 0.5938432, 1.2271004)
 
-[node name="SoftBody3D" type="SoftBody3D" parent="maske/Armature_002/Skeleton3D"]
+[node name="SoftBody3D" type="SoftBody3D" parent="maske/Armature_002/Skeleton3D" unique_id=2017874589]
 transform = Transform3D(0.1355772, 0, 0.99076676, 0, 1, 0, -0.99076676, 0, 0.1355772, 2.1742508, -0.35870016, 0.33791864)
 mesh = ExtResource("3_32vcs")
 surface_material_override/0 = SubResource("StandardMaterial3D_32vcs")
@@ -865,27 +869,31 @@ attachments/11/point_index = 10
 attachments/11/spatial_attachment_path = NodePath("../../../Armature/Skeleton3D/Cube_001")
 attachments/11/offset = Vector3(0.14741826, -0.32977715, -1.145224)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="maske/Armature_002"]
+[node name="StaticBody3D" type="StaticBody3D" parent="maske/Armature_002" unique_id=1200784991]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05137804, 0.551144, 0)
+collision_layer = 3
+collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="maske/Armature_002/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="maske/Armature_002/StaticBody3D" unique_id=1733692092]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.026247323, 0)
 shape = SubResource("CapsuleShape3D_sgwef")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="maske/Armature_002"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="maske/Armature_002" unique_id=1122546864]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.2542884, -0.35011417, 0.08686036)
 material_overlay = SubResource("StandardMaterial3D_slrq7")
 mesh = ExtResource("6_cb6wl")
 skeleton = NodePath("../../Armature")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="maske/Armature_002"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="maske/Armature_002" unique_id=1178667015]
 transform = Transform3D(-4.37114e-08, -1.748456e-07, 1, -0.18468884, -0.9827971, -1.7991067e-07, 0.9827971, -0.18468884, 1.066741e-08, 2.2750854, 1.4775504, 0.056138158)
 material_overlay = SubResource("StandardMaterial3D_ygco3")
 mesh = ExtResource("6_cb6wl")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=1444965050]
+collision_layer = 3
+collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1427078033]
 transform = Transform3D(0.99099714, 0, -0.13388236, 0, 0.9999789, 0, 0.1338824, 0, 0.9909968, 1.2842219, -0.43397453, 0.0863673)
 shape = SubResource("SphereShape3D_slrq7")
 

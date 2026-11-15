@@ -276,7 +276,6 @@ script = SubResource("GDScript_frh6j")
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1714146211]
 process_mode = 3
-transparent_bg = true
 handle_input_locally = false
 use_occlusion_culling = true
 scaling_3d_mode = 5
@@ -593,6 +592,7 @@ mesh = SubResource("SphereMesh_entm2")
 skeleton = NodePath("../LevelHolder")
 
 [node name="Player" parent="Node3D" unique_id=502571989 groups=["player"] instance=ExtResource("1_arn5h")]
+unique_name_in_owner = true
 process_mode = 1
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="Node3D/Player/Marker3D/Camera3D" parent_id_path=PackedInt32Array(502571989, 1343936358) index="4" unique_id=1022234193]

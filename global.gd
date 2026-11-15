@@ -4,6 +4,7 @@ extends Node
 
 var target_level_path: String = ""
 var just_teleported := false
+var level_to_tp_to
 
 @onready var player := CharacterBody2D 
 
@@ -12,10 +13,6 @@ func _ready() -> void:
 	
 	print(player)
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 
 var system_node: Node = null

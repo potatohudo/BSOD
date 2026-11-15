@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://rqnf22wdn8lp" path="res://3d/levels/frutigeraero/hill.tscn" id="1_x5u56"]
 [ext_resource type="Shader" uid="uid://uuptkn5qty78" path="res://3d/levels/frutigeraero/frutiger_orb.gdshader" id="2_n8ulh"]
+[ext_resource type="Sky" uid="uid://jww0dd01adok" path="res://3d/levels/frutigeraero/sky.tres" id="3_k5opk"]
 [ext_resource type="AudioStream" uid="uid://dcjw6bs8ygsf3" path="res://3d/levels/frutigeraero/Mood Music.wav" id="3_mm71k"]
 [ext_resource type="Shader" uid="uid://1tn8h3jpr7oi" path="res://3d/levels/frutigeraero/water.gdshader" id="4_45w4e"]
 
@@ -12,46 +13,75 @@ script/source = "extends Node3D
 @onready var timer: Timer = $Timer
 @onready var mood_music: AudioStreamPlayer = $MoodMusic
 
-
-var rng = RandomNumberGenerator.new()
-# Called when the node enters the scene tree for the first time.
-
-
 @export var hill: Node3D
-@onready var area_radius: float = 200.0
-@onready var spacing:float = 30
+@export var markers: Array[Marker3D] = []
 
-func _ready():
-	if hill == null:
+@export var area_radius: float = 150.0
+@export var spacing: float = 30.0
+
+var rng := RandomNumberGenerator.new()
+
+
+func _ready() -> void:
+	rng.randomize()
+
+	if spacing <= 0.0:
+		push_error(\"Spacing must be greater than zero.\")
 		return
 
-	
-	var center = hill.global_position
-	var steps = int(ceil(area_radius / spacing))
+	for marker in markers:
+		if not is_instance_valid(marker):
+			continue
+
+		spawn_hills_around(marker)
+
+
+func spawn_hills_around(marker: Marker3D) -> void:
+	var center: Vector3 = marker.global_position
+	var steps: int = int(ceil(area_radius / spacing))
+	var parent: Node = hill.get_parent()
 
 	for x in range(-steps, steps + 1):
-	
 		for z in range(-steps, steps + 1):
-			var random_spacing = spacing * rng.randf_range(0.6, 1.4)
-			var offset = Vector3(x * random_spacing, 0, z * random_spacing)
 
+			# Randomize the spacing and scale.
+			var random_spacing: float = spacing * rng.randf_range(0.6, 1.4)
+
+			var offset := Vector3(
+				x * random_spacing,
+				0.0,
+				z * random_spacing
+			)
+
+			# Keep spawned hills within the circular radius.
 			if offset.length() > area_radius:
 				continue
+
+			# Don't spawn a hill at the center.
 			if x == 0 and z == 0:
 				continue
 
-			var copy = hill.duplicate() as Node3D
-			hill.get_parent().add_child(copy)
-			copy.scale *= random_spacing /28
+			var copy := hill.duplicate() as Node3D
+
+			if copy == null:
+				continue
+
+			parent.add_child(copy)
+
+			copy.scale *= random_spacing / 28.0
 			copy.global_position = center + offset
-			
 
 
 func _on_timer_timeout() -> void:
 	mood_music.pitch_scale = rng.randf_range(0.3, 0.6)
-	await(get_tree().create_timer(rng.randf_range(0.1, 1.0))).timeout
+
+	await get_tree().create_timer(
+		rng.randf_range(0.1, 0.5)
+	).timeout
+
 	mood_music.pitch_scale = rng.randf_range(0.3, 0.6)
 	timer.start(rng.randf_range(0.5, 40.0))
+
 	print(\"timed out\")
 "
 
@@ -106,13 +136,16 @@ lightmap_size_hint = Vector2i(17, 9)
 add_uv2 = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yxlw0"]
-albedo_color = Color(0.4, 0.43529412, 0.59607846, 1)
+disable_fog = true
+metallic = 0.25
 metallic_specular = 1.0
 roughness = 0.0
-emission_enabled = true
 emission = Color(0.66337794, 0.80205226, 1, 1)
+clearcoat_enabled = true
+ao_light_affect = 1.0
 backlight_enabled = true
 backlight = Color(1, 1, 1, 1)
+refraction_scale = -1.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_ppncm"]
 material = SubResource("StandardMaterial3D_yxlw0")
@@ -253,23 +286,15 @@ shader_parameter/wave_z_height = 0.1
 shader_parameter/wave_z_frequency = 8.0
 shader_parameter/wave_z_speed = 0.5
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_yxlw0"]
-sky_top_color = Color(0.26689428, 0.42646205, 0.79915345, 1)
-sky_horizon_color = Color(0.6627451, 0.8235294, 0.9019608, 1)
-sky_energy_multiplier = 1.1
-ground_bottom_color = Color(0.6627451, 0.8235294, 0.9019608, 1)
-ground_horizon_color = Color(0.6627451, 0.8235294, 0.9019608, 1)
-
-[sub_resource type="Sky" id="Sky_ppncm"]
-sky_material = SubResource("ProceduralSkyMaterial_yxlw0")
-
 [sub_resource type="Environment" id="Environment_dvye3"]
 background_mode = 2
-sky = SubResource("Sky_ppncm")
-ambient_light_color = Color(0.42658642, 0.74930024, 0.98250276, 1)
-volumetric_fog_enabled = true
+sky = ExtResource("3_k5opk")
+ambient_light_color = Color(1, 1, 1, 1)
+fog_enabled = true
+fog_light_color = Color(0.5731755, 0.67294717, 0.9378013, 1)
+fog_density = 0.005
+fog_aerial_perspective = 1.0
 volumetric_fog_albedo = Color(0.6812298, 0.87806755, 0.9949717, 1)
-adjustment_enabled = true
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_cdh37"]
 frequency = 0.05
@@ -293,12 +318,13 @@ lightmap_size_hint = Vector2i(17, 9)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_45w4e"]
 points = PackedVector3Array(0.4578707, 0.19807906, 0.01578243, -0.48873997, -0.09168735, -0.04518683, -0.47150937, -0.1370268, -0.090701535, 0.07635914, -0.33327514, 0.36417928, 0.13656896, -0.33242497, -0.3469059, -0.15161654, 0.47198188, -0.060245913, -0.10534735, 0.21193622, 0.43966028, -0.045016855, 0.19809827, -0.4564163, 0.4090765, -0.15116782, 0.2425159, -0.27137637, -0.37776056, 0.18187061, 0.41147974, -0.07598096, -0.27324012, 0.19819722, -0.4561612, -0.04493101, -0.24064063, -0.33167413, -0.2857683, 0.22713655, 0.2567203, 0.36304116, 0.22752243, 0.42360392, -0.13548777, -0.37899047, 0.060702223, 0.31946206, -0.40674683, 0.18104935, -0.22569102, -0.014631338, -0.09176946, 0.49022886, -0.37785473, 0.30279276, 0.121712334, 0.046232317, 0.45601088, 0.19818504, -0.22746402, -0.060786348, -0.44034815, 0.22845526, 0.06072284, -0.43988743, -0.09113759, -0.48924586, -0.045174047, 0.44186506, -0.22821625, -0.044958085, 0.31717873, 0.24121423, -0.30081153, -0.044848714, 0.39473665, -0.30295488, -0.316348, -0.19622163, 0.33255145, 0.19844188, -0.03042933, 0.45723665, 0.061471395, -0.1522456, -0.47130713, 0.36308852, 0.25670764, 0.22707908, 0.15213433, -0.43948856, 0.18237916, -0.21072462, 0.36227608, 0.2722302)
 
-[node name="Node3D" type="Node3D" unique_id=1814904996 node_paths=PackedStringArray("hill")]
+[node name="Node3D" type="Node3D" unique_id=1814904996 node_paths=PackedStringArray("hill", "markers")]
 script = SubResource("GDScript_mm71k")
 hill = NodePath("Hill")
+markers = [NodePath("Marker3D2"), NodePath("Marker3D3"), NodePath("Marker3D4"), NodePath("Marker3D5")]
 
 [node name="Hill" parent="." unique_id=1621177540 instance=ExtResource("1_x5u56")]
-transform = Transform3D(3, 0, 0, 0, 5.316827, 0, 0, 0, 3, 0, -0.010501862, 0)
+transform = Transform3D(3, 0, 0, 0, 5.316827, 0, 0, 0, 3, 0, 0, 0)
 
 [node name="Marker3D" type="Marker3D" parent="." unique_id=485956569 groups=["playerspawn"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0019677, 15.739477, 0)
@@ -334,10 +360,12 @@ pitch_scale = 0.5
 autoplay = true
 
 [node name="Timer" type="Timer" parent="." unique_id=186697084]
+wait_time = 30.0
 autostart = true
+ignore_time_scale = true
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="." unique_id=1502887694]
-transform = Transform3D(-21.311838, -399.43185, 7.897031e-07, 0, -1.7484554e-05, -18.091997, 399.43185, -21.311838, 4.2134907e-08, 5.158119, -7.719463, 49.67405)
+transform = Transform3D(-32.701687, -616.63873, 7.897031e-07, 0, -2.6992473e-05, -18.091997, 612.90326, -32.900997, 4.2134907e-08, 5.158119, -7.719463, 148.0321)
 material_override = SubResource("ShaderMaterial_8catc")
 mesh = SubResource("SphereMesh_jh1kh")
 
@@ -348,5 +376,19 @@ collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D4/StaticBody3D" unique_id=1402325184]
 shape = SubResource("ConvexPolygonShape3D_45w4e")
+
+[node name="Marker3D2" type="Marker3D" parent="." unique_id=1688817215]
+
+[node name="Marker3D3" type="Marker3D" parent="." unique_id=115356171]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.2089233, 381.65802)
+
+[node name="Marker3D4" type="Marker3D" parent="." unique_id=945364805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 208.99634, 5.0411377, 115.10251)
+
+[node name="Marker3D5" type="Marker3D" parent="." unique_id=1253553865]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -184.56076, 0, 115.10251)
+
+[node name="Marker3D6" type="Marker3D" parent="." unique_id=1946232133]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -184.56076, 0, 115.10251)
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

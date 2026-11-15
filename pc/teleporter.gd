@@ -20,7 +20,7 @@ func get_usage() -> Vector2:
 
 func _ready() -> void:
 	await get_tree().process_frame
-	DisplayServer.window_set_size(Vector2i(1000, 450))
+	DisplayServer.window_set_size(Vector2i(1000, 300))
 	
 
 func _process(_delta):
@@ -43,7 +43,7 @@ func tp(coordinates: String) -> void:
 		
 		Global.target_level_path = level_path
 		Global.just_teleported = true
-		get_tree().get_root().set_transparent_background(true)
+		#get_tree().get_root().set_transparent_background(true)
 
 		await get_tree().create_timer(2.0).timeout
 		DisplayServer.window_set_size(Vector2i(1, 1))
